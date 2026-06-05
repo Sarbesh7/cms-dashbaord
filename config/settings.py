@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-only-key-change-me")
 
-DEBUG = os.getenv("DEBUG", "False").lower() in {"1", "true", "yes"}
+DEBUG = True
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -90,11 +90,15 @@ DATABASES = {
     }
 }
 
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+AUTH_USER_MODEL = "users.User"
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
