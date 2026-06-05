@@ -1,3 +1,18 @@
 from django.db import models
+import uuid
+from apps.notices.models import Notice
 
-# Create your models here.
+#certificate ko template haru ko lagi model
+class CertificateTemplate(models.Model):
+    template_name = models.CharField(max_length=255)
+    template_file=models.FileField(upload_to='certificate_templates/', blank=False, null=False)
+    
+    def __str__(self):
+        return self.template_name
+
+class Certificate(models.Model):
+    certificate_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    full_name=models.CharField(max_length=255)
+    event=models.ForeignKey(Notice, on_delete=models.CASCADE)#using notice model as event reference kinaki event xainw ajae
+    issued_at=models.DateTimeField(auto_now_add=True) 
+    
