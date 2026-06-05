@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-only-key-change-me")
 
-DEBUG = os.getenv("DEBUG", "False").lower() in {"1", "true", "yes"}
+DEBUG = True
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'apps.notices',
     'apps.certificates',
     'apps.core',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +90,20 @@ DATABASES = {
     }
 }
 
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+AUTH_USER_MODEL = "users.User"
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
