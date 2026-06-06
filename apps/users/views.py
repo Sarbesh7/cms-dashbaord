@@ -7,6 +7,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserCreateSerializer
 from rest_framework.permissions import IsAuthenticated
 
+# core ma gaerw herw haii 
+from apps.core.permissions import IsCMSManagerOrAdmin, IsSuperAdmin
+
 
 
 class LoginView(APIView):
@@ -33,19 +36,32 @@ class LoginView(APIView):
             status = status.HTTP_401_UNAUTHORIZED
         )
     
+# yo tmle gareko ho
 
+
+# class UserView(APIView):
+#     permission_classes = [IsAuthenticated]
+  
+#     def post(self,request):
+#         if not request.user.is_superuser :
+#            return Response({"error": "Not allowed"},status=status.HTTP_403_FORBIDDEN)
+#         serializer =  UserCreateSerializer(data=request.data) 
+#         if serializer.is_valid():
+#                serializer.save()
+#                return Response(serializer.data,status=status.HTTP_200_OK)
+#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+               
+               
+            #    yo naya 
 class UserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsSuperAdmin]
   
     def post(self,request):
-        if not request.user.is_superuser :
-           return Response({"error": "Not allowed"},status=status.HTTP_403_FORBIDDEN)
         serializer =  UserCreateSerializer(data=request.data) 
         if serializer.is_valid():
                serializer.save()
                return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-               
-
+        
             

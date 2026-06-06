@@ -7,8 +7,6 @@ from django.db import models
 class User(AbstractUser):
   ROLE_CHOICES=(
     ('admin','Admin'),
-    ('cms_user','Cms User')
+    ('cms_manager','CMS_MANAGER')
   )
-  role = models.CharField(max_length=20,choices=ROLE_CHOICES,default='cms_user')
-
-
+  role = models.CharField(max_length=20,choices=ROLE_CHOICES,default='cms_manager')
