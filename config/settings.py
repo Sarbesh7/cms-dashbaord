@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.notices',
     'apps.certificates',
     'apps.core',
+    'apps.tenure',
     'rest_framework.authtoken',
 ]
 

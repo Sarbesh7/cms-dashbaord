@@ -22,5 +22,7 @@ urlpatterns = [
     path('',include('apps.users.urls')),
     path('',include('apps.notices.urls')),
     path('',include('apps.events.urls')),
+    path('',include('apps.tenure.urls')),
+    path('',include('apps.certificates.urls')),
     
 ]

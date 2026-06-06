@@ -5,7 +5,7 @@ from . import models
 class NoticeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notice
-        fields = ["id", "title", "content", "created_at", "updated_at", "image"]
+        fields = ["id", "title", "slug", "content", "created_at", "updated_at", "image"]
 
     def validate_image(self, value):
         if value is not None:
@@ -30,6 +30,7 @@ class NoticeSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 
         instance.title = validated_data.get("title", instance.title)
+        instance.slug = validated_data.get("slug", instance.slug)
         instance.content = validated_data.get("content", instance.content)
 
         if "image" in validated_data:
