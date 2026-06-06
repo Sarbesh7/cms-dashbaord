@@ -1,6 +1,6 @@
 from django.db import models
 import uuid
-from apps.notices.models import Notice
+from apps.events.models import Event 
 
 #certificate ko template haru ko lagi model
 class CertificateTemplate(models.Model):
@@ -13,6 +13,6 @@ class CertificateTemplate(models.Model):
 class Certificate(models.Model):
     certificate_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     full_name=models.CharField(max_length=255)
-    event=models.ForeignKey(Notice, on_delete=models.CASCADE)#using notice model as event reference kinaki event xainw ajae
+    event=models.ForeignKey(Event, on_delete=models.CASCADE) #using event model as event reference
     issued_at=models.DateTimeField(auto_now_add=True) 
     
