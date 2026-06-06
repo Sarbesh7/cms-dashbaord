@@ -9,7 +9,7 @@ class TenureAdmin(admin.ModelAdmin):
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
-    list_display = ('name', 'role', 'email', 'phone_number', 'tenure')
+    list_display = ('name', 'role', 'email', 'phone_number', 'tenure', 'slug')
     list_filter = ('tenure',)
-    search_fields = ('name', 'email', 'phone_number')
+    search_fields = ('name', 'email', 'phone_number', 'slug')
 

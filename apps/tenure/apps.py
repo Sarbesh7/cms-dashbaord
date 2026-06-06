@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class TenureConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'tenure'
+    name = 'apps.tenure'
