@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.certificates',
     'apps.core',
     'apps.tenure',
+    'apps.papers',
     'rest_framework.authtoken',
 ]
 
