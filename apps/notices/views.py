@@ -12,8 +12,17 @@ from rest_framework.parsers import JSONParser, MultiPartParser, FormParser # ima
 class NoticeListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
 
+
     def get(self, request):
         notices = Notice.objects.all()
+
+        search = request.query_params.get('search')
+        status_filter= request.query_params.get('status')
+        if search:
+          notices = notices.filter(title__icontains=search)
+        if status_filter:
+            notices = notices.filter(status=status_filter) 
+
         serializer = NoticeSerializer(notices, many=True)
         return Response(serializer.data)
     
@@ -25,29 +34,29 @@ class NoticeListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
 class NoticeDetailView(APIView):
-    def get_object(self, pk):
+    def get_object(self, slug):
         try:
-            return Notice.objects.get(pk=pk)
+            return Notice.objects.get(slug=slug)
         
         
         except Notice.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk):
-        notice = self.get_object(pk)
+    def get(self, request, slug):
+        notice = self.get_object(slug)
         serializer = NoticeSerializer(notice)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        notice = self.get_object(pk)
+    def put(self, request, slug):
+        notice = self.get_object(slug)
         serializer = NoticeSerializer(notice, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        notice = self.get_object(pk)
+    def delete(self, request,slug):
+        notice = self.get_object(slug)
         notice.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
                 
