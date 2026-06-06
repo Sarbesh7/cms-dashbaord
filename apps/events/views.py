@@ -9,7 +9,7 @@ from .pagination import EventPagination
 
 # Create your views here.
 
-class EventView(APIView):
+class EvenListtView(APIView):
     def get(self,request):
         events = Event.objects.all()
         search = request.query_params.get("search")
@@ -42,22 +42,22 @@ class EventView(APIView):
     
 
 class EventDetailsView(APIView) :
-    def get(self,request,id) :
-        event = get_object_or_404(Event,id=id)
+    def get(self,request,slug) :
+        event = get_object_or_404(Event,slug=slug)
         serializer = EventSerializer(event)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
 
-    def put(self,request,id):
-        event = get_object_or_404(Event,id=id)
+    def put(self,request,slug):
+        event = get_object_or_404(Event,slug=slug)
         serializer = EventSerializer(event,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_204_NO_CONTENT)
     
-    def delete(self,request,id):
-        event= get_object_or_404(Event,id=id)
+    def delete(self,request,slug):
+        event= get_object_or_404(Event,slug=slug)
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
