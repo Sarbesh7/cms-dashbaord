@@ -1,0 +1,87 @@
+from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Certificate, CertificateTemplate
+from .serializers import CertificateSerializer, CertificateTemplateSerializer
+from django.http import Http404
+from rest_framework import status
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser 
+
+class CertificateTemplateListView(APIView):
+    parser_classes=(JSONParser, MultiPartParser, FormParser)
+    def get(self, request):
+        templates = CertificateTemplate.objects.all()
+        serializer = CertificateTemplateSerializer(templates, many=True)
+        return Response(serializer.data)
+    def post(self, request):
+        serializer = CertificateTemplateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CertificateTemplateDetailView(APIView):
+    parser_classes=(JSONParser, MultiPartParser, FormParser)
+    def get_object(self, pk):
+        try:
+            return CertificateTemplate.objects.get(pk=pk)
+        except CertificateTemplate.DoesNotExist:
+            raise Http404
+    def get(self, request, pk):
+        template = self.get_object(pk)
+        serializer = CertificateTemplateSerializer(template)
+        return Response(serializer.data)
+    def put(self, request, pk):
+        template=self.get_object(pk)
+        serializer = CertificateTemplateSerializer(template, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        template =self.get_object(pk)
+        template.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class CertificateListView(APIView):
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
+    def get(self, request):
+        certificates = Certificate.objects.all()
+        serializer = CertificateSerializer(certificates, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = CertificateSerializer(data=request.data)
+        if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class CertificateDetailView(APIView):
+    def get_object(self, pk):
+        try:
+            return Certificate.objects.get(pk=pk)
+        except Certificate.DoesNotExist:
+            raise Http404
+        
+    def get(self, request, pk):
+        certificate = self.get_object(pk)
+        serializer = CertificateSerializer(certificate)
+        return Response(serializer.data)
+    
+    def put (self,request,pk):
+        certificate = self.get_object(pk)
+        serializer =CertificateSerializer(certificate,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        certificate = self.get_object(pk)
+        certificate.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
