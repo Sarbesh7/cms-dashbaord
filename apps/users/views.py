@@ -5,6 +5,7 @@ from rest_framework import status
 from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserCreateSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -34,17 +35,16 @@ class LoginView(APIView):
     
 
 class UserView(APIView):
+    permission_classes = [IsAuthenticated]
   
     def post(self,request):
-        if not request.user.is_autheticated:
-           return Response({'error':"not authorized "},status=status.HTTP_401_UNAUTHORIZED)
         if not request.user.is_superuser :
            return Response({"error": "Not allowed"},status=status.HTTP_403_FORBIDDEN)
         serializer =  UserCreateSerializer(data=request.data) 
         if serializer.is_valid():
                serializer.save()
                return Response(serializer.data,status=status.HTTP_200_OK)
-        return Response(serializer.errors)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
                
 

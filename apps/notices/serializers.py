@@ -22,5 +22,3 @@ class NoticeSerializer(serializers.ModelSerializer):
                 )
 
         return value
-
-  
