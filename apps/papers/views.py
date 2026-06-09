@@ -6,7 +6,7 @@ from .serializers import PastPaperSerializer
 from django.http import Http404
 from rest_framework import status
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser 
-from apps.core.pagination import StandardPagination
+# from apps.core.pagination import StandardPagination
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
@@ -18,7 +18,6 @@ class PastPaperListView(APIView):
 
     def get(self, request):
         papers = models.PastPaper.objects.all()
-        paginator = StandardPagination()
         paginated_papers = paginator.paginate_queryset(papers, request)
         serializer = serializers.PastPaperSerializer(paginated_papers, many=True)
         return paginator.get_paginated_response(serializer.data)

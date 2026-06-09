@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     'apps.events',
     'apps.notices',
     'apps.certificates',
-    'apps.core',
     'apps.tenure',
+    'apps.core',
     'apps.papers',
     'rest_framework.authtoken',
 ]
