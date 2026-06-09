@@ -6,13 +6,15 @@ from django.http import Http404
 from rest_framework import status
 from .serializers import NoticeSerializer
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser # image haru ko lagi by chance dekhaenwbhane 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 
 class NoticeListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
 
-
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self, request):
         notices = Notice.objects.all()
 
@@ -41,7 +43,8 @@ class NoticeDetailView(APIView):
         
         except Notice.DoesNotExist:
             raise Http404
-
+        
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self, request, slug):
         notice = self.get_object(slug)
         serializer = NoticeSerializer(notice)

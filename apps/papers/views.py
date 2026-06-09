@@ -8,11 +8,14 @@ from rest_framework import status
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser 
 # from apps.core.pagination import StandardPagination
 from rest_framework.permissions import IsAuthenticated
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 # Create your views here.
 class PastPaperListView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = [JSONParser, MultiPartParser, FormParser]
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     
   
 
@@ -32,6 +35,7 @@ class PastPaperListView(APIView):
 class PastPaperDetailView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = [JSONParser, MultiPartParser, FormParser]
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     
     def get_object(self, pk):
         try:
@@ -39,6 +43,8 @@ class PastPaperDetailView(APIView):
         except models.PastPaper.DoesNotExist:
             return None
         
+        
+    @method_decorator(cache_page(60 * 5), name='dispatch')   
     def get(self, request, pk):
         paper = self.get_object(pk)
         if paper is None:
