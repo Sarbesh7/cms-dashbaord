@@ -4,12 +4,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Event
 from .serializers import EventSerializer
-from .pagination import EventPagination
+from apps.core.pagination import StandardPagination
+from apps.core.permission import IsAdmin,IsCMSUser
 
 
 # Create your views here.
 
 class EvenListtView(APIView):
+    permission_classes = [IsCMSUser]
     def get(self,request):
         events = Event.objects.all()
 
@@ -21,7 +23,7 @@ class EvenListtView(APIView):
         if status_filter:
             events = events.filter(status=status_filter)
 
-        paginator = EventPagination()
+        paginator = StandardPagination()
         result_page = paginator.paginate_queryset(events,request)    
 
         serializer = EventSerializer(result_page,many=True)
@@ -36,6 +38,7 @@ class EvenListtView(APIView):
     
 
 class EventDetailsView(APIView) :
+    permission_classes =[IsCMSUser]
     def get(self,request,slug) :
         event = get_object_or_404(Event,slug__iexact=slug)
         serializer = EventSerializer(event)

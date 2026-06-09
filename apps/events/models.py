@@ -1,8 +1,9 @@
 from django.db import models
 from django.utils.text import slugify
+from apps.core.models import TimeStampModel
 
 # Create your models here.
-class Event(models.Model):
+class Event(TimeStampModel):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True,blank=True)
     description = models.TextField()
@@ -14,8 +15,6 @@ class Event(models.Model):
     ],
     default ='draft'
     )
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at= models.DateTimeField(auto_now=True)
 
     def __Str__(self):
         return self.title
