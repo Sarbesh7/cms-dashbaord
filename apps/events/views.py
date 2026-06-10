@@ -22,6 +22,8 @@ class EvenListtView(APIView):
             events = events.filter(title__icontains=search)
         if status_filter:
             events = events.filter(status=status_filter)
+            
+        events = events.order_by("-created_at")    
 
         paginator = StandardPagination()
         result_page = paginator.paginate_queryset(events,request)    
