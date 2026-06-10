@@ -8,6 +8,8 @@ from .serializers import NoticeSerializer
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser # image haru ko lagi by chance dekhaenwbhane 
 from apps.core.pagination import StandardPagination
 from apps.core.permission import IsAdmin,IsCMSUser
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 
@@ -15,7 +17,7 @@ class NoticeListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
     permission_classes =[IsCMSUser]
 
-
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self, request):
         notices = Notice.objects.all()
 
@@ -47,7 +49,8 @@ class NoticeDetailView(APIView):
         
         except Notice.DoesNotExist:
             raise Http404
-
+        
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self, request, slug):
         notice = self.get_object(slug)
         serializer = NoticeSerializer(notice)

@@ -6,12 +6,16 @@ from .models import Event
 from .serializers import EventSerializer
 from apps.core.pagination import StandardPagination
 from apps.core.permission import IsAdmin,IsCMSUser
+from .pagination import EventPagination
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 # Create your views here.
-
+    
 class EvenListtView(APIView):
     permission_classes = [IsCMSUser]
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self,request):
         events = Event.objects.all()
 
@@ -39,6 +43,7 @@ class EvenListtView(APIView):
 
 class EventDetailsView(APIView) :
     permission_classes =[IsCMSUser]
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self,request,slug) :
         event = get_object_or_404(Event,slug__iexact=slug)
         serializer = EventSerializer(event)
