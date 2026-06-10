@@ -26,7 +26,10 @@ class NoticeListView(APIView):
         if search:
           notices = notices.filter(title__icontains=search)
         if status_filter:
-            notices = notices.filter(status=status_filter) 
+            notices = notices.filter(status=status_filter)
+
+        notices = notices.order_by("-created_at")   
+         
         paginator = StandardPagination() 
         result_page = paginator.paginate_queryset(notices,request) 
 
