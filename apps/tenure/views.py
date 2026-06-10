@@ -9,11 +9,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from django.utils.text import slugify
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 class TenureListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
-
+     
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self, request):
         tenures = Tenure.objects.all()
         serializer = TenureSerializer(tenures, many=True)
@@ -30,12 +33,13 @@ class TenureListView(APIView):
 class TenureDetailView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
 
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get_object(self, slug):
         try:
             return Tenure.objects.get(slug=slug)
         except Tenure.DoesNotExist:
             raise Http404
-
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self, request, slug):
         tenure = self.get_object(slug)
         serializer = TenureSerializer(tenure)
@@ -73,13 +77,15 @@ class MemberListView(APIView):
 
 class MemberDetailView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
-
+    
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get_object(self, slug):
         try:
             return Member.objects.get(slug=slug)
         except Member.DoesNotExist:
             raise Http404
-
+        
+    @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self, request, slug):
         member = self.get_object(slug)
         serializer = MemberSerializer(member)
@@ -103,6 +109,7 @@ class MemberDetailView(APIView):
 
 
 # cloning members from one tenure to another
+@method_decorator(cache_page(60 * 5), name='dispatch')
 @api_view(["POST"])
 def clone_members(request, slug):
 
