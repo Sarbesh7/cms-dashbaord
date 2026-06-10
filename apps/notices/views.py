@@ -6,6 +6,8 @@ from django.http import Http404
 from rest_framework import status
 from .serializers import NoticeSerializer
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser # image haru ko lagi by chance dekhaenwbhane 
+from apps.core.pagination import StandardPagination
+from apps.core.permission import IsAdmin,IsCMSUser
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
@@ -13,6 +15,7 @@ from django.views.decorators.cache import cache_page
 
 class NoticeListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
+    permission_classes =[IsCMSUser]
 
     @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self, request):
@@ -24,9 +27,11 @@ class NoticeListView(APIView):
           notices = notices.filter(title__icontains=search)
         if status_filter:
             notices = notices.filter(status=status_filter) 
+        paginator = StandardPagination() 
+        result_page = paginator.paginate_queryset(notices,request) 
 
-        serializer = NoticeSerializer(notices, many=True)
-        return Response(serializer.data)
+        serializer = NoticeSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
     
     def post(self, request):
         serializer =NoticeSerializer(data=request.data)
@@ -36,6 +41,7 @@ class NoticeListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
 class NoticeDetailView(APIView):
+    permission_classes = [IsCMSUser]
     def get_object(self, slug):
         try:
             return Notice.objects.get(slug=slug)

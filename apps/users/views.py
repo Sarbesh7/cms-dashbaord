@@ -6,6 +6,8 @@ from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserCreateSerializer
 from rest_framework.permissions import IsAuthenticated
+from apps.core.permission import IsAdmin,IsCMSUser
+
 from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
 
 
@@ -36,18 +38,17 @@ class LoginView(APIView):
     
 
 class UserView(APIView):
+    permission_classes = [IsAdmin]
     throttle_classes = [UserRateThrottle]
     
     permission_classes = [IsAuthenticated]
   
     def post(self,request):
-        if not request.user.is_superuser :
-           return Response({"error": "Not allowed"},status=status.HTTP_403_FORBIDDEN)
         serializer =  UserCreateSerializer(data=request.data) 
         if serializer.is_valid():
                serializer.save()
                return Response(serializer.data,status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors,status=status.HTTP_403_FORBIDDEN)
 
                
 

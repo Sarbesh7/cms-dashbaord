@@ -6,8 +6,10 @@ from .serializers import CertificateSerializer, CertificateTemplateSerializer
 from django.http import Http404
 from rest_framework import status
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser 
+from apps.core.permission import IsAdmin,IsCMSUser
 
 class CertificateTemplateListView(APIView):
+    permission_classes = [IsCMSUser]
     parser_classes=(JSONParser, MultiPartParser, FormParser)
     def get(self, request):
         templates = CertificateTemplate.objects.all()
@@ -22,6 +24,7 @@ class CertificateTemplateListView(APIView):
 
 
 class CertificateTemplateDetailView(APIView):
+    permission_classes =[IsCMSUser]
     parser_classes=(JSONParser, MultiPartParser, FormParser)
     def get_object(self, pk):
         try:
