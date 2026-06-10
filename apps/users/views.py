@@ -6,10 +6,11 @@ from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserCreateSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
 
 
 class LoginView(APIView):
+    throttle_classes = [AnonRateThrottle]
     def post(self,request):
         email=request.data.get('email')
         password = request.data.get('password')
@@ -35,6 +36,8 @@ class LoginView(APIView):
     
 
 class UserView(APIView):
+    throttle_classes = [UserRateThrottle]
+    
     permission_classes = [IsAuthenticated]
   
     def post(self,request):
