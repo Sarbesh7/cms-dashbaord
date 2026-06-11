@@ -9,13 +9,13 @@ from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 # from apps.core.pagination import StandardPagination
 from apps.core.permission import IsAdmin,IsCMSUser
 from apps.core.pagination import StandardPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , IsAuthenticatedOrReadOnly
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
 # Create your views here.
 class PastPaperListView(APIView):
-    permission_classes = [IsCMSUser]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = [JSONParser, MultiPartParser, FormParser]
     @method_decorator(cache_page(60 * 5), name='dispatch')
     
@@ -36,7 +36,7 @@ class PastPaperListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class PastPaperDetailView(APIView):
-    permission_classes = [IsCMSUser]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = [JSONParser, MultiPartParser, FormParser]
     @method_decorator(cache_page(60 * 5), name='dispatch')
     

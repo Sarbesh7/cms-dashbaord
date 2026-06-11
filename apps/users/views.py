@@ -6,7 +6,7 @@ from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserCreateSerializer,ChangePasswordSerializer
 from apps.core.permission import IsAdmin,IsCMSUser
-
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
 
 
@@ -52,7 +52,7 @@ class UserView(APIView):
 
 class ChangePasswordView(APIView) :
      permission_classes =[IsCMSUser]
-     def post(Self,request):
+     def post(self,request):
           serializer = ChangePasswordSerializer(data=request.data)
           if serializer.is_valid():
                user = request.user

@@ -7,6 +7,7 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser 
 from apps.core.permission import IsAdmin,IsCMSUser
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 class CertificateTemplateListView(APIView):
     permission_classes = [IsCMSUser]
@@ -51,9 +52,10 @@ class CertificateTemplateDetailView(APIView):
 
 
 class CertificateListView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = (JSONParser, MultiPartParser, FormParser)
     def get(self, request):
-        certificates = Certificate.objects.all()
+        certificates = Certificate.objects.select_related('event').all()
         serializer = CertificateSerializer(certificates, many=True)
         return Response(serializer.data)
     
@@ -65,9 +67,10 @@ class CertificateListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class CertificateDetailView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     def get_object(self, pk):
         try:
-            return Certificate.objects.get(pk=pk)
+            return Certificate.objects.select_related('event').get(pk=pk)
         except Certificate.DoesNotExist:
             raise Http404
         

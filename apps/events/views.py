@@ -6,7 +6,6 @@ from .models import Event
 from .serializers import EventSerializer
 from apps.core.pagination import StandardPagination
 from apps.core.permission import IsAdmin,IsCMSUser
-from .pagination import EventPagination
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
