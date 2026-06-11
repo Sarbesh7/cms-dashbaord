@@ -1,5 +1,6 @@
 from django.db import models
 from apps.core.models import TimeStampModel
+from django.utils.text import slugify
 
 # Create your models here.
 class PastPaper(TimeStampModel):
@@ -15,11 +16,22 @@ class PastPaper(TimeStampModel):
     model_set = models.BooleanField(default=False)
     exam_year = models.IntegerField()
     drive_link = models.URLField(max_length=200 , blank=True, null=True)
+    slug = models.SlugField(max_length=150, blank=True)
     
     class Meta:
         ordering = ['-exam_year', '-semester', 'subject_code']
         unique_together = ('subject_code', 'semester', 'exam_year', 'model_set')
-   
+        
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            
+            set_type = "model-set" if self.model_set else "board-exam"
+            
+           
+            slug_text = f"{self.subject_code}-{self.exam_year}-{set_type}"
+            self.slug = slugify(slug_text)
+            
+        super(PastPaper, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.subject_code
