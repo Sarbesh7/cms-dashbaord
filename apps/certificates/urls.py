@@ -3,9 +3,9 @@ from .views import CertificateListView, CertificateDetailView, CertificateTempla
 
 
 urlpatterns = [
-    path('api/certificates/', CertificateListView.as_view()),
-    path('api/certificates/<int:pk>/', CertificateDetailView.as_view()),    
-    path('api/certificates/templates/', CertificateTemplateListView.as_view()),
-    path('api/certificates/templates/<int:pk>/', CertificateTemplateDetailView.as_view()),
+    path('api/v1/certificates/', CertificateListView.as_view()),
+    path('api/v1/certificates/<int:pk>/', CertificateDetailView.as_view()),    
+    path('api/v1/certificates/templates/', CertificateTemplateListView.as_view()),
+    path('api/v1/certificates/templates/<int:pk>/', CertificateTemplateDetailView.as_view()),
     
 ]

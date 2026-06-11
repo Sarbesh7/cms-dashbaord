@@ -16,7 +16,7 @@ class Event(TimeStampModel):
     default ='draft'
     )
 
-    def __Str__(self):
+    def __str__(self):
         return self.title
     
 

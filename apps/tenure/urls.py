@@ -3,11 +3,11 @@ from .views import TenureListView, TenureDetailView, MemberListView , MemberDeta
 
 
 urlpatterns = [
-    path('api/tenures/', TenureListView.as_view()),
-    path('api/tenures/<slug:slug>/', TenureDetailView.as_view()),
+    path('api/v1/tenures/', TenureListView.as_view()),
+    path('api/v1/tenures/<slug:slug>/', TenureDetailView.as_view()),
     
-    path('api/members/', MemberListView.as_view()),
-    path('api/members/<slug:slug>/', MemberDetailView.as_view()),
+    path('api/v1/members/', MemberListView.as_view()),
+    path('api/v1/members/<slug:slug>/', MemberDetailView.as_view()),
     
-    path('api/clone-members/<slug:slug>/', clone_members, name='clone-members'),
+    path('api/v1/clone-members/<slug:slug>/', clone_members, name='clone-members'),
 ]

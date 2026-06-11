@@ -3,6 +3,6 @@ from .views import NoticeListView, NoticeDetailView
 
 
 urlpatterns = [
-    path('api/notices/', NoticeListView.as_view()),
-    path('api/notices/<slug:slug>/', NoticeDetailView.as_view()),
+    path('api/v1/notices/', NoticeListView.as_view()),
+    path('api/v1/notices/<slug:slug>/', NoticeDetailView.as_view()),
 ]
