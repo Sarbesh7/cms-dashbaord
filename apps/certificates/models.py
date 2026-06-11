@@ -16,3 +16,6 @@ class Certificate(models.Model):
     event=models.ForeignKey(Event, on_delete=models.CASCADE) #using event model as event reference
     issued_at=models.DateTimeField(auto_now_add=True) 
     
+    def __str__(self):
+        return f"{self.full_name} - {self.event.title}"
+    

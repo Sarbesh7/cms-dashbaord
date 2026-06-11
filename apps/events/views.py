@@ -11,7 +11,7 @@ from django.views.decorators.cache import cache_page
 
 # Create your views here.
     
-class EvenListtView(APIView):
+class EventListView(APIView):
     @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self,request):
         events = Event.objects.all()

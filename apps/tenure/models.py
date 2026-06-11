@@ -25,8 +25,8 @@ class Member(models.Model):
     github_link = models.URLField(null=True, blank=True)
     slug = models.SlugField(unique=True, blank=True)
 
-def save(self, *args, **kwargs):
-    if not self.slug:
+    def save(self, *args, **kwargs):
+      if not self.slug:
         base_slug = slugify(f"{self.name}-{self.tenure.name}")
 
         slug = base_slug
@@ -38,4 +38,4 @@ def save(self, *args, **kwargs):
 
         self.slug = slug
 
-    super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
