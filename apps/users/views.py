@@ -37,11 +37,9 @@ class LoginView(APIView):
     
 
 class UserView(APIView):
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAuthenticated, IsAdmin]
     throttle_classes = [UserRateThrottle]
     
-    permission_classes = [IsAuthenticated]
-  
     def post(self,request):
         serializer =  UserCreateSerializer(data=request.data) 
         if serializer.is_valid():
@@ -51,7 +49,8 @@ class UserView(APIView):
 
 
 class ChangePasswordView(APIView) :
-     permission_classes =[IsCMSUser]
+     permission_classes = [IsAuthenticated, IsCMSUser]
+     throttle_classes = [UserRateThrottle]
      def post(self,request):
           serializer = ChangePasswordSerializer(data=request.data)
           if serializer.is_valid():
