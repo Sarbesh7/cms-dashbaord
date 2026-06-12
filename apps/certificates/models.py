@@ -10,12 +10,12 @@ class CertificateTemplate(models.Model):
     def __str__(self):
         return self.template_name
 
-class Certificate(models.Model):
-    certificate_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+class Certificate(TimeStampModel):
+    id=models.AutoField(primary_key=True)
+    certificate_id=models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     full_name=models.CharField(max_length=255)
     event=models.ForeignKey(Event, on_delete=models.CASCADE) #using event model as event reference
     issued_at=models.DateTimeField(auto_now_add=True) 
     
     def __str__(self):
         return f"{self.full_name} - {self.event.title}"
-    
