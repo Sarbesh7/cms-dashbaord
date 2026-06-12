@@ -6,6 +6,8 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
 
+    
+
 
 
 class UserCreateSerializer(serializers.ModelSerializer) :
@@ -22,3 +24,16 @@ class UserCreateSerializer(serializers.ModelSerializer) :
         user.set_password(password)
         user.save()
         return user
+    
+
+    def validate_password(self, value):
+     if len(value) < 8:
+        raise serializers.ValidationError(
+            "Password must be at least 8 characters long."
+        )
+     return value
+    
+class ChangePasswordSerializer(serializers.Serializer):
+   old_password = serializers.CharField()
+   new_password = serializers.CharField()
+     

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view ,permission_classes
 from rest_framework.response import Response
 from .models import Tenure, Member
 from .serializers import MemberSerializer, TenureSerializer
@@ -11,14 +11,16 @@ from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from django.utils.text import slugify
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from rest_framework.permissions import IsAuthenticated , IsAuthenticatedOrReadOnly
+from apps.core.permission import IsAdmin, IsCMSUser
 
 
 class TenureListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
-     
+    permission_classes = [IsAuthenticatedOrReadOnly] 
     @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self, request):
-        tenures = Tenure.objects.all()
+        tenures = Tenure.objects.prefetch_related('members').all()
         serializer = TenureSerializer(tenures, many=True)
         return Response(serializer.data)
 
@@ -32,6 +34,7 @@ class TenureListView(APIView):
 
 class TenureDetailView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     @method_decorator(cache_page(60 * 5), name='dispatch')
     def get_object(self, slug):
@@ -60,10 +63,11 @@ class TenureDetailView(APIView):
 
 
 class MemberListView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = (JSONParser, MultiPartParser, FormParser)
 
     def get(self, request):
-        members = Member.objects.all()
+        members = Member.objects.select_related('tenure').all()
         serializer = MemberSerializer(members, many=True)
         return Response(serializer.data)
 
@@ -77,11 +81,12 @@ class MemberListView(APIView):
 
 class MemberDetailView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
-    
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     @method_decorator(cache_page(60 * 5), name='dispatch')
     def get_object(self, slug):
         try:
-            return Member.objects.get(slug=slug)
+            return Member.objects.select_related('tenure').get(slug=slug)
         except Member.DoesNotExist:
             raise Http404
         
@@ -105,19 +110,17 @@ class MemberDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# errror xw hernw nabhull sarbesh
-
 
 # cloning members from one tenure to another
+
+
 @method_decorator(cache_page(60 * 5), name='dispatch')
 @api_view(["POST"])
+@permission_classes([IsCMSUser])
 def clone_members(request, slug):
 
     target_tenure = get_object_or_404(Tenure, slug=slug)
-    print("slug",slug)
     source_tenure_slug = request.data.get("source_tenure_slug")
-    print("source_tenure_slug",source_tenure_slug)
-    
 
     if not source_tenure_slug:
         return Response({"error": "source_tenure_slug is required"}, status=400)
@@ -125,16 +128,18 @@ def clone_members(request, slug):
     source_tenure = get_object_or_404(Tenure, slug=source_tenure_slug)
     members = Member.objects.filter(tenure=source_tenure)
 
-    for member in members:
+    new_members = []
 
+    for member in members:
         base_slug = slugify(f"{member.name}-{target_tenure.name}")
         slug = base_slug
         counter = 1
+        
         while Member.objects.filter(slug=slug).exists():
             slug = f"{base_slug}-{counter}"
             counter += 1
 
-        new_members = [
+        new_members.append(
             Member(
                 tenure=target_tenure,
                 name=member.name,
@@ -147,8 +152,9 @@ def clone_members(request, slug):
                 image=member.image,
                 slug=slug,
             )
-        ]
+        )
     Member.objects.bulk_create(new_members)
+    
     return Response(
         {"message": "Members cloned successfully"}, status=status.HTTP_200_OK
     )

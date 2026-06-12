@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Event
 from .serializers import EventSerializer
-from .pagination import EventPagination
+from apps.core.pagination import StandardPagination
+from apps.core.permission import IsAdmin,IsCMSUser
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
@@ -23,8 +24,10 @@ class EventListView(APIView):
             events = events.filter(title__icontains=search)
         if status_filter:
             events = events.filter(status=status_filter)
+            
+        events = events.order_by("-created_at")    
 
-        paginator = EventPagination()
+        paginator = StandardPagination()
         result_page = paginator.paginate_queryset(events,request)    
 
         serializer = EventSerializer(result_page,many=True)
@@ -39,6 +42,7 @@ class EventListView(APIView):
     
 
 class EventDetailsView(APIView) :
+    permission_classes =[IsCMSUser]
     @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self,request,slug) :
         event = get_object_or_404(Event,slug__iexact=slug)

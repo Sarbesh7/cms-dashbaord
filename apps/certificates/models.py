@@ -1,9 +1,10 @@
 from django.db import models
 import uuid
 from apps.events.models import Event 
+from apps.core.models import TimeStampModel
 
 #certificate ko template haru ko lagi model
-class CertificateTemplate(models.Model):
+class CertificateTemplate(TimeStampModel):
     template_name = models.CharField(max_length=255)
     template_file=models.FileField(upload_to='certificate_templates/', blank=False, null=False)
     
