@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('notices', '0001_initial'),
+        ('events', '0001_initial'),
     ]
 
     operations = [
@@ -18,9 +18,14 @@ class Migration(migrations.Migration):
             name='CertificateTemplate',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
                 ('template_name', models.CharField(max_length=255)),
                 ('template_file', models.FileField(upload_to='certificate_templates/')),
             ],
+            options={
+                'abstract': False,
+            },
         ),
         migrations.CreateModel(
             name='Certificate',
@@ -31,7 +36,10 @@ class Migration(migrations.Migration):
                 ('certificate_id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
                 ('full_name', models.CharField(max_length=255)),
                 ('issued_at', models.DateTimeField(auto_now_add=True)),
-                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='notices.notice')),
+                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.event')),
             ],
+            options={
+                'abstract': False,
+            },
         ),
     ]

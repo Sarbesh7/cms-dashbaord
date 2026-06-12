@@ -1,9 +1,10 @@
 from django.db import models
 from django.utils.text import slugify
+from apps.core.models import TimeStampModel
 
 
 # Create your models here.
-class Tenure(models.Model):
+class Tenure(TimeStampModel):
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -13,7 +14,7 @@ class Tenure(models.Model):
         return self.name
 
 
-class Member(models.Model):
+class Member(TimeStampModel):
     tenure = models.ForeignKey(Tenure, on_delete=models.CASCADE, related_name="members")
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)

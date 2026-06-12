@@ -1,13 +1,12 @@
 from django.db import models
 from django.utils.text import slugify
+from apps.core.models import TimeStampModel
 
 # Create your models here.
-class Notice(models.Model):
+class Notice(TimeStampModel):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True, null=True)
     description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     image = models.FileField(upload_to='notices/', null=True, blank=True)
 
     status = models.CharField(max_length=20,choices=[
