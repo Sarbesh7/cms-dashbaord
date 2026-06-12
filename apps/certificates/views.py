@@ -50,8 +50,12 @@ class CertificateTemplateDetailView(APIView):
 class CertificateListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
     def get(self, request):
-        certificates = Certificate.objects.all()
+        certificates = Certificate.objects.select_related('event').all()
+        search_query = request.query_params.get('search', None)
+        if search_query: 
+            certificates = certificates.filter(event__title__icontains=search_query)  
         serializer = CertificateSerializer(certificates, many=True)
+        
         return Response(serializer.data)
     
     def post(self, request):
