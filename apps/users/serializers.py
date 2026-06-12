@@ -11,7 +11,8 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer) :
-    password = serializers.CharField(write_only=True)   
+    password = serializers.CharField(write_only=True)  
+   
    
     class Meta:
         model = User
@@ -36,4 +37,20 @@ class UserCreateSerializer(serializers.ModelSerializer) :
 class ChangePasswordSerializer(serializers.Serializer):
    old_password = serializers.CharField()
    new_password = serializers.CharField()
-     
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+   email = serializers.EmailField()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)
+
+    def validate_new_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError(
+                "Password must be at least 8 characters long."
+            )
+        return value
