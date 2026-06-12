@@ -7,7 +7,7 @@ from . import models
 @admin.register(models.Certificate)
 class CertificateAdmin(admin.ModelAdmin):
     list_display = ("certificate_id", "full_name", "event", "issued_at")
-    search_fields = ("full_name","event")
+    search_fields = ("full_name","event__title")
     list_filter = ("issued_at",)
 
 @admin.register(models.CertificateTemplate)
