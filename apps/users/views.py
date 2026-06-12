@@ -42,7 +42,7 @@ class LoginView(APIView):
     
 
 class UserView(APIView):
-    # permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticated, IsAdmin]
     throttle_classes = [UserRateThrottle]
     
     def post(self,request):
@@ -188,3 +188,28 @@ class ResetPasswordView(APIView):
                     },
                     status=status.HTTP_400_BAD_REQUEST
                 )
+            
+
+
+
+class LogoutView(APIView):
+    permission_classes =[IsAuthenticated]
+    def post(self,request):
+        try:
+          refresh_token =request.data.get("refresh")
+          token = RefreshToken(refresh_token)
+          token.blacklist()
+          return Response(
+                {"message": "Logout successful"},
+                status=status.HTTP_205_RESET_CONTENT
+            )
+
+        except Exception:
+         return Response(
+                {"error": "Invalid token"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+
+            
