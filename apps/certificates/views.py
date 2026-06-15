@@ -8,6 +8,9 @@ from rest_framework import status
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser 
 from apps.core.permission import IsAdmin,IsCMSUser
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+# import logging
+
+# logger = logging.getLogger(certificate)
 
 class CertificateTemplateListView(APIView):
     permission_classes = [IsCMSUser]

@@ -170,3 +170,63 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     "http://localhost:3000",
 #     "http://127.0.0.1:3000",
 # ]
+
+# Logging Configuration
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "standard": {
+            "format": "[{asctime}] {levelname} {name}: {message}",
+            "style": "{",
+        },
+    },
+
+    "handlers": {
+        "django_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/django.log",
+            "formatter": "standard",
+        },
+
+        "error_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/errors.log",
+            "formatter": "standard",
+            "level": "ERROR",
+        },
+
+        "security_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/security.log",
+            "formatter": "standard",
+        },
+
+        "certificate_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/certificate.log",
+            "formatter": "standard",
+        },
+    },
+
+    "loggers": {
+        "django": {
+            "handlers": ["django_file", "error_file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+
+        "security": {
+            "handlers": ["security_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+
+        "certificate": {
+            "handlers": ["certificate_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
