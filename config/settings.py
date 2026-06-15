@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.papers',
     'rest_framework.authtoken',
-    'apps.logs',
+    # 'apps.logs',
     # 'corsheaders',
 ]
 
