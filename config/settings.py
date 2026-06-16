@@ -172,7 +172,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ]
 
 # Logging Configuration
-LOGGING = {
+LOGGING ={
     "version": 1,
     "disable_existing_loggers": False,
 
@@ -208,6 +208,26 @@ LOGGING = {
             "filename": BASE_DIR / "logs/certificate.log",
             "formatter": "standard",
         },
+        "notice_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/notice.log",
+            "formatter": "standard",
+        },
+        "event_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/event.log",
+            "formatter": "standard",
+        },
+        "tenure_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/tenure.log",
+            "formatter": "standard",
+        },
+         "paper_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/paper.log",
+            "formatter": "standard",
+        },
     },
 
     "loggers": {
@@ -228,5 +248,26 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
+
+        "notice": {
+            "handlers": ["notice_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "event": {
+            "handlers": ["event_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "tenure": {
+            "handlers": ["tenure_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+         "paper": {
+            "handlers": ["paper_file"],
+            "level": "INFO",
+            "propagate": False,
     },
+    }
 }
