@@ -10,7 +10,9 @@ from apps.core.pagination import StandardPagination
 from apps.core.permission import IsAdmin,IsCMSUser
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+import logging
 
+logger = logging.getLogger('notice')
 
 
 class NoticeListView(APIView):
@@ -40,7 +42,13 @@ class NoticeListView(APIView):
         serializer =NoticeSerializer(data=request.data)
         if serializer.is_valid():
                 serializer.save()
+                logger.info(
+                    f"Notice '{serializer.data['title']}' (Slug: {serializer.data['slug']}) created by User: {request.user}"
+                )
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+        logger.warning(
+            f"Failed post update for Notice Slug '{slug}'. Errors: {serializer.errors}"
+        )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
 class NoticeDetailView(APIView):
@@ -64,11 +72,22 @@ class NoticeDetailView(APIView):
         serializer = NoticeSerializer(notice, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info(
+                f"Notice '{notice.title}' (Slug: {slug}) fully updated (PUT) by User: {request.user}"
+            )
             return Response(serializer.data)
+        
+        logger.warning(
+            f"Failed PUT update for Notice Slug '{slug}'. Errors: {serializer.errors}"
+        )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request,slug):
         notice = self.get_object(slug)
         notice.delete()
+        
+        logger.info(
+            f"Notice '{notice.title}' (Slug: {slug}) was deleted by User: {request.user}"
+        )
         return Response(status=status.HTTP_204_NO_CONTENT)
                 
