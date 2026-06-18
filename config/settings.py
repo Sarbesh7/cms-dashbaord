@@ -98,6 +98,7 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+
     ),
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
@@ -108,8 +109,7 @@ REST_FRAMEWORK = {
         'user': '1000/day'
     },
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 50
-
+    'PAGE_SIZE': 50,
     
 }
 
@@ -121,6 +121,15 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = "swikrityac31@gmail.com"
+EMAIL_HOST_PASSWORD = "xvmz fpzx eykp gzop"
 
 
 
@@ -210,6 +219,28 @@ LOGGING = {
             "filename": BASE_DIR / "logs/certificate.log",
             "formatter": "standard",
         },
+        
+        "paper_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/pastpaper.log",
+            "formatter": "standard",
+        },
+        "event_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/event.log",
+            "formatter": "standard",
+        },
+        "notice_file": {
+                "class": "logging.FileHandler",
+                "filename": BASE_DIR / "logs/notice.log",
+                "formatter": "standard",
+            },
+        "tenure_file": {
+                "class": "logging.FileHandler",
+                "filename": BASE_DIR / "logs/tenure.log",
+                "formatter": "standard",
+            },
+        
     },
 
     "loggers": {
@@ -230,5 +261,27 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
+
+        "paper": {
+            "handlers": ["paper_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "event": {
+            "handlers": ["event_file"],
+            "level": "INFO",
+            "propagate": False,
+        },  
+        "notice": {
+            "handlers": ["notice_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "tenure": {
+            "handlers": ["tenure_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        
     },
 }

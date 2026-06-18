@@ -12,8 +12,10 @@ from apps.core.pagination import StandardPagination
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+import logging
 
-# Create your views here.
+logger = logging.getLogger('pastpaper')
+
 class PastPaperListView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = [JSONParser, MultiPartParser, FormParser]
@@ -31,6 +33,10 @@ class PastPaperListView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        logger.warning(
+            f"Failed POST creation for Past Paper. Errors: {serializer.errors}"
+        )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
@@ -61,6 +67,9 @@ class PastPaperDetailView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        logger.warning(
+            f"Failed PUT update for Past Paper Slug '{slug}'. Errors: {serializer.errors}"
+        )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, slug):
@@ -68,4 +77,8 @@ class PastPaperDetailView(APIView):
         if paper is None:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         paper.delete()
+        
+        logger.info(
+            f"Past paper '{paper.title}' (Slug: {slug}) was deleted by User: {request.user}"
+        )
         return Response(status=status.HTTP_204_NO_CONTENT)

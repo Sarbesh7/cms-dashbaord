@@ -1,93 +1,829 @@
-[2026-06-18 21:53:37,135] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:53:50,655] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:53:52,328] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:53:55,212] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:53:56,743] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:53:58,441] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:53:59,964] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:03,774] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:04,990] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:06,379] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:07,992] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:09,539] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:10,892] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:12,282] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:13,490] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:14,896] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:16,629] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:20,352] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:21,650] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:27,278] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:28,790] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:31,261] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:32,468] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:33,913] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:35,440] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:37,048] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:38,323] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:39,895] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:41,546] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:43,040] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:44,662] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:46,248] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
-[2026-06-18 21:54:47,273] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:54:52,174] WARNING django.request: Not Found: /
-[2026-06-18 21:54:52,175] WARNING django.server: "GET / HTTP/1.1" 404 7369
-[2026-06-18 21:54:57,547] INFO django.server: "GET /admin/ HTTP/1.1" 200 16478
-[2026-06-18 21:54:57,601] INFO django.server: "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
-[2026-06-18 21:55:09,630] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17529
-[2026-06-18 21:55:09,674] INFO django.server: "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
-[2026-06-18 21:55:09,675] INFO django.server: "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
-[2026-06-18 21:55:09,741] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:55:14,418] INFO django.server: "GET /admin/users/user/2/change/ HTTP/1.1" 200 33221
-[2026-06-18 21:55:14,453] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:55:14,464] INFO django.server: "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
-[2026-06-18 21:55:19,175] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17529
-[2026-06-18 21:55:30,262] INFO django.server: "GET /admin/users/user/4/change/ HTTP/1.1" 200 33177
-[2026-06-18 21:55:30,297] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:55:32,723] INFO django.server: "GET /admin/users/user/4/delete/ HTTP/1.1" 200 15447
-[2026-06-18 21:55:32,751] INFO django.server: "GET /static/admin/js/cancel.js HTTP/1.1" 304 0
-[2026-06-18 21:55:34,608] INFO django.server: "POST /admin/users/user/4/delete/ HTTP/1.1" 302 0
-[2026-06-18 21:55:34,636] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17420
-[2026-06-18 21:55:34,663] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:55:36,239] INFO django.server: "GET /admin/users/user/3/change/ HTTP/1.1" 200 33162
-[2026-06-18 21:55:36,260] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:55:38,788] INFO django.server: "GET /admin/users/user/3/delete/ HTTP/1.1" 200 15438
-[2026-06-18 21:55:40,151] INFO django.server: "POST /admin/users/user/3/delete/ HTTP/1.1" 302 0
-[2026-06-18 21:55:40,178] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17156
-[2026-06-18 21:55:40,216] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:55:41,547] INFO django.server: "GET /admin/users/user/2/change/ HTTP/1.1" 200 33221
-[2026-06-18 21:55:41,583] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:55:43,675] INFO django.server: "GET /admin/users/user/2/delete/ HTTP/1.1" 200 15645
-[2026-06-18 21:55:44,970] INFO django.server: "POST /admin/users/user/2/delete/ HTTP/1.1" 302 0
-[2026-06-18 21:55:44,980] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 302 0
-[2026-06-18 21:55:45,041] INFO django.server: "GET /admin/login/?next=/admin/users/user/ HTTP/1.1" 200 4257
-[2026-06-18 21:56:51,810] INFO django.utils.autoreload: Watching for file changes with StatReloader
-[2026-06-18 21:57:00,390] WARNING django.request: Not Found: /
-[2026-06-18 21:57:00,391] WARNING django.server: "GET / HTTP/1.1" 404 7369
-[2026-06-18 21:57:06,275] INFO django.server: "GET /admin/ HTTP/1.1" 302 0
-[2026-06-18 21:57:06,336] INFO django.server: "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4080
-[2026-06-18 21:57:14,693] INFO django.server: "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
-[2026-06-18 21:57:14,719] INFO django.server: "GET /admin/ HTTP/1.1" 200 16099
-[2026-06-18 21:57:19,024] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17002
-[2026-06-18 21:57:19,061] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:57:21,077] INFO django.server: "GET /admin/users/user/5/change/ HTTP/1.1" 200 33219
-[2026-06-18 21:57:21,127] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:57:24,913] INFO django.server: "POST /admin/users/user/5/change/ HTTP/1.1" 302 0
-[2026-06-18 21:57:24,929] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17199
-[2026-06-18 21:57:24,954] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
-[2026-06-18 21:59:23,455] ERROR django.request: Internal Server Error: /api/v1/login
+[2026-06-15 22:42:50,823] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:39:24,438] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:39:25,879] WARNING django.request: Not Found: /
+[2026-06-16 22:39:25,880] WARNING django.server: "GET / HTTP/1.1" 404 6856
+[2026-06-16 22:39:29,723] INFO django.server: "GET /admin/ HTTP/1.1" 200 16160
+[2026-06-16 22:39:29,749] INFO django.server: "GET /static/admin/css/base.css HTTP/1.1" 304 0
+[2026-06-16 22:39:29,760] INFO django.server: "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+[2026-06-16 22:39:29,760] INFO django.server: "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+[2026-06-16 22:39:29,763] INFO django.server: "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+[2026-06-16 22:39:29,763] INFO django.server: "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+[2026-06-16 22:39:29,765] INFO django.server: "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+[2026-06-16 22:39:29,773] INFO django.server: "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+[2026-06-16 22:39:29,781] INFO django.server: "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+[2026-06-16 22:39:29,781] INFO django.server: "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+[2026-06-16 22:39:35,311] ERROR django.request: Internal Server Error: /admin/events/event/
 Traceback (most recent call last):
-  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: events_event.registration_link
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
-  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\utils\deprecation.py", line 311, in __call__
-    response = self.process_response(request, response)
-  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\middleware\common.py", line 109, in process_response
-    self.get_full_path_with_slash(request)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\middleware\common.py", line 87, in get_full_path_with_slash
-    raise RuntimeError(
-    ...<9 lines>...
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2166, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
     )
-RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/v1/login/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
-[2026-06-18 21:59:23,460] ERROR django.server: "POST /api/v1/login HTTP/1.1" 500 73932
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: events_event.registration_link
+[2026-06-16 22:39:35,318] ERROR django.server: "GET /admin/events/event/ HTTP/1.1" 500 185171
+[2026-06-16 22:40:13,090] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:14,586] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:17,226] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:18,519] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:20,166] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:21,489] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:24,118] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:25,421] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:26,955] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:28,281] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:35,249] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:36,537] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:38,003] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:39,380] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:44,104] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:45,553] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:46,988] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:48,295] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:54,081] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:55,326] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:40:58,003] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:40:59,306] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:41:00,784] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:41:02,029] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:41:04,633] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:41:05,895] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:41:07,518] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:41:08,740] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:41:15,258] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:41:16,719] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:41:22,477] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:41:23,902] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:41:25,400] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:41:26,763] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:41:31,369] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:41:32,749] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:41:40,665] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:41:42,073] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:41:44,655] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\admin.py changed, reloading.
+[2026-06-16 22:41:46,126] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:43:18,122] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:43:25,308] ERROR django.request: Internal Server Error: /admin/events/event/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: events_event.registration_link
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2166, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: events_event.registration_link
+[2026-06-16 22:43:25,313] ERROR django.server: "GET /admin/events/event/ HTTP/1.1" 500 185308
+[2026-06-16 22:43:26,550] ERROR django.request: Internal Server Error: /admin/events/event/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: events_event.registration_link
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2166, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: events_event.registration_link
+[2026-06-16 22:43:26,557] ERROR django.server: "GET /admin/events/event/ HTTP/1.1" 500 185308
+[2026-06-16 22:43:27,281] INFO django.server: "GET /admin/ HTTP/1.1" 200 16749
+[2026-06-16 22:43:28,738] ERROR django.request: Internal Server Error: /admin/events/event/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: events_event.registration_link
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2166, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: events_event.registration_link
+[2026-06-16 22:43:28,743] ERROR django.server: "GET /admin/events/event/ HTTP/1.1" 500 185171
+[2026-06-16 22:43:29,949] INFO django.server: "GET /admin/ HTTP/1.1" 200 16749
+[2026-06-16 22:43:30,988] ERROR django.request: Internal Server Error: /admin/events/mentor/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: events_mentor
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2025, in changelist_view
+    cl = self.get_changelist_instance(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 868, in get_changelist_instance
+    return ChangeList(
+        request,
+    ...<12 lines>...
+        self.search_help_text,
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\views\main.py", line 146, in __init__
+    self.get_results(request)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\views\main.py", line 313, in get_results
+    result_count = paginator.count
+                   ^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ~~~~~~~~~^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\paginator.py", line 110, in count
+    return c()
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: events_mentor
+[2026-06-16 22:43:30,993] ERROR django.server: "GET /admin/events/mentor/ HTTP/1.1" 500 206068
+[2026-06-16 22:43:40,874] INFO django.server: "GET /admin/ HTTP/1.1" 200 16749
+[2026-06-16 22:44:22,804] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:44:27,694] WARNING django.request: Not Found: /
+[2026-06-16 22:44:27,695] WARNING django.server: "GET / HTTP/1.1" 404 6856
+[2026-06-16 22:44:32,787] INFO django.server: "GET /admin/ HTTP/1.1" 302 0
+[2026-06-16 22:44:32,984] INFO django.server: "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4173
+[2026-06-16 22:44:33,010] INFO django.server: "GET /static/admin/css/login.css HTTP/1.1" 304 0
+[2026-06-16 22:44:39,311] INFO django.server: "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4341
+[2026-06-16 22:44:44,202] INFO django.server: "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4341
+[2026-06-16 22:45:29,412] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:45:31,734] INFO django.server: "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+[2026-06-16 22:45:31,800] INFO django.server: "GET /admin/ HTTP/1.1" 200 14947
+[2026-06-16 22:45:34,201] INFO django.server: "GET /admin/tenure/member/ HTTP/1.1" 200 14947
+[2026-06-16 22:45:34,230] INFO django.server: "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+[2026-06-16 22:45:34,239] INFO django.server: "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+[2026-06-16 22:45:34,239] INFO django.server: "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+[2026-06-16 22:45:34,241] INFO django.server: "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+[2026-06-16 22:45:34,248] INFO django.server: "GET /static/admin/js/core.js HTTP/1.1" 304 0
+[2026-06-16 22:45:34,251] INFO django.server: "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+[2026-06-16 22:45:34,251] INFO django.server: "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+[2026-06-16 22:45:34,252] INFO django.server: "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+[2026-06-16 22:45:34,253] INFO django.server: "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+[2026-06-16 22:45:34,278] INFO django.server: "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+[2026-06-16 22:45:34,286] INFO django.server: "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+[2026-06-16 22:45:34,302] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:45:34,323] INFO django.server: "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+[2026-06-16 22:45:36,661] INFO django.server: "GET /admin/tenure/member/add/ HTTP/1.1" 200 22009
+[2026-06-16 22:45:36,687] INFO django.server: "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+[2026-06-16 22:45:36,687] INFO django.server: "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+[2026-06-16 22:45:36,696] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:45:36,697] INFO django.server: "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+[2026-06-16 22:45:36,709] INFO django.server: "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+[2026-06-16 22:45:36,710] INFO django.server: "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+[2026-06-16 22:46:01,009] INFO django.server: "GET /admin/tenure/tenure/ HTTP/1.1" 200 14622
+[2026-06-16 22:46:01,035] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:46:06,365] INFO django.server: "GET /admin/events/mentor/ HTTP/1.1" 200 14947
+[2026-06-16 22:46:06,388] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:46:07,850] INFO django.server: "GET /admin/events/mentor/add/ HTTP/1.1" 200 17915
+[2026-06-16 22:46:07,875] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:46:30,666] INFO django.server: "POST /admin/events/mentor/add/ HTTP/1.1" 200 18228
+[2026-06-16 22:46:30,695] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:46:39,039] INFO django.server: "POST /admin/events/mentor/add/ HTTP/1.1" 200 18423
+[2026-06-16 22:46:39,063] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:46:44,064] INFO django.server: "POST /admin/events/mentor/add/ HTTP/1.1" 302 0
+[2026-06-16 22:46:44,104] INFO django.server: "GET /admin/events/mentor/ HTTP/1.1" 200 16793
+[2026-06-16 22:46:44,133] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:46:44,176] INFO django.server: "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+[2026-06-16 22:46:54,076] INFO django.server: "GET /admin/events/event/ HTTP/1.1" 200 16421
+[2026-06-16 22:46:54,100] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:46:55,496] INFO django.server: "GET /admin/events/event/add/ HTTP/1.1" 200 20786
+[2026-06-16 22:46:55,528] INFO django.server: "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 304 0
+[2026-06-16 22:46:55,529] INFO django.server: "GET /static/admin/js/calendar.js HTTP/1.1" 304 0
+[2026-06-16 22:46:55,535] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 22:46:55,575] INFO django.server: "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 304 0
+[2026-06-16 22:47:37,657] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:47:38,942] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:47:41,573] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:47:42,871] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:47:46,459] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:47:48,005] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:47:52,714] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:47:54,086] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:47:55,461] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:47:56,773] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:48:03,660] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:48:05,004] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:48:08,424] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:48:09,343] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:48:10,623] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:48:11,972] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:48:25,218] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:48:26,461] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:48:27,954] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:48:29,218] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:48:31,915] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:48:33,429] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:48:52,894] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:48:54,285] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:48:55,729] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:48:56,928] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:48:58,229] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:48:59,720] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:49:03,357] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:49:04,799] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:49:19,161] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:49:20,531] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:49:21,884] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:49:23,255] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:50:05,257] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:50:06,920] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:50:09,381] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:50:10,812] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:50:12,390] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:50:13,628] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:50:22,706] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:50:23,973] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:51:30,905] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:51:32,169] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:00,417] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:01,726] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:09,504] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:10,802] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:13,216] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:14,351] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:15,685] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:17,014] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:25,749] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:27,090] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:28,350] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:29,598] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:40,374] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:41,604] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:43,947] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:45,545] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:47,941] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:49,164] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:52,519] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:53,853] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:57,357] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:55:58,642] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:55:59,967] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:56:01,456] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:56:08,092] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:56:09,501] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:56:16,089] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:56:17,442] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:56:24,069] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:56:25,309] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:56:37,195] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:56:38,531] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:56:39,812] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:56:41,020] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:56:42,351] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:56:43,896] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:56:47,633] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:56:49,052] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:57:03,266] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:57:04,617] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:57:05,904] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:57:07,143] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:57:08,492] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:57:09,904] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:57:15,460] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:57:16,867] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:58:51,758] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:58:53,054] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:58:54,570] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:58:55,927] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 22:59:01,858] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 22:59:03,403] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:01:59,238] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:00,683] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:05,309] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:06,736] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:11,270] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:12,806] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:16,201] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:17,618] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:20,011] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:21,449] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:24,913] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:26,262] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:28,678] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:30,019] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:32,372] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:33,715] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:36,115] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:37,548] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:40,933] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:42,349] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:44,744] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:46,206] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:02:56,038] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:02:57,227] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:03:29,324] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:03:30,594] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:03:31,892] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:03:33,370] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:03:38,922] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:03:40,358] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:04:46,922] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:04:48,253] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:04:55,174] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:04:56,552] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:05:03,448] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:05:04,863] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:05:11,767] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:05:13,226] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:05:29,750] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:05:31,180] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:05:33,894] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:05:35,444] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:05:38,159] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:05:39,650] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:05:42,399] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:05:43,658] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:06:05,383] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:06:06,847] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:06:10,613] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:06:11,893] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:06:20,940] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:06:22,240] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:08:04,541] WARNING django.request: Not Found: /
+[2026-06-16 23:08:04,541] WARNING django.server: "GET / HTTP/1.1" 404 6856
+[2026-06-16 23:08:28,417] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\urls.py changed, reloading.
+[2026-06-16 23:08:29,765] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:08:31,270] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\urls.py changed, reloading.
+[2026-06-16 23:08:32,571] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:08:36,070] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\urls.py changed, reloading.
+[2026-06-16 23:08:37,497] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:08:38,800] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\urls.py changed, reloading.
+[2026-06-16 23:08:40,181] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:08:44,652] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\urls.py changed, reloading.
+[2026-06-16 23:08:46,067] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:09:06,860] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:09:08,160] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:09:15,084] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:09:16,366] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:09:23,282] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:09:24,586] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:09:31,028] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:09:32,345] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:09:33,939] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:09:35,363] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:09:37,999] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:09:39,486] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:10:30,964] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:10:32,211] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:10:33,692] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:10:34,988] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:10:36,598] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:10:37,815] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:11:07,875] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:11:09,258] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:11:15,051] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\views.py changed, reloading.
+[2026-06-16 23:11:16,524] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:11:27,754] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\urls.py changed, reloading.
+[2026-06-16 23:11:29,123] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:12:09,722] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:12:10,978] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:12:14,554] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:12:15,960] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:16:30,395] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:16:35,684] WARNING django.request: Not Found: /
+[2026-06-16 23:16:35,685] WARNING django.server: "GET / HTTP/1.1" 404 7370
+[2026-06-16 23:16:39,780] INFO django.server: "GET /admin/ HTTP/1.1" 302 0
+[2026-06-16 23:16:39,824] INFO django.server: "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4173
+[2026-06-16 23:16:48,261] INFO django.server: "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+[2026-06-16 23:16:48,287] INFO django.server: "GET /admin/ HTTP/1.1" 200 14947
+[2026-06-16 23:16:53,475] INFO django.server: "GET /admin/events/mentor/ HTTP/1.1" 200 14947
+[2026-06-16 23:16:53,510] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 23:16:55,090] INFO django.server: "GET /admin/events/mentor/add/ HTTP/1.1" 200 18506
+[2026-06-16 23:16:55,116] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 23:17:23,779] INFO django.server: "POST /admin/events/mentor/add/ HTTP/1.1" 302 0
+[2026-06-16 23:17:23,805] INFO django.server: "GET /admin/events/mentor/ HTTP/1.1" 200 16782
+[2026-06-16 23:17:23,826] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 23:17:25,647] INFO django.server: "GET /admin/events/mentor/1/change/ HTTP/1.1" 200 18785
+[2026-06-16 23:17:25,672] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 23:17:35,590] INFO django.server: "POST /admin/events/mentor/1/change/ HTTP/1.1" 302 0
+[2026-06-16 23:17:35,611] INFO django.server: "GET /admin/events/mentor/ HTTP/1.1" 200 16784
+[2026-06-16 23:17:35,638] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 23:17:38,235] INFO django.server: "GET /admin/events/mentor/add/ HTTP/1.1" 200 18506
+[2026-06-16 23:17:38,263] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-16 23:17:56,862] ERROR django.request: Internal Server Error: /admin/events/mentor/add/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: UNIQUE constraint failed: events_mentor.slug
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 1985, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 1844, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 1895, in _changeform_view
+    self.save_model(request, new_object, form, not add)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 1315, in save_model
+    obj.save()
+    ~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py", line 48, in save
+    super().save(*args,**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\base.py", line 902, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\base.py", line 1008, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\base.py", line 1169, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, fields, returning_fields, raw
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\base.py", line 1210, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: UNIQUE constraint failed: events_mentor.slug
+[2026-06-16 23:17:56,877] ERROR django.server: "POST /admin/events/mentor/add/ HTTP/1.1" 500 224186
+[2026-06-16 23:18:24,764] INFO django.server: "GET /admin/events/mentor/add/ HTTP/1.1" 200 18506
+[2026-06-16 23:19:28,473] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:19:29,637] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:19:33,984] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:19:35,090] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-16 23:21:09,583] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
+[2026-06-16 23:21:10,866] INFO django.utils.autoreload: Watching for file changes with StatReloader

@@ -1,15 +1,502 @@
-[2026-06-18 21:59:23,455] ERROR django.request: Internal Server Error: /api/v1/login
+[2026-06-16 22:39:35,311] ERROR django.request: Internal Server Error: /admin/events/event/
 Traceback (most recent call last):
-  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: events_event.registration_link
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
-  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\utils\deprecation.py", line 311, in __call__
-    response = self.process_response(request, response)
-  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\middleware\common.py", line 109, in process_response
-    self.get_full_path_with_slash(request)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\middleware\common.py", line 87, in get_full_path_with_slash
-    raise RuntimeError(
-    ...<9 lines>...
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2166, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
     )
-RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/v1/login/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
-[2026-06-18 21:59:23,460] ERROR django.server: "POST /api/v1/login HTTP/1.1" 500 73932
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: events_event.registration_link
+[2026-06-16 22:39:35,318] ERROR django.server: "GET /admin/events/event/ HTTP/1.1" 500 185171
+[2026-06-16 22:43:25,308] ERROR django.request: Internal Server Error: /admin/events/event/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: events_event.registration_link
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2166, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: events_event.registration_link
+[2026-06-16 22:43:25,313] ERROR django.server: "GET /admin/events/event/ HTTP/1.1" 500 185308
+[2026-06-16 22:43:26,550] ERROR django.request: Internal Server Error: /admin/events/event/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: events_event.registration_link
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2166, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: events_event.registration_link
+[2026-06-16 22:43:26,557] ERROR django.server: "GET /admin/events/event/ HTTP/1.1" 500 185308
+[2026-06-16 22:43:28,738] ERROR django.request: Internal Server Error: /admin/events/event/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: events_event.registration_link
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2166, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: events_event.registration_link
+[2026-06-16 22:43:28,743] ERROR django.server: "GET /admin/events/event/ HTTP/1.1" 500 185171
+[2026-06-16 22:43:30,988] ERROR django.request: Internal Server Error: /admin/events/mentor/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: events_mentor
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 2025, in changelist_view
+    cl = self.get_changelist_instance(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 868, in get_changelist_instance
+    return ChangeList(
+        request,
+    ...<12 lines>...
+        self.search_help_text,
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\views\main.py", line 146, in __init__
+    self.get_results(request)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\views\main.py", line 313, in get_results
+    result_count = paginator.count
+                   ^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ~~~~~~~~~^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\paginator.py", line 110, in count
+    return c()
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: events_mentor
+[2026-06-16 22:43:30,993] ERROR django.server: "GET /admin/events/mentor/ HTTP/1.1" 500 206068
+[2026-06-16 23:17:56,862] ERROR django.request: Internal Server Error: /admin/events/mentor/add/
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: UNIQUE constraint failed: events_mentor.slug
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 1985, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 1844, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 1895, in _changeform_view
+    self.save_model(request, new_object, form, not add)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\contrib\admin\options.py", line 1315, in save_model
+    obj.save()
+    ~~~~~~~~^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py", line 48, in save
+    super().save(*args,**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\base.py", line 902, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\base.py", line 1008, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\base.py", line 1169, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, fields, returning_fields, raw
+    )
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\base.py", line 1210, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "S:\python-django\rest-framewrok\dashboard\cms-dashbaord\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: UNIQUE constraint failed: events_mentor.slug
+[2026-06-16 23:17:56,877] ERROR django.server: "POST /admin/events/mentor/add/ HTTP/1.1" 500 224186
