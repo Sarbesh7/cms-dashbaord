@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -64,7 +64,7 @@ class ChangePasswordView(APIView) :
                new_password = serializer.validated_data["new_password"] 
                if not user.check_password(old_password) :
                     return Response(
-                    {"error": "Old password is incorrect"},
+                    {"error": "old password is incorrect"},
                     status=status.HTTP_400_BAD_REQUEST
                 )  
                user.set_password(new_password)     

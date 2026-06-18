@@ -2,14 +2,11 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from datetime import timedelta
-
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
-
-
 
 
 # Quick-start development settings - unsuitable for production
@@ -51,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     # 'apps.logs',
     # 'corsheaders',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 MIDDLEWARE = [
@@ -132,6 +130,7 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = "swikrityac31@gmail.com"
 EMAIL_HOST_PASSWORD = "xvmz fpzx eykp gzop"
+
 
 
 # Password validation

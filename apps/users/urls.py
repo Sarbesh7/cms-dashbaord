@@ -1,4 +1,5 @@
 from django.urls import path
+from .views import LoginView,UserView,ChangePasswordView,LogoutView,ResetPasswordView
 from .views import LoginView,UserView,ChangePasswordView,TestEmailView,ForgotPasswordView,ResetPasswordView
 
 
