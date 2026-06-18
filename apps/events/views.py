@@ -8,11 +8,20 @@ from apps.core.pagination import StandardPagination
 from apps.core.permission import IsAdmin,IsCMSUser
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from rest_framework.permissions import AllowAny
+import logging
+
+
 
 
 # Create your views here.
     
 class EventListView(APIView):
+    def get_permissions(self):
+        if self.request.method == 'GET':
+         return[AllowAny()]
+        return [IsCMSUser()]
+    
     @method_decorator(cache_page(60 * 5), name='dispatch')
     def get(self,request):
         events = Event.objects.all()

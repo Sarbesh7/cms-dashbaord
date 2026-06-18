@@ -2,14 +2,11 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from datetime import timedelta
-
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
-
-
 
 
 # Quick-start development settings - unsuitable for production
@@ -51,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     # 'apps.logs',
     # 'corsheaders',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 MIDDLEWARE = [
@@ -111,6 +109,7 @@ REST_FRAMEWORK = {
     },
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 50
+
     
 }
 
@@ -119,7 +118,10 @@ AUTH_USER_MODEL = "users.User"
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
+
 
 
 # Password validation

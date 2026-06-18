@@ -36,4 +36,8 @@ class UserCreateSerializer(serializers.ModelSerializer) :
 class ChangePasswordSerializer(serializers.Serializer):
    old_password = serializers.CharField()
    new_password = serializers.CharField()
+
+class ResetPasswordSerializer(serializers.Serializer):
+   new_password = serializers.CharField(write_only = True, min_length = 8)
+   
      

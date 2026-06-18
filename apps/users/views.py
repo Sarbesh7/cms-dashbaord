@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserCreateSerializer,ChangePasswordSerializer
+from .serializers import UserCreateSerializer,ChangePasswordSerializer,ResetPasswordSerializer
 from apps.core.permission import IsAdmin,IsCMSUser
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
@@ -59,7 +59,7 @@ class ChangePasswordView(APIView) :
                new_password = serializer.validated_data["new_password"] 
                if not user.check_password(old_password) :
                     return Response(
-                    {"error": "Old password is incorrect"},
+                    {"error": "old password is incorrect"},
                     status=status.HTTP_400_BAD_REQUEST
                 )  
                user.set_password(new_password)     
@@ -71,7 +71,56 @@ class ChangePasswordView(APIView) :
       serializer.errors,
     status=status.HTTP_400_BAD_REQUEST
 )
-           
+     
+
+class LogoutView(APIView)   :
+     permission_classes = [IsAuthenticated,IsCMSUser] 
+
+     def post(self,request)  :
+          try:
+               refresh_token = request.data.get("refresh")
+               token = RefreshToken(refresh_token)
+               token.blacklist()
+               return Response(
+                    {"message":"Logout Sucessfully"},
+                    status=status.HTTP_204_NO_CONTENT
+               )
+          except Exception:
+               return Response(
+                    {"message":"Invalid Token"},
+                    status=status.HTTP_400_BAD_REQUEST
+               )
+          
+
+
+class ResetPasswordView(APIView):
+    permission_classes = [IsAdmin,IsAuthenticated]
+
+    def post(self, request, user_id):
+
+        serializer = ResetPasswordSerializer(
+            data=request.data
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        user = get_object_or_404(
+            User,
+            id=user_id
+        )
+
+        user.set_password(
+            serializer.validated_data["new_password"]
+        )
+
+        user.save()
+
+        return Response(
+            {
+                "message": "Password reset successfully"
+            },
+            status=status.HTTP_200_OK
+        )          
 
 
                

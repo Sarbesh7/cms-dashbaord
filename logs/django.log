@@ -1,0 +1,93 @@
+[2026-06-18 21:53:37,135] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:53:50,655] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:53:52,328] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:53:55,212] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:53:56,743] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:53:58,441] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:53:59,964] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:03,774] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:04,990] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:06,379] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:07,992] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:09,539] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:10,892] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:12,282] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:13,490] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:14,896] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:16,629] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:20,352] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:21,650] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:27,278] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:28,790] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:31,261] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:32,468] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:33,913] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:35,440] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:37,048] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:38,323] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:39,895] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:41,546] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:43,040] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:44,662] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:46,248] INFO django.utils.autoreload: C:\Users\SWIKRITI AC\OneDrive\Desktop\CSITABMC-DASHBOARD\cms-dashbaord\apps\users\urls.py changed, reloading.
+[2026-06-18 21:54:47,273] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:54:52,174] WARNING django.request: Not Found: /
+[2026-06-18 21:54:52,175] WARNING django.server: "GET / HTTP/1.1" 404 7369
+[2026-06-18 21:54:57,547] INFO django.server: "GET /admin/ HTTP/1.1" 200 16478
+[2026-06-18 21:54:57,601] INFO django.server: "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+[2026-06-18 21:55:09,630] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17529
+[2026-06-18 21:55:09,674] INFO django.server: "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+[2026-06-18 21:55:09,675] INFO django.server: "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+[2026-06-18 21:55:09,741] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:55:14,418] INFO django.server: "GET /admin/users/user/2/change/ HTTP/1.1" 200 33221
+[2026-06-18 21:55:14,453] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:55:14,464] INFO django.server: "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+[2026-06-18 21:55:19,175] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17529
+[2026-06-18 21:55:30,262] INFO django.server: "GET /admin/users/user/4/change/ HTTP/1.1" 200 33177
+[2026-06-18 21:55:30,297] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:55:32,723] INFO django.server: "GET /admin/users/user/4/delete/ HTTP/1.1" 200 15447
+[2026-06-18 21:55:32,751] INFO django.server: "GET /static/admin/js/cancel.js HTTP/1.1" 304 0
+[2026-06-18 21:55:34,608] INFO django.server: "POST /admin/users/user/4/delete/ HTTP/1.1" 302 0
+[2026-06-18 21:55:34,636] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17420
+[2026-06-18 21:55:34,663] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:55:36,239] INFO django.server: "GET /admin/users/user/3/change/ HTTP/1.1" 200 33162
+[2026-06-18 21:55:36,260] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:55:38,788] INFO django.server: "GET /admin/users/user/3/delete/ HTTP/1.1" 200 15438
+[2026-06-18 21:55:40,151] INFO django.server: "POST /admin/users/user/3/delete/ HTTP/1.1" 302 0
+[2026-06-18 21:55:40,178] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17156
+[2026-06-18 21:55:40,216] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:55:41,547] INFO django.server: "GET /admin/users/user/2/change/ HTTP/1.1" 200 33221
+[2026-06-18 21:55:41,583] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:55:43,675] INFO django.server: "GET /admin/users/user/2/delete/ HTTP/1.1" 200 15645
+[2026-06-18 21:55:44,970] INFO django.server: "POST /admin/users/user/2/delete/ HTTP/1.1" 302 0
+[2026-06-18 21:55:44,980] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 302 0
+[2026-06-18 21:55:45,041] INFO django.server: "GET /admin/login/?next=/admin/users/user/ HTTP/1.1" 200 4257
+[2026-06-18 21:56:51,810] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-18 21:57:00,390] WARNING django.request: Not Found: /
+[2026-06-18 21:57:00,391] WARNING django.server: "GET / HTTP/1.1" 404 7369
+[2026-06-18 21:57:06,275] INFO django.server: "GET /admin/ HTTP/1.1" 302 0
+[2026-06-18 21:57:06,336] INFO django.server: "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4080
+[2026-06-18 21:57:14,693] INFO django.server: "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+[2026-06-18 21:57:14,719] INFO django.server: "GET /admin/ HTTP/1.1" 200 16099
+[2026-06-18 21:57:19,024] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17002
+[2026-06-18 21:57:19,061] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:57:21,077] INFO django.server: "GET /admin/users/user/5/change/ HTTP/1.1" 200 33219
+[2026-06-18 21:57:21,127] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:57:24,913] INFO django.server: "POST /admin/users/user/5/change/ HTTP/1.1" 302 0
+[2026-06-18 21:57:24,929] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17199
+[2026-06-18 21:57:24,954] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-18 21:59:23,455] ERROR django.request: Internal Server Error: /api/v1/login
+Traceback (most recent call last):
+  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\utils\deprecation.py", line 311, in __call__
+    response = self.process_response(request, response)
+  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\middleware\common.py", line 109, in process_response
+    self.get_full_path_with_slash(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\SWIKRITI AC\AppData\Roaming\Python\Python313\site-packages\django\middleware\common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+    ...<9 lines>...
+    )
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/v1/login/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+[2026-06-18 21:59:23,460] ERROR django.server: "POST /api/v1/login HTTP/1.1" 500 73932
