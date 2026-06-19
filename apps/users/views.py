@@ -139,7 +139,7 @@ class ForgotPasswordView(APIView):
                 logger.info(f"Password reset link dispatched successfully to target: '{email}'")
 
             except User.DoesNotExist:
-                # Log targeted profiling attempt while keeping the response completely opaque to prevent account enumeration
+               
                 logger.warning(f"Password reset requested for non-registered email: '{email}'")
                 pass
             except Exception as mail_err:
@@ -167,7 +167,7 @@ class ResetPasswordView(APIView):
             new_password = serializer.validated_data["new_password"]    
             
             try:
-                # Security Correction Note: Changed back to urlsafe_base64_decode to properly parse inbound base64 string tokens
+                
                 user_id = force_str(urlsafe_base64_decode(uid))
                 user = User.objects.get(pk=user_id)
                 
