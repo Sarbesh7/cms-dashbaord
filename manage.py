@@ -6,7 +6,12 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+    # Updated to point to your new local development file by default
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.development')
+    # production ma jada use thiss 'config.settings.production' or set evn variable DJANGO_SETTINGS_MODULE to 'config.settings.production' in VPS
+    
+    
+    
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
