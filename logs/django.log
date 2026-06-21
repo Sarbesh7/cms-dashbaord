@@ -858,3 +858,17 @@ django.db.utils.IntegrityError: UNIQUE constraint failed: events_mentor.slug
 [2026-06-21 22:20:43,637] INFO django.server: "GET /admin/ HTTP/1.1" 200 17489
 [2026-06-21 22:20:50,286] WARNING django.request: Not Found: /
 [2026-06-21 22:20:50,287] WARNING django.server: "GET / HTTP/1.1" 404 8144
+[2026-06-21 23:17:05,895] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-21 23:17:08,524] WARNING django.request: Not Found: /
+[2026-06-21 23:17:08,525] WARNING django.server: "GET / HTTP/1.1" 404 8144
+[2026-06-21 23:17:16,051] WARNING django.security.SuspiciousSession: Session data corrupted
+[2026-06-21 23:17:16,076] INFO django.server: "GET /admin/ HTTP/1.1" 302 0
+[2026-06-21 23:17:16,079] WARNING django.security.SuspiciousSession: Session data corrupted
+[2026-06-21 23:17:16,266] INFO django.server: "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4173
+[2026-06-21 23:17:16,296] INFO django.server: "GET /static/admin/css/login.css HTTP/1.1" 304 0
+[2026-06-21 23:17:22,927] WARNING django.security.SuspiciousSession: Session data corrupted
+[2026-06-21 23:17:23,640] INFO django.server: "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+[2026-06-21 23:17:23,669] INFO django.server: "GET /admin/ HTTP/1.1" 200 17489
+[2026-06-21 23:17:28,737] INFO django.server: "POST /admin/logout/ HTTP/1.1" 200 3568
+[2026-06-21 23:17:31,008] INFO django.server: "GET /admin/ HTTP/1.1" 302 0
+[2026-06-21 23:17:31,014] INFO django.server: "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4173
