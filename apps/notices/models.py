@@ -27,7 +27,7 @@ class SecureFilePath:
  
 class Notice(TimeStampModel):
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True, db_index=True)
     description = models.TextField()
     
    
