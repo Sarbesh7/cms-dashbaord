@@ -25,7 +25,7 @@ class SecureFilePath:
 
 class Event(TimeStampModel):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True ,db_index=True)
     description = models.TextField()
     
     # Securely point to events_templates subfolder
@@ -71,7 +71,7 @@ class Mentor(TimeStampModel):
         null=True,
         blank=True
     )
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True ,db_index=True)
 
     def __str__(self):
         return self.name

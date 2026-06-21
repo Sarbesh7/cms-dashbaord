@@ -29,7 +29,7 @@ class Tenure(TimeStampModel):
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, db_index=True  )
 
     def __str__(self):
         return self.name
@@ -53,7 +53,7 @@ class Member(TimeStampModel):
     fb_link = models.URLField(null=True, blank=True)
     linkedin_link = models.URLField(null=True, blank=True)
     github_link = models.URLField(null=True, blank=True)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, db_index=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

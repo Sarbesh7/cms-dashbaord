@@ -14,7 +14,7 @@ class CertificateTemplate(TimeStampModel):
 class Certificate(TimeStampModel):
     id=models.AutoField(primary_key=True)
     certificate_id=models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    full_name=models.CharField(max_length=255)
+    full_name=models.CharField(max_length=255 ,db_index=True)
     event=models.ForeignKey(Event, on_delete=models.CASCADE) #using event model as event reference
     issued_at=models.DateTimeField(auto_now_add=True) 
     

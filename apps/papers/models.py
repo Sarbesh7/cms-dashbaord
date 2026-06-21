@@ -16,8 +16,8 @@ class PastPaper(TimeStampModel):
     model_set = models.BooleanField(default=False)
     exam_year = models.IntegerField()
     drive_link = models.URLField(max_length=200 , blank=True, null=True)
-    slug = models.SlugField(max_length=150, blank=True)
-    
+    slug = models.SlugField(max_length=150, blank=True, db_index=True)
+
     class Meta:
         ordering = ['-exam_year', '-semester', 'subject_code']
         unique_together = ('subject_code', 'semester', 'exam_year', 'model_set')
