@@ -827,3 +827,34 @@ django.db.utils.IntegrityError: UNIQUE constraint failed: events_mentor.slug
 [2026-06-16 23:19:35,090] INFO django.utils.autoreload: Watching for file changes with StatReloader
 [2026-06-16 23:21:09,583] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\events\models.py changed, reloading.
 [2026-06-16 23:21:10,866] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-21 22:20:13,937] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-21 22:20:16,959] WARNING django.request: Not Found: /
+[2026-06-21 22:20:16,960] WARNING django.server: "GET / HTTP/1.1" 404 8144
+[2026-06-21 22:20:23,988] INFO django.server: "GET /admin/ HTTP/1.1" 200 17489
+[2026-06-21 22:20:24,019] INFO django.server: "GET /static/admin/css/base.css HTTP/1.1" 304 0
+[2026-06-21 22:20:24,029] INFO django.server: "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+[2026-06-21 22:20:24,030] INFO django.server: "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+[2026-06-21 22:20:24,031] INFO django.server: "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+[2026-06-21 22:20:24,032] INFO django.server: "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+[2026-06-21 22:20:24,034] INFO django.server: "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+[2026-06-21 22:20:24,043] INFO django.server: "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+[2026-06-21 22:20:24,054] INFO django.server: "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+[2026-06-21 22:20:24,055] INFO django.server: "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+[2026-06-21 22:20:30,966] INFO django.server: "GET /admin/token_blacklist/outstandingtoken/ HTTP/1.1" 200 16272
+[2026-06-21 22:20:30,991] INFO django.server: "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+[2026-06-21 22:20:31,000] INFO django.server: "GET /static/admin/js/core.js HTTP/1.1" 304 0
+[2026-06-21 22:20:31,001] INFO django.server: "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+[2026-06-21 22:20:31,002] INFO django.server: "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+[2026-06-21 22:20:31,002] INFO django.server: "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+[2026-06-21 22:20:31,004] INFO django.server: "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+[2026-06-21 22:20:31,004] INFO django.server: "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+[2026-06-21 22:20:31,007] INFO django.server: "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+[2026-06-21 22:20:31,007] INFO django.server: "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+[2026-06-21 22:20:31,017] INFO django.server: "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+[2026-06-21 22:20:31,037] INFO django.server: "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+[2026-06-21 22:20:34,957] INFO django.server: "GET /admin/token_blacklist/blacklistedtoken/ HTTP/1.1" 200 16454
+[2026-06-21 22:20:35,026] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-21 22:20:35,049] INFO django.server: "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+[2026-06-21 22:20:43,637] INFO django.server: "GET /admin/ HTTP/1.1" 200 17489
+[2026-06-21 22:20:50,286] WARNING django.request: Not Found: /
+[2026-06-21 22:20:50,287] WARNING django.server: "GET / HTTP/1.1" 404 8144
