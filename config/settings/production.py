@@ -7,6 +7,10 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 DEBUG = False
 
 # Restrict exclusively to production endpoints/IPs on the VPS
+CSRF_TRUSTED_ORIGINS = [
+    "https://your-app-name.onrender.com",
+]
+
 ALLOWED_HOSTS = [
     host.strip() for host in os.environ.get("ALLOWED_HOSTS", "cms.csitassociation.org").split(",") if host.strip()
 ]
