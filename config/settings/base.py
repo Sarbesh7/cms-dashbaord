@@ -103,7 +103,11 @@ LOGGING = {
         },
     },
     "handlers": {
-        "django_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/django.log", "formatter": "standard"},
+        "django_file": {"class": "logging.FileHandler",
+                        "filename": BASE_DIR / "logs/django.log", 
+                        "formatter": "standard"},
+        
+        
         "error_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/errors.log", "formatter": "standard", "level": "ERROR"},
         "security_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/security.log", "formatter": "standard"},
         "certificate_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/certificate.log", "formatter": "standard"},

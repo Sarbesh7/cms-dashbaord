@@ -13,9 +13,9 @@ ALLOWED_HOSTS = [
 
 # Production Database (PostgreSQL string passed via VPS Env)
 DATABASES = {
-    'default': dj_database_url.config(
+    'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"), 
         conn_max_age=600,
-        ssl_require=False  #true for cloud db
+        ssl_require=True  #true for cloud db
     )
 }
 
