@@ -47,7 +47,7 @@ class LoginView(APIView):
     
 
 class UserView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAdmin]
     throttle_classes = [UserRateThrottle]
     
     def post(self, request):

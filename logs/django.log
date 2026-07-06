@@ -872,3 +872,160 @@ django.db.utils.IntegrityError: UNIQUE constraint failed: events_mentor.slug
 [2026-06-21 23:17:28,737] INFO django.server: "POST /admin/logout/ HTTP/1.1" 200 3568
 [2026-06-21 23:17:31,008] INFO django.server: "GET /admin/ HTTP/1.1" 302 0
 [2026-06-21 23:17:31,014] INFO django.server: "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4173
+[2026-06-30 12:10:24,928] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-30 12:10:29,775] WARNING django.request: Not Found: /
+[2026-06-30 12:10:29,775] WARNING django.server: "GET / HTTP/1.1" 404 8144
+[2026-06-30 13:44:33,403] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-30 13:44:37,623] WARNING django.request: Not Found: /
+[2026-06-30 13:44:37,625] WARNING django.server: "GET / HTTP/1.1" 404 8144
+[2026-06-30 13:47:59,863] WARNING django.request: Not Found: /
+[2026-06-30 13:47:59,864] WARNING django.server: "GET / HTTP/1.1" 404 8144
+[2026-06-30 13:50:33,287] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-30 13:50:39,601] INFO django.server: "POST /api/v1/login/ HTTP/1.1" 200 489
+[2026-06-30 13:52:08,907] WARNING django.request: Unauthorized: /api/v1/users/
+[2026-06-30 13:52:08,909] WARNING django.server: "GET /api/v1/users/ HTTP/1.1" 401 176
+[2026-06-30 13:52:47,442] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 13:52:47,442] WARNING django.server: "GET /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 13:53:11,098] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-30 13:54:18,019] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-30 13:54:39,848] INFO django.server: "POST /api/v1/login/ HTTP/1.1" 200 489
+[2026-06-30 13:54:59,465] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 13:54:59,466] WARNING django.server: "GET /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 13:55:00,441] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 13:55:00,441] WARNING django.server: "GET /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 13:55:01,128] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 13:55:01,132] WARNING django.server: "GET /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 13:55:01,341] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 13:55:01,342] WARNING django.server: "GET /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 13:56:15,377] INFO django.server: "GET /admin/events/mentor/add/ HTTP/1.1" 200 19902
+[2026-06-30 13:56:15,530] INFO django.server: "GET /static/admin/css/base.css HTTP/1.1" 304 0
+[2026-06-30 13:56:15,535] INFO django.server: "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+[2026-06-30 13:56:15,538] INFO django.server: "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+[2026-06-30 13:56:15,555] INFO django.server: "GET /static/admin/js/core.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,557] INFO django.server: "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,558] INFO django.server: "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+[2026-06-30 13:56:15,559] INFO django.server: "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,565] INFO django.server: "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,566] INFO django.server: "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,567] INFO django.server: "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,567] INFO django.server: "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+[2026-06-30 13:56:15,567] INFO django.server: "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,571] INFO django.server: "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,572] INFO django.server: "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,573] INFO django.server: "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,580] INFO django.server: "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+[2026-06-30 13:56:15,595] INFO django.server: "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,599] INFO django.server: "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+[2026-06-30 13:56:15,611] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 13:56:15,636] INFO django.server: "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+[2026-06-30 14:00:52,259] INFO django.server: "POST /api/v1/login/ HTTP/1.1" 200 489
+[2026-06-30 14:01:07,577] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:07,579] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:09,578] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:09,579] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:09,744] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:09,745] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:09,948] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:09,949] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:10,170] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:10,171] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:10,712] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:10,717] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:14,902] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:14,902] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:15,363] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:15,363] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:15,559] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:15,562] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:15,721] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:15,722] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:15,853] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:01:15,853] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:01:36,524] INFO django.server: "GET /admin/ HTTP/1.1" 200 17847
+[2026-06-30 14:01:36,553] INFO django.server: "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+[2026-06-30 14:01:36,570] INFO django.server: "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+[2026-06-30 14:01:40,626] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17521
+[2026-06-30 14:01:40,651] INFO django.server: "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+[2026-06-30 14:01:40,671] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:01:40,680] INFO django.server: "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+[2026-06-30 14:01:40,707] INFO django.server: "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+[2026-06-30 14:01:43,655] INFO django.server: "GET /admin/users/user/add/ HTTP/1.1" 200 32518
+[2026-06-30 14:01:43,702] INFO django.server: "GET /static/admin/js/calendar.js HTTP/1.1" 304 0
+[2026-06-30 14:01:43,705] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:01:43,715] INFO django.server: "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 304 0
+[2026-06-30 14:01:43,836] INFO django.server: "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 304 0
+[2026-06-30 14:01:43,934] INFO django.server: "GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+[2026-06-30 14:02:29,035] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\users\views.py changed, reloading.
+[2026-06-30 14:02:30,852] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-30 14:02:33,684] INFO django.utils.autoreload: S:\python-django\rest-framewrok\dashboard\cms-dashbaord\apps\users\views.py changed, reloading.
+[2026-06-30 14:02:35,041] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-30 14:03:01,326] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:03:01,327] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:03:02,174] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:03:02,175] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:03:02,389] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:03:02,390] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:03:03,482] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:03:03,483] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:03:03,638] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:03:03,640] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:03:03,826] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:03:03,827] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:03:04,041] WARNING django.request: Forbidden: /api/v1/users/
+[2026-06-30 14:03:04,043] WARNING django.server: "POST /api/v1/users/ HTTP/1.1" 403 63
+[2026-06-30 14:03:19,041] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17521
+[2026-06-30 14:03:19,084] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:03:20,750] INFO django.server: "GET /admin/users/user/1/change/ HTTP/1.1" 200 32908
+[2026-06-30 14:03:20,779] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:03:38,494] INFO django.server: "POST /admin/users/user/1/change/ HTTP/1.1" 302 0
+[2026-06-30 14:03:38,512] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17715
+[2026-06-30 14:03:38,549] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:03:38,595] INFO django.server: "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+[2026-06-30 14:03:40,243] INFO django.server: "GET /admin/users/user/2/change/ HTTP/1.1" 200 32865
+[2026-06-30 14:03:40,275] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:03:53,400] INFO django.server: "POST /admin/users/user/2/change/ HTTP/1.1" 302 0
+[2026-06-30 14:03:53,418] INFO django.server: "GET /admin/users/user/ HTTP/1.1" 200 17714
+[2026-06-30 14:03:53,446] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:04:00,714] INFO django.server: "POST /api/v1/users/ HTTP/1.1" 200 64
+[2026-06-30 14:04:29,264] WARNING django.request: Not Found: /
+[2026-06-30 14:04:29,265] WARNING django.server: "GET / HTTP/1.1" 404 8144
+[2026-06-30 14:05:53,015] INFO django.server: "POST /api/v1/login/ HTTP/1.1" 200 489
+[2026-06-30 14:06:08,507] INFO django.server: "POST /api/v1/login/ HTTP/1.1" 200 489
+[2026-06-30 14:08:47,320] INFO django.server: "POST /api/v1/users/change-password/ HTTP/1.1" 200 43
+[2026-06-30 14:09:53,995] INFO django.server: "POST /api/v1/login/ HTTP/1.1" 200 489
+[2026-06-30 14:10:09,816] INFO django.server: "GET /admin/events/event/add/ HTTP/1.1" 200 22178
+[2026-06-30 14:10:09,910] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:10:12,643] WARNING django.request: Not Found: /
+[2026-06-30 14:10:12,643] WARNING django.server: "GET / HTTP/1.1" 404 8144
+[2026-06-30 14:11:23,431] WARNING django.request: Not Found: /
+[2026-06-30 14:11:23,432] WARNING django.server: "GET / HTTP/1.1" 404 8144
+[2026-06-30 14:11:23,544] WARNING django.request: Not Found: /favicon.ico
+[2026-06-30 14:11:23,545] WARNING django.server: "GET /favicon.ico HTTP/1.1" 404 8195
+[2026-06-30 14:12:06,769] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:12:08,103] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:12:17,473] WARNING django.request: Bad Request: /api/v1/tenures/
+[2026-06-30 14:12:17,479] WARNING django.server: "POST /api/v1/tenures/ HTTP/1.1" 400 151
+[2026-06-30 14:12:47,210] INFO django.server: "GET /admin/notices/notice/ HTTP/1.1" 200 20176
+[2026-06-30 14:12:47,346] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:12:47,370] INFO django.server: "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+[2026-06-30 14:12:47,405] INFO django.server: "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+[2026-06-30 14:12:51,070] INFO django.server: "GET /admin/tenure/tenure/ HTTP/1.1" 200 16018
+[2026-06-30 14:12:51,111] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:12:54,653] INFO django.server: "GET /admin/tenure/tenure/add/ HTTP/1.1" 200 19084
+[2026-06-30 14:12:54,693] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:13:27,713] INFO django.server: "POST /admin/tenure/tenure/add/ HTTP/1.1" 302 0
+[2026-06-30 14:13:27,750] INFO django.server: "GET /admin/tenure/tenure/ HTTP/1.1" 200 18063
+[2026-06-30 14:13:27,785] INFO django.server: "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+[2026-06-30 14:13:50,140] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:14:03,531] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:14:04,264] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:14:04,437] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:14:04,592] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:14:04,740] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:14:08,008] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:14:08,197] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:14:08,356] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:14:08,519] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 2
+[2026-06-30 14:16:26,427] INFO django.utils.autoreload: Watching for file changes with StatReloader
+[2026-06-30 14:16:37,282] INFO django.server: "GET /api/v1/tenures/ HTTP/1.1" 200 197
+[2026-06-30 14:17:57,868] INFO django.server: "GET /api/v1/members/ HTTP/1.1" 200 2
