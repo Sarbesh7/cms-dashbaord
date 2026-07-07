@@ -94,6 +94,8 @@ USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+IS_RENDER = os.environ.get("RENDER") == "true"
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -103,27 +105,140 @@ LOGGING = {
             "style": "{",
         },
     },
-    "handlers": {
-        "django_file": {"class": "logging.FileHandler",
-                        "filename": BASE_DIR / "logs/django.log", 
-                        "formatter": "standard"},
-        
-        
-        "error_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/errors.log", "formatter": "standard", "level": "ERROR"},
-        "security_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/security.log", "formatter": "standard"},
-        "certificate_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/certificate.log", "formatter": "standard"},
-        "paper_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/pastpaper.log", "formatter": "standard"},
-        "event_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/event.log", "formatter": "standard"},
-        "notice_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/notice.log", "formatter": "standard"},
-        "tenure_file": {"class": "logging.FileHandler", "filename": BASE_DIR / "logs/tenure.log", "formatter": "standard"},
-    },
-    "loggers": {
-        "django": {"handlers": ["django_file", "error_file"], "level": "INFO", "propagate": True},
-        "security": {"handlers": ["security_file"], "level": "INFO", "propagate": False},
-        "certificate": {"handlers": ["certificate_file"], "level": "INFO", "propagate": False},
-        "paper": {"handlers": ["paper_file"], "level": "INFO", "propagate": False},
-        "event": {"handlers": ["event_file"], "level": "INFO", "propagate": False},  
-        "notice": {"handlers": ["notice_file"], "level": "INFO", "propagate": False},
-        "tenure": {"handlers": ["tenure_file"], "level": "INFO", "propagate": False},
-    },
+    "handlers": {},
+    "loggers": {},
 }
+
+if IS_RENDER:
+    # Console logging for Render
+    LOGGING["handlers"] = {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
+        }
+    }
+
+    LOGGING["loggers"] = {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "security": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "certificate": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "paper": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "event": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "notice": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "tenure": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    }
+
+else:
+    # Local file logging
+    LOG_DIR = BASE_DIR / "logs"
+    os.makedirs(LOG_DIR, exist_ok=True)
+
+    LOGGING["handlers"] = {
+        "django_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "django.log",
+            "formatter": "standard",
+        },
+        "error_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "errors.log",
+            "formatter": "standard",
+            "level": "ERROR",
+        },
+        "security_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "security.log",
+            "formatter": "standard",
+        },
+        "certificate_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "certificate.log",
+            "formatter": "standard",
+        },
+        "paper_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "pastpaper.log",
+            "formatter": "standard",
+        },
+        "event_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "event.log",
+            "formatter": "standard",
+        },
+        "notice_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "notice.log",
+            "formatter": "standard",
+        },
+        "tenure_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "tenure.log",
+            "formatter": "standard",
+        },
+    }
+
+    LOGGING["loggers"] = {
+        "django": {
+            "handlers": ["django_file", "error_file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "security": {
+            "handlers": ["security_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "certificate": {
+            "handlers": ["certificate_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "paper": {
+            "handlers": ["paper_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "event": {
+            "handlers": ["event_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "notice": {
+            "handlers": ["notice_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "tenure": {
+            "handlers": ["tenure_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    }
