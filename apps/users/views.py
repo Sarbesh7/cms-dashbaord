@@ -14,6 +14,8 @@ from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.conf import settings
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError        
 
 
 logger = logging.getLogger('security')
@@ -21,30 +23,69 @@ logger = logging.getLogger('security')
 
 class LoginView(APIView):
     throttle_classes = [AnonRateThrottle]
-    
     def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
+
+        email = request.data.get("email")
+        password = request.data.get("password")
 
         user = User.objects.filter(email=email).first()
 
-        if user and user.check_password(password):
-            refresh = RefreshToken.for_user(user)
-            logger.info(f"Successful login for user: {email}")
+        if not user or not user.check_password(password):
+            logger.warning(f"Failed login attempt: {email}")
+
             return Response(
-                {
-                    "refresh": str(refresh),
-                    "access": str(refresh.access_token)
-                },
-                status=status.HTTP_200_OK
+                {"message": "Invalid credentials"},
+                status=status.HTTP_401_UNAUTHORIZED
             )
-        
-        logger.warning(f"Failed login attempt for email: {email}")
-        return Response(
-            {"message": "Invalid credentials"},
-            status=status.HTTP_401_UNAUTHORIZED
+
+        refresh = RefreshToken.for_user(user)
+        access = refresh.access_token
+
+        response = Response(
+            {
+                "message": "Login successful",
+                "user": {
+                    "id": user.id,
+                    "email": user.email,
+                    "username": user.username,
+                }
+            },
+            status=status.HTTP_200_OK
         )
+
+        response.set_cookie(
+            key="access_token",
+            value=str(access),
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite="Lax",
+            max_age=ACCESS_TOKEN_AGE,
+        )
+
+        response.set_cookie(
+            key="refresh_token",
+            value=str(refresh),
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite="Lax",
+            max_age=REFRESH_TOKEN_AGE,
+        )
+
+        logger.info(f"Successful login: {user.email}")
+
+        return response
     
+
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+    throttle_classes = [UserRateThrottle]
+    
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        serializer = UserCreateSerializer(user)
+        logger.info(f"Admin '{request.user.email}' retrieved details for user: '{user.email}'")
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class UserView(APIView):
     permission_classes = [IsAdmin]
@@ -59,6 +100,12 @@ class UserView(APIView):
         
         logger.warning(f"User creation failed by Admin '{request.user.email}'. Errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
+        
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserCreateSerializer(users, many=True)
+        logger.info(f"Admin '{request.user.email}' retrieved the user list.")
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ChangePasswordView(APIView):
@@ -93,72 +140,74 @@ class ChangePasswordView(APIView):
         )
 
 
-class TestEmailView(APIView):
-    # Removing permission guard if it's meant to be public, but adding auth logging if user context is available
-    def get(self, request):
-        caller = request.user.email if request.user.is_authenticated else "Anonymous"
-        try:
-            send_mail(
-                subject="SMTP Test",
-                message="Congratulations! Your Django SMTP setup is working.",
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[settings.EMAIL_HOST_USER],
-                fail_silently=False,
-                )
-            logger.info(f"SMTP Test email successfully sent by operator: '{caller}'")
-            return Response({
-                "message": "Email sent successfully"
-            })
-        except Exception as e:
-            logger.error(f"SMTP Test email delivery failed for operator '{caller}'. Error Details: {str(e)}")
-            return Response(
-                {"error": "Email system configuration issue encountered."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+# class TestEmailView(APIView):
+#     # Removing permission guard if it's meant to be public, but adding auth logging if user context is available
+#     def get(self, request):
+#         caller = request.user.email if request.user.is_authenticated else "Anonymous"
+#         try:
+#             send_mail(
+#                 subject="SMTP Test",
+#                 message="Congratulations! Your Django SMTP setup is working.",
+#                 from_email=settings.EMAIL_HOST_USER,
+#                 recipient_list=[settings.EMAIL_HOST_USER],
+#                 fail_silently=False,
+#                 )
+#             logger.info(f"SMTP Test email successfully sent by operator: '{caller}'")
+#             return Response({
+#                 "message": "Email sent successfully"
+#             })
+#         except Exception as e:
+#             logger.error(f"SMTP Test email delivery failed for operator '{caller}'. Error Details: {str(e)}")
+#             return Response(
+#                 {"error": "Email system configuration issue encountered."},
+#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#             )
 
 
-class ForgotPasswordView(APIView):
-    def post(self, request):
-        serializer = ForgotPasswordSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data["email"]
-            try:
-                user = User.objects.get(email=email)
-                uid = urlsafe_base64_encode(force_bytes(user.pk))
-                token = default_token_generator.make_token(user)
+#   class ForgotPasswordView(APIView):
+#     def post(self, request):
+#         serializer = ForgotPasswordSerializer(data=request.data)
+#         if serializer.is_valid():
+#             email = serializer.validated_data["email"]
+#             try:
+#                 user = User.objects.get(email=email)
+#                 uid = urlsafe_base64_encode(force_bytes(user.pk))
+#                 token = default_token_generator.make_token(user)
                 
-                reset_link = f"http://localhost:3000/reset-password/{uid}/{token}/"
+#                 reset_link = f"http://localhost:3000/reset-password/{uid}/{token}/"
 
-                send_mail(
-                    subject="Password Reset Request",
-                    message=f"\nHi {user.username},\n\nClick the link below to reset your password:\n\n{reset_link}\n\nIf you didn't request this, ignore this email.\n",
-                    from_email=settings.EMAIL_HOST_USER,
-                    recipient_list=[user.email],
-                    fail_silently=False
-                )
-                logger.info(f"Password reset link dispatched successfully to target: '{email}'")
+#                 send_mail(
+#                     subject="Password Reset Request",
+#                     message=f"\nHi {user.username},\n\nClick the link below to reset your password:\n\n{reset_link}\n\nIf you didn't request this, ignore this email.\n",
+#                     from_email=settings.EMAIL_HOST_USER,
+#                     recipient_list=[user.email],
+#                     fail_silently=False
+#                 )
+#                 logger.info(f"Password reset link dispatched successfully to target: '{email}'")
 
-            except User.DoesNotExist:
+#             except User.DoesNotExist:
                
-                logger.warning(f"Password reset requested for non-registered email: '{email}'")
-                pass
-            except Exception as mail_err:
-                logger.error(f"Failed to transmit reset email to target '{email}'. Technical error: {str(mail_err)}")
+#                 logger.warning(f"Password reset requested for non-registered email: '{email}'")
+#                 pass
+#             except Exception as mail_err:
+#                 logger.error(f"Failed to transmit reset email to target '{email}'. Technical error: {str(mail_err)}")
 
-            return Response(
-                {
-                    "message": "If an account exists, a reset email has been sent."
-                },
-                status=status.HTTP_200_OK
-            )
+#             return Response(
+#                 {
+#                     "message": "If an account exists, a reset email has been sent."
+#                 },
+#                 status=status.HTTP_200_OK
+#             )
 
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+#         return Response(
+#             serializer.errors,
+#             status=status.HTTP_400_BAD_REQUEST
+#         )
 
 
 class ResetPasswordView(APIView):
+    permission_classes = [IsAdmin]
+    throttle_classes = [UserRateThrottle]
     def post(self, request):
         serializer = ResetPasswordSerializer(data=request.data)
         if serializer.is_valid():
@@ -198,22 +247,45 @@ class ResetPasswordView(APIView):
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
-    
+  
     def post(self, request):
-        user_identity = request.user.email if request.user else "Unknown Identity"
+
+        refresh_token = request.COOKIES.get("refresh_token")
+
+        response = Response(
+            {"message": "Logout successful"},
+            status=status.HTTP_205_RESET_CONTENT
+        )
+
+        if refresh_token:
+
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+
+            except TokenError:
+                pass
+
+        response.delete_cookie("access_token")
+        response.delete_cookie("refresh_token")
+
+        logger.info(f"Logout: {request.user.email}")
+
+        return response
+
+#cookiesss 
+
+class CookieJWTAuthentication(JWTAuthentication):
+
+    def authenticate(self, request):
+        raw_token = request.COOKIES.get("access_token")
+
+        if raw_token is None:
+            return None
+
         try:
-            refresh_token = request.data.get("refresh")
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            
-            logger.info(f"User session successfully closed and token blacklisted for: '{user_identity}'")
-            return Response(
-                {"message": "Logout successful"},
-                status=status.HTTP_205_RESET_CONTENT
-            )
-        except Exception as e:
-            logger.warning(f"Logout execution failure for user '{user_identity}'. Error/Token invalidation Context: {str(e)}")
-            return Response(
-                {"error": "Invalid token"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            validated_token = self.get_validated_token(raw_token)
+            return self.get_user(validated_token), validated_token
+
+        except InvalidToken:
+            return None               
