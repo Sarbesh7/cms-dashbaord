@@ -15,7 +15,6 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.conf import settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError        
 
 
 logger = logging.getLogger('security')
@@ -273,19 +272,3 @@ class LogoutView(APIView):
 
         return response
 
-#cookiesss 
-
-class CookieJWTAuthentication(JWTAuthentication):
-
-    def authenticate(self, request):
-        raw_token = request.COOKIES.get("access_token")
-
-        if raw_token is None:
-            return None
-
-        try:
-            validated_token = self.get_validated_token(raw_token)
-            return self.get_user(validated_token), validated_token
-
-        except InvalidToken:
-            return None               
