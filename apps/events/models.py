@@ -94,7 +94,6 @@ class Event(TimeStampModel):
 class Mentor(TimeStampModel):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    event=models.ForeignKey(Event, on_delete=models.CASCADE, related_name='mentors', null=True, blank=True)
     expertise = models.CharField(max_length=200)
     linkedin_profile = models.URLField(blank=True, null=True)
     
