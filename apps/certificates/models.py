@@ -16,6 +16,7 @@ class Certificate(TimeStampModel):
     certificate_id=models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     full_name=models.CharField(max_length=255 ,db_index=True)
     event=models.ForeignKey(Event, on_delete=models.CASCADE) #using event model as event reference
+    is_project_completed=models.BooleanField(default=True)
     issued_at=models.DateTimeField(auto_now_add=True) 
     
     def __str__(self):
