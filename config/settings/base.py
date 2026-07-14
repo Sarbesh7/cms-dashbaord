@@ -6,7 +6,7 @@ import cloudinary
 # Corrected path calculation for being 3 folders deep now
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 #cloudinary configuration
 USE_CLOUDINARY = os.getenv("USE_CLOUDINARY", "False").lower() == "true"
 
@@ -39,16 +39,17 @@ else:
 
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
-
+    
+    
 INSTALLED_APPS = [
+    'cloudinary_storage',          
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary',
-    'cloudinary_storage',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',  
+    'cloudinary',                  
     'rest_framework',
     'rest_framework_simplejwt',
     'apps.users',
@@ -60,10 +61,7 @@ INSTALLED_APPS = [
     'apps.papers',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
-    'corsheaders',
-    # 'cloudinary',
-    # 'cloudinary_storage',
-]
+    'corsheaders',]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
