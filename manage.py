@@ -7,7 +7,7 @@ import sys
 def main():
     """Run administrative tasks."""
     # Updated to point to your new local development file by default
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')  # Change to 'config.settings.development' for local dev
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.development')
     # production ma jada use thiss 'config.settings.production' or set evn variable DJANGO_SETTINGS_MODULE to 'config.settings.production' in VPS
     
     

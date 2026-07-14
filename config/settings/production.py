@@ -1,6 +1,30 @@
 from .base import *
 import os
 import dj_database_url
+import cloudinary
+
+
+USE_CLOUDINARY = os.environ.get("USE_CLOUDINARY", "true").lower() == "true"
+
+if USE_CLOUDINARY:
+    cloudinary.config(
+        cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+        api_key=os.environ.get("CLOUDINARY_API_KEY"),
+        api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+        secure=True,
+    )
+
+    INSTALLED_APPS += [
+        'cloudinary',
+        'cloudinary_storage',
+    ]
+
+    STORAGES = {
+        **STORAGES,
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+    }
 
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
