@@ -6,7 +6,7 @@ import cloudinary
 # Corrected path calculation for being 3 folders deep now
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 #cloudinary configuration
 USE_CLOUDINARY = os.getenv("USE_CLOUDINARY", "False").lower() == "true"
 
@@ -23,7 +23,7 @@ if USE_CLOUDINARY:
         },
        
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
 else:
@@ -33,7 +33,7 @@ else:
         },
         
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
     MEDIA_URL = "/media/"
@@ -41,15 +41,15 @@ else:
   
   
     
-INSTALLED_APPS = [
-    'cloudinary_storage',          
+INSTALLED_APPS = [         
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',  
+    'django.contrib.staticfiles',
     'cloudinary',                  
+    'cloudinary_storage',  
     'rest_framework',
     'rest_framework_simplejwt',
     'apps.users',
