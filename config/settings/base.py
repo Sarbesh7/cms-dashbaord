@@ -17,29 +17,29 @@ if USE_CLOUDINARY:
         api_secret=os.getenv("CLOUDINARY_API_SECRET"),
         secure=True,
     )
-
     STORAGES = {
         "default": {
             "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
         },
+       
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
-
 else:
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
         },
+        
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
-
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
-    
+  
+  
     
 INSTALLED_APPS = [
     'cloudinary_storage',          
