@@ -1,9 +1,44 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+import cloudinary
 
 # Corrected path calculation for being 3 folders deep now
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+
+#cloudinary configuration
+USE_CLOUDINARY = os.getenv("USE_CLOUDINARY", "False").lower() == "true"
+
+if USE_CLOUDINARY:
+    cloudinary.config(
+        cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+        api_key=os.getenv("CLOUDINARY_API_KEY"),
+        api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+        secure=True,
+    )
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+
+else:
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -24,6 +59,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
