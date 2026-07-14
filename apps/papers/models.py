@@ -20,7 +20,7 @@ class PastPaper(TimeStampModel):
 
     class Meta:
         ordering = ['-exam_year', '-semester', 'subject_name']
-        unique_together = ('subject_name', 'semester', 'exam_year', 'model_set')
+        unique_together = ('subject_name', 'semester', 'exam_year')
         
     def save(self, *args, **kwargs): 
         if not self.slug:
