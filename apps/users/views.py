@@ -13,9 +13,9 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from django.conf import settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+from django.conf import settings
+from rest_framework_simplejwt.settings import api_settings
 
 logger = logging.getLogger('security')
 
@@ -51,6 +51,8 @@ class LoginView(APIView):
             },
             status=status.HTTP_200_OK
         )
+        ACCESS_TOKEN_AGE = int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds())
+        REFRESH_TOKEN_AGE = int(api_settings.REFRESH_TOKEN_LIFETIME.total_seconds())
 
         response.set_cookie(
             key="access_token",
