@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser 
 from apps.core.permission import IsAdmin, IsCMSUser
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from apps.core.pagination import StandardPagination
 # import logging
 
 # logger = logging.getLogger(certificate)
@@ -80,8 +81,12 @@ class CertificateListView(APIView):
         if search_query: 
             logger.info(f"Certificate search triggered with query: '{search_query}'")
             certificates = certificates.filter(event__title__icontains=search_query)  
-        serializer = CertificateSerializer(certificates, many=True)
-        return Response(serializer.data)
+            
+        paginator = StandardPagination()
+        result_page = paginator.paginate_queryset(certificates, request)
+
+        serializer = CertificateSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)    
     
     def post(self, request):
         serializer = CertificateSerializer(data=request.data)
