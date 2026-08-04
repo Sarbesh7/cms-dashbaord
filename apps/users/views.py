@@ -15,6 +15,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.conf import settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.settings import api_settings
+
 
 
 logger = logging.getLogger('security')
@@ -47,6 +49,8 @@ class LoginView(APIView):
                     "id": user.id,
                     "email": user.email,
                     "username": user.username,
+                    "user_role": user.role,
+                    "profile_picture": user.profile_picture.url if user.profile_picture else None
                 }
             },
             status=status.HTTP_200_OK
@@ -58,7 +62,7 @@ class LoginView(APIView):
             httponly=True,
             secure=not settings.DEBUG,
             samesite="Lax",
-            max_age=ACCESS_TOKEN_AGE,
+            max_age=int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds()),
         )
 
         response.set_cookie(
@@ -67,7 +71,7 @@ class LoginView(APIView):
             httponly=True,
             secure=not settings.DEBUG,
             samesite="Lax",
-            max_age=REFRESH_TOKEN_AGE,
+            max_age=int(api_settings.REFRESH_TOKEN_LIFETIME.total_seconds()),
         )
 
         logger.info(f"Successful login: {user.email}")
@@ -302,7 +306,7 @@ class RefreshTokenView(APIView):
                 httponly=True,
                 secure=not settings.DEBUG,
                 samesite="Lax",
-                max_age=ACCESS_TOKEN_AGE,
+                max_age=int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds()),
             )
 
             return response
