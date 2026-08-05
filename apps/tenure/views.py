@@ -1,231 +1,38 @@
-# from django.shortcuts import render
-# from rest_framework.views import APIView
-# from rest_framework.decorators import api_view ,permission_classes
-# from rest_framework.response import Response
-# from .models import Tenure, Member
-# from .serializers import MemberSerializer, TenureSerializer
-# from django.http import Http404
-# from django.shortcuts import get_object_or_404
-# from rest_framework import status
-# from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
-# from django.utils.text import slugify
-# from django.utils.decorators import method_decorator
-# from django.views.decorators.cache import cache_page
-# from rest_framework.permissions import IsAuthenticated , IsAuthenticatedOrReadOnly
-# from apps.core.permission import IsAdmin, IsCMSUser
-# import logging
-
-# logger = logging.getLogger('tenure')
-
-
-# class TenureListView(APIView):
-#     parser_classes = (JSONParser, MultiPartParser, FormParser)
-#     permission_classes = [IsAuthenticatedOrReadOnly] 
-    
-#     @method_decorator(cache_page(60 * 5), name='dispatch')
-#     def get(self, request):
-#         tenures = Tenure.objects.prefetch_related('members').all()
-#         serializer = TenureSerializer(tenures, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = TenureSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             logger.info(f"Successfully created a new Tenure: {serializer.data.get('name')}")
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-#         logger.warning(f"Failed to create Tenure. Validation errors: {serializer.errors}")
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class TenureDetailView(APIView):
-#     parser_classes = (JSONParser, MultiPartParser, FormParser)
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-
-#     @method_decorator(cache_page(60 * 5), name='dispatch')
-#     def get_object(self, slug):
-#         try:
-#             return Tenure.objects.get(slug=slug)
-#         except Tenure.DoesNotExist:
-#             logger.error(f"Tenure with slug '{slug}' not found.")
-#             raise Http404
-
-#     @method_decorator(cache_page(60 * 5), name='dispatch')
-#     def get(self, request, slug):
-#         tenure = self.get_object(slug)
-#         serializer = TenureSerializer(tenure)
-#         return Response(serializer.data)
-
-#     def put(self, request, slug):
-#         tenure = self.get_object(slug)
-#         serializer = TenureSerializer(tenure, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             logger.info(f"Successfully updated Tenure with slug '{slug}'.")
-#             return Response(serializer.data)
-        
-#         logger.warning(f"Failed to update Tenure with slug '{slug}'. Validation errors: {serializer.errors}")
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def delete(self, request, slug):
-#         tenure = self.get_object(slug)
-#         tenure_name = tenure.name
-#         tenure.delete()
-#         logger.info(f"Successfully deleted Tenure: {tenure_name} (slug: '{slug}').")
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# class MemberListView(APIView):
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-#     parser_classes = (JSONParser, MultiPartParser, FormParser)
-
-#     def get(self, request):
-#         members = Member.objects.select_related('tenure').all()
-#         serializer = MemberSerializer(members, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = MemberSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             logger.info(f"Successfully created Member: {serializer.data.get('name')} in Tenure ID: {serializer.data.get('tenure')}")
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-#         logger.warning(f"Failed to create Member. Validation errors: {serializer.errors}")
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class MemberDetailView(APIView):
-#     parser_classes = (JSONParser, MultiPartParser, FormParser)
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-
-#     @method_decorator(cache_page(60 * 5), name='dispatch')
-#     def get_object(self, slug):
-#         try:
-#             return Member.objects.select_related('tenure').get(slug=slug)
-#         except Member.DoesNotExist:
-#             logger.error(f"Member with slug '{slug}' not found.")
-#             raise Http404
-        
-#     @method_decorator(cache_page(60 * 5), name='dispatch')
-#     def get(self, request, slug):
-#         member = self.get_object(slug)
-#         serializer = MemberSerializer(member)
-#         return Response(serializer.data)
-
-#     def put(self, request, slug):
-#         member = self.get_object(slug)
-#         serializer = MemberSerializer(member, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             logger.info(f"Successfully updated Member with slug '{slug}'.")
-#             return Response(serializer.data)
-        
-#         logger.warning(f"Failed to update Member with slug '{slug}'. Validation errors: {serializer.errors}")
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def delete(self, request, slug):
-#         member = self.get_object(slug)
-#         member_name = member.name
-#         member.delete()
-#         logger.info(f"Successfully deleted Member: {member_name} (slug: '{slug}').")
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# # cloning members from one tenure to another
-
-# @method_decorator(cache_page(60 * 5), name='dispatch')
-# @api_view(["POST"])
-# @permission_classes([IsCMSUser])
-# def clone_members(request, slug):
-#     target_tenure = get_object_or_404(Tenure, slug=slug)
-#     source_tenure_slug = request.data.get("source_tenure_slug")
-
-#     if not source_tenure_slug:
-#         logger.warning(f"Clone members failed: Missing 'source_tenure_slug' in request data targeting tenure '{slug}'.")
-#         return Response({"error": "source_tenure_slug is required"}, status=400)
-
-#     source_tenure = get_object_or_404(Tenure, slug=source_tenure_slug)
-#     members = Member.objects.filter(tenure=source_tenure)
-    
-#     count_to_clone = members.count()
-#     if count_to_clone == 0:
-#         logger.info(f"Clone members execution finished: Source tenure '{source_tenure_slug}' contains no members to copy.")
-#         return Response({"message": "No members found in source tenure to clone"}, status=status.HTTP_200_OK)
-
-#     new_members = []
-
-#     for member in members:
-#         base_slug = slugify(f"{member.name}-{target_tenure.name}")
-#         slug_str = base_slug
-#         counter = 1
-        
-#         while Member.objects.filter(slug=slug_str).exists():
-#             slug_str = f"{base_slug}-{counter}"
-#             counter += 1
-
-#         new_members.append(
-#             Member(
-#                 tenure=target_tenure,
-#                 name=member.name,
-#                 role=member.role,
-#                 email=member.email,
-#                 phone_number=member.phone_number,
-#                 fb_link=member.fb_link,
-#                 linkedin_link=member.linkedin_link,
-#                 github_link=member.github_link,
-#                 image=member.image,
-#                 slug=slug_str,
-#             )
-#         )
-        
-#     try:
-#         Member.objects.bulk_create(new_members)
-#         logger.info(f"Successfully cloned {count_to_clone} members from tenure '{source_tenure_slug}' to '{slug}'.")
-#     except Exception as e:
-#         logger.error(f"Database error while executing bulk_create during cloning operation: {str(e)}")
-#         return Response({"error": "An internal error occurred during data processing."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-#     return Response(
-#         {"message": "Members cloned successfully"}, status=status.HTTP_200_OK
-#     )
-
-
 import logging
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Tenure, Member, TenureMembership, Alumni
 from .serializers import (
-    MemberSerializer, 
-    TenureSerializer, 
+    MemberSerializer,
+    MemberProfileSerializer,
+    TenureDropdownSerializer,
     DetailedTenureSerializer,
-    TenureMembershipSerializer, 
-    AlumniSerializer
+    TenureMembershipSerializer,
+    AlumniSerializer,
 )
 from apps.core.permission import IsAdmin, IsCMSUser
 
-logger = logging.getLogger('tenure')
+logger = logging.getLogger("tenure")
 
 
 class TenureListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
-    permission_classes = [IsAuthenticatedOrReadOnly] 
-    
-    @method_decorator(cache_page(60 * 5), name='dispatch')
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    @method_decorator(cache_page(60 * 5), name="dispatch")
     def get(self, request):
-        # Prefetch memberships and alumni via their new related_names
-        tenures = Tenure.objects.prefetch_related('memberships__member', 'alumni__member').all()
+       
+        tenures = Tenure.objects.prefetch_related(
+            "memberships__member", "alumni__member"
+        ).all()
         serializer = DetailedTenureSerializer(tenures, many=True)
         return Response(serializer.data)
 
@@ -233,10 +40,14 @@ class TenureListView(APIView):
         serializer = TenureSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            logger.info(f"Successfully created a new Tenure: {serializer.data.get('name')}")
+            logger.info(
+                f"Successfully created a new Tenure: {serializer.data.get('name')}"
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        logger.warning(f"Failed to create Tenure. Validation errors: {serializer.errors}")
+
+        logger.warning(
+            f"Failed to create Tenure. Validation errors: {serializer.errors}"
+        )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -246,12 +57,14 @@ class TenureDetailView(APIView):
 
     def get_object(self, slug):
         try:
-            return Tenure.objects.prefetch_related('memberships__member', 'alumni__member').get(slug=slug)
+            return Tenure.objects.prefetch_related(
+                "memberships__member", "alumni__member"
+            ).get(slug=slug)
         except Tenure.DoesNotExist:
             logger.error(f"Tenure with slug '{slug}' not found.")
             raise Http404
 
-    @method_decorator(cache_page(60 * 5), name='dispatch')
+    @method_decorator(cache_page(60 * 5), name="dispatch")
     def get(self, request, slug):
         tenure = self.get_object(slug)
         serializer = DetailedTenureSerializer(tenure)
@@ -264,8 +77,10 @@ class TenureDetailView(APIView):
             serializer.save()
             logger.info(f"Successfully updated Tenure with slug '{slug}'.")
             return Response(serializer.data)
-        
-        logger.warning(f"Failed to update Tenure with slug '{slug}'. Validation errors: {serializer.errors}")
+
+        logger.warning(
+            f"Failed to update Tenure with slug '{slug}'. Validation errors: {serializer.errors}"
+        )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, slug):
@@ -281,7 +96,6 @@ class MemberListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
 
     def get(self, request):
-        # Removed select_related('tenure') since tenure relationship lives on TenureMembership
         members = Member.objects.all()
         serializer = MemberSerializer(members, many=True)
         return Response(serializer.data)
@@ -292,8 +106,10 @@ class MemberListView(APIView):
             serializer.save()
             logger.info(f"Successfully created Member: {serializer.data.get('name')}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        logger.warning(f"Failed to create Member. Validation errors: {serializer.errors}")
+
+        logger.warning(
+            f"Failed to create Member. Validation errors: {serializer.errors}"
+        )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -303,15 +119,17 @@ class MemberDetailView(APIView):
 
     def get_object(self, slug):
         try:
-            return Member.objects.get(slug=slug)
+            # Prefetch memberships and tenure names for complete personal profile history
+            return Member.objects.prefetch_related("memberships__tenure").get(slug=slug)
         except Member.DoesNotExist:
             logger.error(f"Member with slug '{slug}' not found.")
             raise Http404
-        
-    @method_decorator(cache_page(60 * 5), name='dispatch')
+
+    @method_decorator(cache_page(60 * 5), name="dispatch")
     def get(self, request, slug):
         member = self.get_object(slug)
-        serializer = MemberSerializer(member)
+        # MemberProfileSerializer returns core profile + full historical tenure timeline
+        serializer = MemberProfileSerializer(member)
         return Response(serializer.data)
 
     def put(self, request, slug):
@@ -321,8 +139,10 @@ class MemberDetailView(APIView):
             serializer.save()
             logger.info(f"Successfully updated Member with slug '{slug}'.")
             return Response(serializer.data)
-        
-        logger.warning(f"Failed to update Member with slug '{slug}'. Validation errors: {serializer.errors}")
+
+        logger.warning(
+            f"Failed to update Member with slug '{slug}'. Validation errors: {serializer.errors}"
+        )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, slug):
@@ -335,6 +155,7 @@ class MemberDetailView(APIView):
 
 # cloning member memberships from one tenure to another
 
+
 @api_view(["POST"])
 @permission_classes([IsCMSUser])
 def clone_members(request, slug):
@@ -342,42 +163,147 @@ def clone_members(request, slug):
     source_tenure_slug = request.data.get("source_tenure_slug")
 
     if not source_tenure_slug:
-        logger.warning(f"Clone members failed: Missing 'source_tenure_slug' in request data targeting tenure '{slug}'.")
-        return Response({"error": "source_tenure_slug is required"}, status=status.HTTP_400_BAD_REQUEST)
+        logger.warning(
+            f"Clone members failed: Missing 'source_tenure_slug' in request data targeting tenure '{slug}'."
+        )
+        return Response(
+            {"error": "source_tenure_slug is required"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     source_tenure = get_object_or_404(Tenure, slug=source_tenure_slug)
     source_memberships = TenureMembership.objects.filter(tenure=source_tenure)
-    
+
     count_to_clone = source_memberships.count()
     if count_to_clone == 0:
-        logger.info(f"Clone members execution finished: Source tenure '{source_tenure_slug}' contains no memberships to copy.")
-        return Response({"message": "No memberships found in source tenure to clone"}, status=status.HTTP_200_OK)
+        logger.info(
+            f"Clone members execution finished: Source tenure '{source_tenure_slug}' contains no memberships to copy."
+        )
+        return Response(
+            {"message": "No memberships found in source tenure to clone"},
+            status=status.HTTP_200_OK,
+        )
 
     new_memberships = []
 
     for membership in source_memberships:
-        
+        # Prevent duplicating the same member in the target tenure
         if not TenureMembership.objects.filter(
-            member=membership.member, 
-            tenure=target_tenure, 
-            role_type=membership.role_type
+            member=membership.member, tenure=target_tenure
         ).exists():
             new_memberships.append(
                 TenureMembership(
                     member=membership.member,
                     tenure=target_tenure,
                     role_type=membership.role_type,
-                    designation=membership.designation
+                    designation=membership.designation,
+                    order=membership.order,  # Copies hierarchy order intact
                 )
             )
-        
+
     try:
         TenureMembership.objects.bulk_create(new_memberships)
-        logger.info(f"Successfully cloned {len(new_memberships)} memberships from tenure '{source_tenure_slug}' to '{slug}'.")
+        logger.info(
+            f"Successfully cloned {len(new_memberships)} memberships from tenure '{source_tenure_slug}' to '{slug}'."
+        )
     except Exception as e:
-        logger.error(f"Database error while executing bulk_create during cloning operation: {str(e)}")
-        return Response({"error": "An internal error occurred during data processing."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+        logger.error(
+            f"Database error while executing bulk_create during cloning operation: {str(e)}"
+        )
+        return Response(
+            {"error": "An internal error occurred during data processing."},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
     return Response(
-        {"message": f"{len(new_memberships)} memberships cloned successfully"}, status=status.HTTP_200_OK
+        {"message": f"{len(new_memberships)} memberships cloned successfully"},
+        status=status.HTTP_200_OK,
     )
+
+
+class TenureMembershipListView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
+
+    def get(self, request):
+        memberships = TenureMembership.objects.select_related("member", "tenure").all()
+        serializer = TenureMembershipSerializer(memberships, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = TenureMembershipSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TenureMembershipDetailView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
+
+    def get_object(self, pk):
+        return get_object_or_404(TenureMembership, pk=pk)
+
+    def get(self, request, pk):
+        membership = self.get_object(pk)
+        serializer = TenureMembershipSerializer(membership)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        membership = self.get_object(pk)
+        serializer = TenureMembershipSerializer(membership, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        membership = self.get_object(pk)
+        membership.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class AlumniListView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
+
+    def get(self, request):
+        alumni = (
+            Alumni.objects.select_related("member").prefetch_related("tenures").all()
+        )
+        serializer = AlumniSerializer(alumni, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = AlumniSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AlumniDetailView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
+
+    def get_object(self, pk):
+        return get_object_or_404(Alumni, pk=pk)
+
+    def get(self, request, pk):
+        alumni = self.get_object(pk)
+        serializer = AlumniSerializer(alumni)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        alumni = self.get_object(pk)
+        serializer = AlumniSerializer(alumni, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        alumni = self.get_object(pk)
+        alumni.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
