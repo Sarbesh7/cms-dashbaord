@@ -8,7 +8,7 @@ class PastPaperSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
     def get_subject_name(self, obj):
-        return obj.get_subject_code_display()
+        return obj.get_subject_name_display()
 
     def get_semester_name(self, obj):
         return obj.get_semester_display()   
