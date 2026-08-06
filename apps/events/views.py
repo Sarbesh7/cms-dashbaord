@@ -1,3 +1,4 @@
+
 import logging
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -6,25 +7,28 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
+
 from .models import Event, Mentor
 from .serializers import EventSerializer, MentorSerializer
 from apps.core.pagination import StandardPagination
-from apps.core.permission import IsAdmin, IsCMSUser
+from apps.core.permission import IsCMSUser
 
 logger = logging.getLogger("event")
 
 
 class EventListView(APIView):
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
 
     def get_permissions(self):
-
         if self.request.method == "GET":
             return [AllowAny()]
         return [IsCMSUser()]
 
     @method_decorator(cache_page(60 * 5))
     def get(self, request):
-        events = Event.objects.all()
+        
+        events = Event.objects.select_related('tenure').prefetch_related('mentors__member').all()
 
         search = request.query_params.get("search")
         status_filter = request.query_params.get("status")
@@ -39,11 +43,11 @@ class EventListView(APIView):
         paginator = StandardPagination()
         result_page = paginator.paginate_queryset(events, request)
 
-        serializer = EventSerializer(result_page, many=True)
+        serializer = EventSerializer(result_page, many=True, context={'request': request})
         return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
-        serializer = EventSerializer(data=request.data)
+        serializer = EventSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             event = serializer.save()
             logger.info(
@@ -58,20 +62,28 @@ class EventListView(APIView):
 
 
 class EventDetailsView(APIView):
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
+
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]
         return [IsCMSUser()]
 
+    def get_object(self, slug):
+        return get_object_or_404(
+            Event.objects.select_related('tenure').prefetch_related('mentors__member'),
+            slug__iexact=slug
+        )
+
     @method_decorator(cache_page(60 * 5))
     def get(self, request, slug):
-        event = get_object_or_404(Event, slug__iexact=slug)
-        serializer = EventSerializer(event)
+        event = self.get_object(slug)
+        serializer = EventSerializer(event, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, slug):
-        event = get_object_or_404(Event, slug__iexact=slug)
-        serializer = EventSerializer(event, data=request.data)
+        event = self.get_object(slug)
+        serializer = EventSerializer(event, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             logger.info(
@@ -84,8 +96,23 @@ class EventDetailsView(APIView):
         )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def patch(self, request, slug):
+        event = self.get_object(slug)
+        serializer = EventSerializer(event, data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            logger.info(
+                f"Event '{event.title}' partially updated (PATCH) by User: {request.user}"
+            )
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        logger.warning(
+            f"Failed PATCH update for Event Slug '{slug}'. Errors: {serializer.errors}"
+        )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, slug):
-        event = get_object_or_404(Event, slug__iexact=slug)
+        event = self.get_object(slug)
         event_title = event.title
         event.delete()
         logger.info(
@@ -95,6 +122,7 @@ class EventDetailsView(APIView):
 
 
 class MentorListView(APIView):
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
 
     def get_permissions(self):
         if self.request.method == "GET":
@@ -103,12 +131,12 @@ class MentorListView(APIView):
 
     @method_decorator(cache_page(60 * 5))
     def get(self, request):
-        mentors = Mentor.objects.all()
-        serializer = MentorSerializer(mentors, many=True)
+        mentors = Mentor.objects.select_related('member').all()
+        serializer = MentorSerializer(mentors, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = MentorSerializer(data=request.data)
+        serializer = MentorSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             mentor = serializer.save()
             logger.info(
@@ -123,6 +151,7 @@ class MentorListView(APIView):
 
 
 class MentorDetailsView(APIView):
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
 
     def get_permissions(self):
         if self.request.method == "GET":
@@ -130,39 +159,42 @@ class MentorDetailsView(APIView):
         return [IsCMSUser()]
 
     def get_object(self, slug):
-        return get_object_or_404(Mentor, slug=slug)
+        return get_object_or_404(
+            Mentor.objects.select_related('member'),
+            slug=slug
+        )
 
     @method_decorator(cache_page(60 * 5))
     def get(self, request, slug):
         mentor = self.get_object(slug)
-        serializer = MentorSerializer(mentor)
+        serializer = MentorSerializer(mentor, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, slug):
         mentor = self.get_object(slug)
-        serializer = MentorSerializer(mentor, data=request.data)
+        serializer = MentorSerializer(mentor, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            logger.info(f"Mentor ID {slug} fully updated (PUT) by User: {request.user}")
+            logger.info(f"Mentor Slug '{slug}' fully updated (PUT) by User: {request.user}")
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         logger.warning(
-            f"Failed PUT update for Mentor ID {slug}. Errors: {serializer.errors}"
+            f"Failed PUT update for Mentor Slug '{slug}'. Errors: {serializer.errors}"
         )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, slug):
         mentor = self.get_object(slug)
-        serializer = MentorSerializer(mentor, data=request.data, partial=True)
+        serializer = MentorSerializer(mentor, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             logger.info(
-                f"Mentor ID {slug} partially updated (PATCH) by User: {request.user}"
+                f"Mentor Slug '{slug}' partially updated (PATCH) by User: {request.user}"
             )
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         logger.warning(
-            f"Failed PATCH update for Mentor ID {slug}. Errors: {serializer.errors}"
+            f"Failed PATCH update for Mentor Slug '{slug}'. Errors: {serializer.errors}"
         )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -171,6 +203,6 @@ class MentorDetailsView(APIView):
         mentor_name = mentor.name
         mentor.delete()
         logger.info(
-            f"Mentor '{mentor_name}' (ID: {slug}) was deleted by User: {request.user}"
+            f"Mentor '{mentor_name}' (Slug: {slug}) was deleted by User: {request.user}"
         )
         return Response(status=status.HTTP_204_NO_CONTENT)
