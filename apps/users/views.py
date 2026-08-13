@@ -22,6 +22,15 @@ from rest_framework_simplejwt.settings import api_settings
 logger = logging.getLogger('security')
 
 
+def _cookie_kwargs(max_age):
+    return {
+        "httponly": True,
+        "secure": not settings.DEBUG,
+        "samesite": "None" if not settings.DEBUG else "Lax",
+        "max_age": max_age,
+    }
+
+
 class LoginView(APIView):
     throttle_classes = [AnonRateThrottle]
     def post(self, request):
@@ -61,19 +70,13 @@ class LoginView(APIView):
         response.set_cookie(
             key="access_token",
             value=str(access),
-            httponly=True,
-            secure=not settings.DEBUG,
-            samesite="Lax",
-            max_age=int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds()),
+            **_cookie_kwargs(int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds())),
         )
 
         response.set_cookie(
             key="refresh_token",
             value=str(refresh),
-            httponly=True,
-            secure=not settings.DEBUG,
-            samesite="Lax",
-            max_age=int(api_settings.REFRESH_TOKEN_LIFETIME.total_seconds()),
+            **_cookie_kwargs(int(api_settings.REFRESH_TOKEN_LIFETIME.total_seconds())),
         )
 
         logger.info(f"Successful login: {user.email}")
@@ -305,10 +308,7 @@ class RefreshTokenView(APIView):
             response.set_cookie(
                 key="access_token",
                 value=str(new_access),
-                httponly=True,
-                secure=not settings.DEBUG,
-                samesite="Lax",
-                max_age=int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds()),
+                **_cookie_kwargs(int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds())),
             )
 
             return response
