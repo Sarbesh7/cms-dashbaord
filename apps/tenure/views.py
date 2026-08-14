@@ -268,12 +268,45 @@ class AlumniListView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = (JSONParser, MultiPartParser, FormParser)
 
+    @method_decorator(cache_page(60 * 5), name="dispatch")
     def get(self, request):
         alumni = (
             Alumni.objects.select_related("member").prefetch_related("tenures").all()
         )
-        serializer = AlumniSerializer(alumni, many=True)
-        return Response(serializer.data)
+
+        search = request.query_params.get("search") or request.query_params.get("name")
+        id_filter = request.query_params.get("id")
+
+        if id_filter:
+            alumni = alumni.filter(id=id_filter)
+        if search:
+            alumni = alumni.filter(member__name__icontains=search)
+
+        ordering = request.query_params.get("ordering")
+        if ordering:
+            is_desc = ordering.startswith("-")
+            field = ordering.lstrip("-")
+            mapping = {
+                "id": "id",
+                "memberId": "member__id",
+                "fullName": "member__name",
+                "graduationYear": "graduation_year",
+            }
+            db_field = mapping.get(field, field)
+            if is_desc:
+                db_field = f"-{db_field}"
+            try:
+                alumni = alumni.order_by(db_field)
+            except Exception:
+                alumni = alumni.order_by("-created_at")
+        else:
+            alumni = alumni.order_by("-created_at")
+
+        paginator = StandardPagination()
+        result_page = paginator.paginate_queryset(alumni, request)
+
+        serializer = AlumniSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = AlumniSerializer(data=request.data)
