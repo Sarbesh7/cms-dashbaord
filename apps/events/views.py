@@ -1,4 +1,3 @@
-
 import logging
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -27,18 +26,48 @@ class EventListView(APIView):
 
     @method_decorator(cache_page(60 * 5))
     def get(self, request):
-        
         events = Event.objects.select_related('tenure').prefetch_related('mentors__member').all()
 
-        search = request.query_params.get("search")
+        search = request.query_params.get("search") or request.query_params.get("name") or request.query_params.get("title")
         status_filter = request.query_params.get("status")
+        category_filter = request.query_params.get("category")
+        id_filter = request.query_params.get("id")
+        date_filter = request.query_params.get("date")
 
+        if id_filter:
+            events = events.filter(id=id_filter)
         if search:
             events = events.filter(title__icontains=search)
         if status_filter:
             events = events.filter(status=status_filter)
+        if category_filter:
+            events = events.filter(category=category_filter)
+        if date_filter:
+            events = events.filter(date__date=date_filter)
 
-        events = events.order_by("-created_at")
+        ordering = request.query_params.get("ordering")
+        if ordering:
+            is_desc = ordering.startswith("-")
+            field = ordering.lstrip("-")
+            mapping = {
+                "id": "id",
+                "title": "title",
+                "category": "category",
+                "status": "status",
+                "startDate": "date",
+                "date": "date",
+                "dates": "date",
+                "createdAt": "created_at",
+            }
+            db_field = mapping.get(field, field)
+            if is_desc:
+                db_field = f"-{db_field}"
+            try:
+                events = events.order_by(db_field)
+            except Exception:
+                events = events.order_by("-created_at")
+        else:
+            events = events.order_by("-created_at")
 
         paginator = StandardPagination()
         result_page = paginator.paginate_queryset(events, request)
@@ -132,8 +161,41 @@ class MentorListView(APIView):
     @method_decorator(cache_page(60 * 5))
     def get(self, request):
         mentors = Mentor.objects.select_related('member').all()
-        serializer = MentorSerializer(mentors, many=True, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        search = request.query_params.get("search") or request.query_params.get("name")
+        id_filter = request.query_params.get("id")
+
+        if id_filter:
+            mentors = mentors.filter(id=id_filter)
+        if search:
+            mentors = mentors.filter(name__icontains=search)
+
+        ordering = request.query_params.get("ordering")
+        if ordering:
+            is_desc = ordering.startswith("-")
+            field = ordering.lstrip("-")
+            mapping = {
+                "id": "id",
+                "fullName": "name",
+                "name": "name",
+                "role": "expertise",
+                "expertise": "expertise",
+            }
+            db_field = mapping.get(field, field)
+            if is_desc:
+                db_field = f"-{db_field}"
+            try:
+                mentors = mentors.order_by(db_field)
+            except Exception:
+                mentors = mentors.order_by("-created_at")
+        else:
+            mentors = mentors.order_by("-created_at")
+
+        paginator = StandardPagination()
+        result_page = paginator.paginate_queryset(mentors, request)
+
+        serializer = MentorSerializer(result_page, many=True, context={'request': request})
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = MentorSerializer(data=request.data, context={'request': request})
@@ -176,7 +238,7 @@ class MentorDetailsView(APIView):
         if serializer.is_valid():
             serializer.save()
             logger.info(f"Mentor Slug '{slug}' fully updated (PUT) by User: {request.user}")
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
 
         logger.warning(
             f"Failed PUT update for Mentor Slug '{slug}'. Errors: {serializer.errors}"
