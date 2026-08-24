@@ -29,6 +29,12 @@ class Tenure(TimeStampModel):
     start_date = models.DateField()
     end_date = models.DateField()
     slug = models.SlugField(unique=True, db_index=True)
+    signature= models.ImageField(
+        upload_to=SecureFilePath("president_signatures/"),
+        validators=[validate_file_size],
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         ordering = ["-start_date"]
@@ -47,7 +53,14 @@ class Member(TimeStampModel):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
-
+    signature = models.ImageField(
+        upload_to=SecureFilePath("member_signatures/"),
+        validators=[validate_file_size],
+        null=True,
+        blank=True,
+    )
+        
+        
     image = models.ImageField(
         upload_to=SecureFilePath("member_images/"),
         validators=[validate_file_size],
@@ -82,6 +95,7 @@ class TenureMembership(TimeStampModel):
     class RoleType(models.TextChoices):
         EXECUTIVE = "EXECUTIVE", "Executive Board"
         ADVISOR = "ADVISOR", "Advisor"
+        
 
     member = models.ForeignKey(
         Member, on_delete=models.CASCADE, related_name="memberships"
