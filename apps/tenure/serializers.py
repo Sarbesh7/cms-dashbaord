@@ -79,7 +79,6 @@ class MemberProfileSerializer(serializers.ModelSerializer):
             "name",
             "email",
             "phone_number",
-            "signature",
             "image",
             "fb_link",
             "linkedin_link",
