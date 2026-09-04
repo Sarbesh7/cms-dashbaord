@@ -43,7 +43,7 @@ class Mentor(TimeStampModel):
         upload_to=SecureFilePath('mentors_photos/'),
         validators=[validate_file_size],
         null=True,
-        blank=True
+        blank=True  
     )
     slug = models.SlugField(unique=True, blank=True, db_index=True)
 

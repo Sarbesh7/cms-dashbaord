@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSIT Association CMS Backend — API Dashboard & Reference</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --surface-sunken: #f7f8fa;
+      --ink: #171e33;
+      --ink-soft: #4b5468;
+      --ink-faint: #8890a0;
+      --border: #e2e4ea;
+      --border-strong: #d3d6e0;
+      --navy: #1b2559;
+      --blue: #2f5fd6;
+      --gold: #b3760a;
+      --get: #0a7ea4;
+      --post: #1a8a53;
+      --put: #b3760a;
+      --delete: #c0392b;
+      --radius-sm: 5px;
+      --radius-md: 8px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      padding: 3rem 1.5rem 4rem;
+    }
+    .container { max-width: 880px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.75rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-strong);
+    }
+    .brand h1 {
+      margin: 0 0 0.3rem;
+      font-size: 1.4rem;
+      font-weight: 650;
+      letter-spacing: -0.015em;
+      color: var(--navy);
+    }
+    .brand p { margin: 0; font-size: 0.875rem; color: var(--ink-soft); }
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      padding: 0.4rem 0.05rem;
+      border-bottom: 1px solid transparent;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .live-status:hover { color: var(--navy); border-bottom-color: var(--border-strong); }
+    .live-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--post);
+      box-shadow: 0 0 0 3px rgba(26, 138, 83, 0.16);
+      flex-shrink: 0;
+    }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    @media (min-width: 720px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.375rem 1.5rem 1.5rem;
+    }
+    .card h2 {
+      margin: 0 0 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 650;
+      color: var(--navy);
+      padding-bottom: 0.7rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .creds-box {
+      background: #fdf8ee;
+      border: 1px solid #f0e1bc;
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .creds-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      padding: 0.2rem 0;
+      color: var(--ink-soft);
+    }
+    .creds-row + .creds-row { border-top: 1px solid #f0e1bc; }
+    .auth-note { font-size: 0.8125rem; color: var(--ink-soft); }
+    .auth-note strong {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+    code {
+      font-family: var(--font-mono);
+      background: var(--surface-sunken);
+      border: 1px solid var(--border);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.83em;
+      color: var(--navy);
+    }
+    ol { margin: 0; padding-left: 1.1rem; font-size: 0.875rem; color: var(--ink-soft); }
+    ol li { margin-bottom: 0.55rem; padding-left: 0.15rem; }
+    ol li:last-child { margin-bottom: 0; }
+    ol li::marker { color: var(--ink-faint); font-weight: 600; }
+    .arch-tree {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      background: var(--surface-sunken);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.1rem;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+    .table-scroll { overflow-x: auto; margin: 0 -0.25rem; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; min-width: 560px; }
+    th, td { padding: 0.65rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    th:first-child, td:first-child { padding-left: 0.25rem; }
+    th:last-child, td:last-child { padding-right: 0.25rem; }
+    thead th {
+      color: var(--ink-faint);
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-strong);
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--surface-sunken); }
+    .badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      display: inline-block;
+      min-width: 46px;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+    .badge-get { background: rgba(10, 126, 164, 0.1); color: var(--get); }
+    .badge-post { background: rgba(26, 138, 83, 0.1); color: var(--post); }
+    .badge-put { background: rgba(179, 118, 10, 0.12); color: var(--put); }
+    .badge-delete { background: rgba(192, 57, 43, 0.1); color: var(--delete); }
+    .access-tag { font-size: 0.8rem; color: var(--ink-soft); }
+    td:last-child { color: var(--ink-soft); }
+    @media (max-width: 480px) {
+      body { padding: 2rem 1.1rem 3rem; font-size: 14.5px; }
+      header { align-items: flex-start; }
+      .card { padding: 1.15rem 1.15rem 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <h1>CSIT Association of BMC</h1>
+        <p>CMS backend — API reference &amp; testing hub</p>
+      </div>
+      <a href="https://cms-dashbaord.onrender.com/" target="_blank" class="live-status">Live API deployment</a>
+    </header>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h2>Authentication &amp; testing credentials</h2>
+        <div class="creds-box">
+          <div class="creds-row"><span>Username</span><code>admin</code></div>
+          <div class="creds-row"><span>Password</span><code>admin</code></div>
+        </div>
+        <div class="auth-note">
+          <strong>Auth header format</strong>
+          <code>Authorization: Bearer &lt;access-token&gt;</code>
+        </div>
+      </div>
+      <div class="card">
+        <h2>How to test the API</h2>
+        <ol>
+          <li>Send a <code>POST</code> request to <code>/api/v1/login/</code> with the credentials above.</li>
+          <li>Copy the returned <code>access</code> JWT token from the JSON response.</li>
+          <li>Include the token in request headers for protected endpoints.</li>
+          <li>All routes use the prefix <code>/api/v1/</code>.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Project architecture</h2>
+        <div class="arch-tree">config/
+  settings.py       # Django, DRF, JWT, DB, and logging settings
+  urls.py           # Admin route and domain URL includes
+apps/
+  users/            # Auth, user creation, password reset
+  core/             # Shared timestamps, permissions, pagination
+  events/           # Events and mentors
+  notices/          # Notices and announcements
+  certificates/     # Certificates and certificate templates
+  papers/           # Past examination papers
+  tenure/           # Tenures, members, and member cloning</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Core API endpoints to test</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Access level</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/login/</code></td><td><span class="access-tag">Public</span></td><td>Obtain JWT access &amp; refresh tokens</td></tr>
+              <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/users/</code></td><td><span class="access-tag">Admin only</span></td><td>Create standard or CMS users</td></tr>
+              <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/events/</code></td><td><span class="access-tag">Public</span></td><td>List events (pagination &amp; search supported)</td></tr>
+              <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/events/</code></td><td><span class="access-tag">CMS user / admin</span></td><td>Create event with mentors &amp; status</td></tr>
+              <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/notices/</code></td><td><span class="access-tag">CMS user / admin</span></td><td>List notices by category or status</td></tr>
+              <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/past-papers/</code></td><td><span class="access-tag">Public</span></td><td>List past exam papers by subject/semester</td></tr>
+              <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/certificates/templates/</code></td><td><span class="access-tag">CMS user / admin</span></td><td>Upload certificate templates</td></tr>
+              <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/tenures/</code></td><td><span class="access-tag">Public</span></td><td>List committee tenures and members</td></tr>
+              <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/clone-members/&lt;slug&gt;/</code></td><td><span class="access-tag">CMS user / admin</span></td><td>Clone committee members across tenures</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

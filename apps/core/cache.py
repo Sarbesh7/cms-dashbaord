@@ -44,7 +44,7 @@ class StandardCacheMixin:
         cache.set(cache_key, response.data, self.cache_timeout)
         return response
 
-    # Automatic Cache Invalidation on Mutations
+   #invalid cache
     def perform_create(self, serializer):
         super().perform_create(serializer)
         self.clear_cache()
