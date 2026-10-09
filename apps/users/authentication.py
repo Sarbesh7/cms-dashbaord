@@ -8,7 +8,7 @@ class CookieJWTAuthentication(JWTAuthentication):
         raw_token = request.COOKIES.get("access_token")
 
         if raw_token is None:
-            return None
+            return super().authenticate(request)
 
         try:
             validated_token = self.get_validated_token(raw_token)

@@ -20,6 +20,7 @@ from .serializers import (
     AlumniSerializer,
 )
 from apps.core.permission import IsAdmin, IsCMSUser
+from apps.core.pagination import StandardPagination
 
 logger = logging.getLogger("tenure")
 

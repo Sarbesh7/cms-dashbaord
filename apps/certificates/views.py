@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Certificate, CertificateTemplate
-from .serializers import CertificateSerializer, CertificateTemplateSerializer
+from .serializers import CertificateSerializer, CertificateTemplateSerializer, BulkStatusSerializer
 from django.http import Http404
 from rest_framework import status
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser 
@@ -122,6 +122,47 @@ class CertificateListView(APIView):
             
         logger.warning(f"Failed certificate generation attempt. Errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request):
+        """Bulk-update is_project_completed for multiple certificates.
+        
+        Expects: { "ids": [1, 2, 3], "is_project_completed": true }
+        """
+        if not (request.user and request.user.is_authenticated and
+                request.user.role in ('admin', 'cms_user')):
+            return Response(
+                {"detail": "You do not have permission to perform this action."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        serializer = BulkStatusSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        ids = serializer.validated_data['ids']
+        is_project_completed = serializer.validated_data['is_project_completed']
+
+        queryset = Certificate.objects.filter(certificate_id__in=ids)
+        found_ids = list(queryset.values_list('certificate_id', flat=True))
+        # Convert UUIDs to string for JSON serialization
+        found_ids_str = [str(i) for i in found_ids]
+        missing_ids = [str(i) for i in ids if i not in found_ids]
+
+        updated_count = queryset.update(is_project_completed=is_project_completed)
+
+        logger.info(
+            f"Bulk status update: user '{request.user}' set is_project_completed={is_project_completed} "
+            f"on {updated_count} certificate(s). IDs: {found_ids_str}"
+        )
+
+        response_data = {
+            'updated': updated_count,
+            'is_project_completed': is_project_completed,
+        }
+        if missing_ids:
+            response_data['missing_ids'] = missing_ids
+
+        return Response(response_data, status=status.HTTP_200_OK)
     
 
 class CertificateDetailView(APIView):
@@ -161,4 +202,4 @@ class CertificateDetailView(APIView):
         certificate = self.get_object(certificate_id)
         certificate.delete()
         logger.info(f"Certificate '{certificate_id}' deleted by user: {request.user}")
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)

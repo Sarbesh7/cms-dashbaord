@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserCreateSerializer, ChangePasswordSerializer, ForgotPasswordSerializer, ResetPasswordSerializer
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from .serializers import UserCreateSerializer, UserUpdateSerializer, ChangePasswordSerializer, ForgotPasswordSerializer, ResetPasswordSerializer
 from apps.core.permission import IsAdmin, IsCMSUser
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
@@ -94,9 +95,36 @@ class UserDetailView(APIView):
         logger.info(f"Admin '{request.user.email}' retrieved details for user: '{user.email}'")
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    
-    #need to add put and delete methods for user management by admin
+    def put(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            logger.info(f"Admin '{request.user.email}' updated user '{user.email}'")
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        logger.warning(f"User update failed by Admin '{request.user.email}'. Errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def patch(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            logger.info(f"Admin '{request.user.email}' patched user '{user.email}'")
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        logger.warning(f"User patch failed by Admin '{request.user.email}'. Errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, user_id):
+        if str(request.user.id) == str(user_id):
+            return Response({"error": "You cannot delete your own account."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = get_object_or_404(User, id=user_id)
+        user.delete()
+        logger.info(f"Admin '{request.user.email}' deleted user '{user.email}'")
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserView(APIView):
     permission_classes = [IsAdmin]
@@ -110,7 +138,7 @@ class UserView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         logger.warning(f"User creation failed by Admin '{request.user.email}'. Errors: {serializer.errors}")
-        return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     def get(self, request):
         users = User.objects.all()
@@ -212,8 +240,8 @@ class LogoutView(APIView):
             except TokenError:
                 pass
 
-        response.delete_cookie("access_token")
-        response.delete_cookie("refresh_token")
+        response.set_cookie("access_token", "", **_cookie_kwargs(0))
+        response.set_cookie("refresh_token", "", **_cookie_kwargs(0))
 
         logger.info(f"Logout: {request.user.email}")
 
@@ -233,6 +261,16 @@ class RefreshTokenView(APIView):
         try:
 
             refresh = RefreshToken(refresh_token)
+            
+            if api_settings.ROTATE_REFRESH_TOKENS:
+                if api_settings.BLACKLIST_AFTER_ROTATION:
+                    try:
+                        refresh.blacklist()
+                    except AttributeError:
+                        pass
+                refresh.set_jti()
+                refresh.set_exp()
+                refresh.set_iat()
 
             new_access = refresh.access_token
 
@@ -248,6 +286,13 @@ class RefreshTokenView(APIView):
                 value=str(new_access),
                 **_cookie_kwargs(int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds())),
             )
+            
+            if api_settings.ROTATE_REFRESH_TOKENS:
+                response.set_cookie(
+                    key="refresh_token",
+                    value=str(refresh),
+                    **_cookie_kwargs(int(api_settings.REFRESH_TOKEN_LIFETIME.total_seconds())),
+                )
 
             return response
 

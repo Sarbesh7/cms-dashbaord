@@ -9,4 +9,13 @@ class CertificateTemplateSerializer(serializers.ModelSerializer):
 class CertificateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Certificate
-        fields = ['id', 'certificate_id', 'full_name', 'event', 'issued_at']
+        fields = ['id', 'certificate_id', 'full_name', 'event', 'is_project_completed', 'issued_at']
+
+
+class BulkStatusSerializer(serializers.Serializer):
+    ids = serializers.ListField(
+        child=serializers.UUIDField(),
+        min_length=1,
+        error_messages={'min_length': 'At least one certificate ID is required.'}
+    )
+    is_project_completed = serializers.BooleanField()
