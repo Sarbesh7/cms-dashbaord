@@ -106,12 +106,17 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = "users.User"
 
+# Session policy: 1-hour access tokens; 7-day refresh tokens rotated (and the old
+# one blacklisted) on every refresh, so each refresh opens a new 7-day window
+# (sliding expiration). JWT_SESSION_MAX_LIFETIME caps a session absolutely,
+# counted from the original login, regardless of activity.
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
+JWT_SESSION_MAX_LIFETIME = timedelta(days=30)
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

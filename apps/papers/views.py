@@ -11,6 +11,7 @@ from apps.core.permission import IsAdmin, IsCMSUser
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.db.models import Q
 import logging
 
 logger = logging.getLogger('pastpaper')
@@ -25,14 +26,24 @@ class PastPaperListView(APIView):
         search = request.query_params.get('search')
         semester_filter = request.query_params.get('semester')
         model_set_filter = request.query_params.get('model_set')
+        is_old_course_filter = request.query_params.get('is_old_course')
         exam_year_filter = request.query_params.get('exam_year')
 
         if search:
-            papers = papers.filter(subject_name__icontains=search)
+            search_str = search.strip()
+            matching_codes = [
+                code for code, title in getattr(PastPaper, 'SUBJECT_CHOICES', ())
+                if search_str.lower() in code.lower() or search_str.lower() in title.lower()
+            ]
+            papers = papers.filter(
+                Q(subject_name__icontains=search_str) | Q(subject_name__in=matching_codes)
+            )
         if semester_filter:
             papers = papers.filter(semester=semester_filter)
         if model_set_filter is not None and model_set_filter != '':
             papers = papers.filter(model_set=(model_set_filter.lower() in ('true', '1', 'yes')))
+        if is_old_course_filter is not None and is_old_course_filter != '':
+            papers = papers.filter(is_old_course=(is_old_course_filter.lower() in ('true', '1', 'yes')))
         if exam_year_filter:
             papers = papers.filter(exam_year=exam_year_filter)
 
@@ -45,6 +56,7 @@ class PastPaperListView(APIView):
                 'semester': 'semester',
                 'exam_year': 'exam_year',
                 'model_set': 'model_set',
+                'is_old_course': 'is_old_course',
             }
             db_field = mapping.get(field, field)
             if is_desc:

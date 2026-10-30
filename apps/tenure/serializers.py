@@ -31,7 +31,7 @@ class TenureDropdownSerializer(serializers.ModelSerializer):
 class TenureSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Tenure
-        fields = ["id", "name", "start_date", "end_date", "slug"]
+        fields = ["id", "name", "start_date", "end_date", "slug", "signature"]
         read_only_fields = ["slug"]
 
 
@@ -133,9 +133,10 @@ class AlumniSerializer(serializers.ModelSerializer):
         }
 
     def update(self, instance, validated_data):
+        has_tenure_ids = "tenures" in validated_data
         tenures = validated_data.pop("tenures", None)
         instance = super().update(instance, validated_data)
-        if tenures is not None:
+        if has_tenure_ids and tenures is not None:
             instance.tenures.set(tenures)
         return instance
 

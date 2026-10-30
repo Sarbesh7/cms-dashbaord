@@ -1,8 +1,7 @@
 import logging
 from django.shortcuts import get_object_or_404
 from django.http import Http404
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+from apps.core.cache import bump_content_cache_version, versioned_cache_page
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
@@ -29,7 +28,7 @@ class TenureListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    @method_decorator(cache_page(60 * 5), name="dispatch")
+    @versioned_cache_page(60 * 5)
     def get(self, request):
        
         tenures = Tenure.objects.prefetch_related(
@@ -66,7 +65,7 @@ class TenureDetailView(APIView):
             logger.error(f"Tenure with slug '{slug}' not found.")
             raise Http404
 
-    @method_decorator(cache_page(60 * 5), name="dispatch")
+    @versioned_cache_page(60 * 5)
     def get(self, request, slug):
         tenure = self.get_object(slug)
         serializer = DetailedTenureSerializer(tenure)
@@ -99,6 +98,8 @@ class TenureDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+from django.db.models import Q
+
 class MemberListView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = (JSONParser, MultiPartParser, FormParser)
@@ -108,6 +109,14 @@ class MemberListView(APIView):
         status_param = request.query_params.get("status")
         if status_param and status_param.lower() in ["published", "draft"]:
             members = members.filter(status=status_param.lower())
+
+        search = request.query_params.get("search")
+        if search:
+            members = members.filter(
+                Q(name__icontains=search)
+                | Q(email__icontains=search)
+                | Q(slug__icontains=search)
+            )
 
         ordering = request.query_params.get("ordering")
         if ordering:
@@ -126,10 +135,18 @@ class MemberListView(APIView):
             try:
                 members = members.order_by(db_field)
             except Exception:
-                pass
+                members = members.order_by("-id")
+        else:
+            members = members.order_by("-id")
 
-        serializer = MemberSerializer(members, many=True)
-        return Response(serializer.data)
+        if request.query_params.get("all") in ["true", "1"]:
+            serializer = MemberSerializer(members, many=True)
+            return Response(serializer.data)
+
+        paginator = StandardPagination()
+        result_page = paginator.paginate_queryset(members, request)
+        serializer = MemberSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = MemberSerializer(data=request.data)
@@ -156,7 +173,7 @@ class MemberDetailView(APIView):
             logger.error(f"Member with slug '{slug}' not found.")
             raise Http404
 
-    @method_decorator(cache_page(60 * 5), name="dispatch")
+    @versioned_cache_page(60 * 5)
     def get(self, request, slug):
         member = self.get_object(slug)
         # MemberProfileSerializer returns core profile + full historical tenure timeline
@@ -247,6 +264,8 @@ def clone_members(request, slug):
 
     try:
         TenureMembership.objects.bulk_create(new_memberships)
+        # bulk_create sends no post_save signals, so invalidate cached reads explicitly.
+        bump_content_cache_version()
         logger.info(
             f"Successfully cloned {len(new_memberships)} memberships from tenure '{source_tenure_slug}' to '{slug}'."
         )
@@ -312,7 +331,7 @@ class AlumniListView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = (JSONParser, MultiPartParser, FormParser)
 
-    @method_decorator(cache_page(60 * 5), name="dispatch")
+    @versioned_cache_page(60 * 5)
     def get(self, request):
         alumni = (
             Alumni.objects.select_related("member").prefetch_related("tenures").all()
@@ -345,6 +364,11 @@ class AlumniListView(APIView):
                 alumni = alumni.order_by("-created_at")
         else:
             alumni = alumni.order_by("-created_at")
+
+        # Full-list mode for the dashboard, which paginates alumni in the browser.
+        if request.query_params.get("all") in ["true", "1"]:
+            serializer = AlumniSerializer(alumni, many=True)
+            return Response(serializer.data)
 
         paginator = StandardPagination()
         result_page = paginator.paginate_queryset(alumni, request)

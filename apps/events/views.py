@@ -1,7 +1,6 @@
 import logging
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+from apps.core.cache import versioned_cache_page
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,9 +23,9 @@ class EventListView(APIView):
             return [AllowAny()]
         return [IsCMSUser()]
 
-    @method_decorator(cache_page(60 * 5))
+    @versioned_cache_page(60 * 5)
     def get(self, request):
-        events = Event.objects.select_related('tenure').prefetch_related('mentors__member').all()
+        events = Event.objects.select_related('tenure').prefetch_related('mentor_assignments__mentor', 'mentors__event_assignments__event').all()
 
         search = request.query_params.get("search") or request.query_params.get("name") or request.query_params.get("title")
         status_filter = request.query_params.get("status")
@@ -100,11 +99,11 @@ class EventDetailsView(APIView):
 
     def get_object(self, slug):
         return get_object_or_404(
-            Event.objects.select_related('tenure').prefetch_related('mentors__member'),
+            Event.objects.select_related('tenure').prefetch_related('mentor_assignments__mentor', 'mentors__event_assignments__event'),
             slug__iexact=slug
         )
 
-    @method_decorator(cache_page(60 * 5))
+    @versioned_cache_page(60 * 5)
     def get(self, request, slug):
         event = self.get_object(slug)
         serializer = EventSerializer(event, context={'request': request})
@@ -165,9 +164,9 @@ class MentorListView(APIView):
             return [AllowAny()]
         return [IsCMSUser()]
 
-    @method_decorator(cache_page(60 * 5))
+    @versioned_cache_page(60 * 5)
     def get(self, request):
-        mentors = Mentor.objects.select_related('member').all()
+        mentors = Mentor.objects.prefetch_related('event_assignments__event').all()
 
         search = request.query_params.get("search") or request.query_params.get("name")
         id_filter = request.query_params.get("id")
@@ -227,58 +226,58 @@ class MentorDetailsView(APIView):
             return [AllowAny()]
         return [IsCMSUser()]
 
-    def get_object(self, slug):
-        return get_object_or_404(
-            Mentor.objects.select_related('member'),
-            slug=slug
-        )
+    def get_object(self, identifier):
+        qs = Mentor.objects.prefetch_related('event_assignments__event')
+        return get_object_or_404(qs, id=identifier)
 
-    @method_decorator(cache_page(60 * 5))
-    def get(self, request, slug):
-        mentor = self.get_object(slug)
+    @versioned_cache_page(60 * 5)
+    def get(self, request, identifier):
+        mentor = self.get_object(identifier)
         serializer = MentorSerializer(mentor, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, slug):
-        mentor = self.get_object(slug)
+    def put(self, request, identifier):
+        target = identifier
+        mentor = self.get_object(target)
         serializer = MentorSerializer(mentor, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            logger.info(f"Mentor Slug '{slug}' fully updated (PUT) by User: {request.user}")
+            logger.info(f"Mentor '{target}' fully updated (PUT) by User: {request.user}")
             return Response(serializer.data)
 
         logger.warning(
-            f"Failed PUT update for Mentor Slug '{slug}'. Errors: {serializer.errors}"
+            f"Failed PUT update for Mentor '{target}'. Errors: {serializer.errors}"
         )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, slug):
-        mentor = self.get_object(slug)
+    def patch(self, request, identifier):
+        target = identifier
+        mentor = self.get_object(target)
         serializer = MentorSerializer(mentor, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             logger.info(
-                f"Mentor Slug '{slug}' partially updated (PATCH) by User: {request.user}"
+                f"Mentor '{target}' partially updated (PATCH) by User: {request.user}"
             )
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         logger.warning(
-            f"Failed PATCH update for Mentor Slug '{slug}'. Errors: {serializer.errors}"
+            f"Failed PATCH update for Mentor '{target}'. Errors: {serializer.errors}"
         )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, slug):
-        
+    def delete(self, request, identifier):
+        target = identifier
         if not IsAdmin().has_permission(request, self) and not (request.user.is_authenticated and request.user.is_staff):
             return Response(
-            {"detail": "You do not have permission to perform this action."},
-            status=status.HTTP_403_FORBIDDEN
-        )
+                {"detail": "You do not have permission to perform this action."},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
-        mentor = self.get_object(slug)
+        mentor = self.get_object(target)
         mentor_name = mentor.name
         mentor.delete()
         logger.info(
-            f"Mentor '{mentor_name}' (Slug: {slug}) was deleted by User: {request.user}"
+            f"Mentor '{mentor_name}' (ID: {target}) was deleted by User: {request.user}"
         )
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
 from apps.core.models import TimeStampModel
-from apps.tenure.models import Member, Tenure
+from apps.tenure.models import Tenure
 
 
 def validate_file_size(value):
@@ -26,15 +26,8 @@ class SecureFilePath:
 
 
 class Mentor(TimeStampModel):
-    # Optional link to an internal team member from tenure
-    member = models.ForeignKey(
-        Member, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        related_name='mentor_profiles',
-        help_text="Select an existing team member, or leave blank for guest/external mentors."
-    )
+    # Global mentor directory, independent of organization members.
+    # Mentors are identified by primary key only (no public slug).
     name = models.CharField(max_length=100, blank=True)
     email = models.EmailField(blank=True, null=True)
     expertise = models.CharField(max_length=200)
@@ -45,31 +38,9 @@ class Mentor(TimeStampModel):
         null=True,
         blank=True  
     )
-    slug = models.SlugField(unique=True, blank=True, db_index=True)
 
     def __str__(self):
-        return self.name or (self.member.name if self.member else "Unnamed Mentor")
-
-    def save(self, *args, **kwargs):
-        # Auto-populate name, email, and photo from Member if linked
-        if self.member:
-            if not self.name:
-                self.name = self.member.name
-            if not self.email:
-                self.email = self.member.email
-            if not self.photo and self.member.image:
-                self.photo = self.member.image
-                
-        if not self.slug and self.name:
-            base_slug = slugify(self.name)
-            slug = base_slug
-            count = 1
-            while Mentor.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base_slug}-{count}"
-                count += 1
-            self.slug = slug
-
-        super().save(*args, **kwargs)
+        return self.name or f"Mentor #{self.pk}"
 
 
 class Event(TimeStampModel):
@@ -128,7 +99,12 @@ class Event(TimeStampModel):
     category = models.CharField(max_length=50, choices=Category.choices, null=True, blank=True)
     tags = models.CharField(max_length=50, choices=Tag.choices, null=True, blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
-    mentors = models.ManyToManyField(Mentor, related_name='events', blank=True)
+    mentors = models.ManyToManyField(
+        Mentor,
+        through='EventMentorAssignment',
+        related_name='events',
+        blank=True
+    )
 
     def __str__(self):
         return self.title
@@ -143,3 +119,32 @@ class Event(TimeStampModel):
                 count += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+
+class EventMentorAssignment(TimeStampModel):
+    class Role(models.TextChoices):
+        MAIN_MENTOR = 'main_mentor', 'Main Mentor'
+        CO_MENTOR = 'co_mentor', 'Co-Mentor'
+        SPEAKER = 'speaker', 'Speaker'
+        INSTRUCTOR = 'instructor', 'Instructor'
+        JUDGE = 'judge', 'Judge'
+        CUSTOM = 'custom', 'Custom'
+
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='mentor_assignments')
+    mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE, related_name='event_assignments')
+    role = models.CharField(max_length=50, choices=Role.choices, default=Role.MAIN_MENTOR)
+    custom_role = models.CharField(max_length=100, blank=True, null=True)
+    responsibility = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('event', 'mentor')
+        ordering = ['id']
+
+    @property
+    def role_label(self):
+        if self.role == self.Role.CUSTOM and self.custom_role:
+            return self.custom_role
+        return self.get_role_display()
+
+    def __str__(self):
+        return f"{self.mentor} - {self.event} ({self.role_label})"

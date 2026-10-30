@@ -1,5 +1,37 @@
+from functools import wraps
+
 from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
+
+CONTENT_CACHE_VERSION_KEY = "content-cache-version"
+
+
+def get_content_cache_version():
+    return cache.get_or_set(CONTENT_CACHE_VERSION_KEY, 1, None)
+
+
+def bump_content_cache_version(*args, **kwargs):
+    """Invalidate every versioned_cache_page response. Usable directly as a signal receiver."""
+    try:
+        cache.incr(CONTENT_CACHE_VERSION_KEY)
+    except ValueError:
+        cache.set(CONTENT_CACHE_VERSION_KEY, 2, None)
+
+
+def versioned_cache_page(timeout):
+    """cache_page for APIView methods whose key changes whenever content is written."""
+    def decorator(view_method):
+        @wraps(view_method)
+        def _wrapped(self, request, *args, **kwargs):
+            key_prefix = f"content-v{get_content_cache_version()}"
+            cached_view = cache_page(timeout, key_prefix=key_prefix)(
+                lambda req, *a, **kw: view_method(self, req, *a, **kw)
+            )
+            return cached_view(request, *args, **kwargs)
+        return _wrapped
+    return decorator
+
 
 class StandardCacheMixin:
 

@@ -15,5 +15,5 @@ urlpatterns = [
 
     # Mentor endpoints
     path('api/v1/mentors/', MentorListView.as_view(), name='mentor-list'),
-    path('api/v1/mentors/<slug:slug>/', MentorDetailsView.as_view(), name='mentor-detail'),
+    path('api/v1/mentors/<int:identifier>/', MentorDetailsView.as_view(), name='mentor-detail'),
 ]

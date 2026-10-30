@@ -6,6 +6,8 @@ class NoticeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notice
         fields = "__all__"
+        # The backend is the only authority for slugs (derived from the title).
+        read_only_fields = ["slug"]
 
     def validate_image(self, value):
         if value is not None:

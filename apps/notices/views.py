@@ -9,8 +9,7 @@ from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from apps.core.pagination import StandardPagination
 from apps.core.permission import IsAdmin, IsCMSUser
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+from apps.core.cache import versioned_cache_page
 import logging
 
 logger = logging.getLogger('notice')
@@ -20,7 +19,7 @@ class NoticeListView(APIView):
     parser_classes = (JSONParser, MultiPartParser, FormParser)
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    @method_decorator(cache_page(60 * 5), name='dispatch')
+    @versioned_cache_page(60 * 5)
     def get(self, request):
         notices = Notice.objects.all()
 
@@ -91,7 +90,7 @@ class NoticeDetailView(APIView):
         except Notice.DoesNotExist:
             raise Http404
         
-    @method_decorator(cache_page(60 * 5), name='dispatch')
+    @versioned_cache_page(60 * 5)
     def get(self, request, slug):
         notice = self.get_object(slug)
         serializer = NoticeSerializer(notice)

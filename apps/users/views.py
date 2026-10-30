@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from .serializers import UserCreateSerializer, UserUpdateSerializer, ChangePasswordSerializer, ForgotPasswordSerializer, ResetPasswordSerializer
 from apps.core.permission import IsAdmin, IsCMSUser
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -16,6 +16,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.conf import settings
+from django.utils import timezone
 from rest_framework_simplejwt.settings import api_settings
 
 
@@ -32,7 +33,20 @@ def _cookie_kwargs(max_age):
     }
 
 
+# Claim carried through every rotation so the absolute session cap counts from login.
+SESSION_START_CLAIM = "session_start"
+
+
+def _clear_session_cookies(response):
+    response.set_cookie("access_token", "", **_cookie_kwargs(0))
+    response.set_cookie("refresh_token", "", **_cookie_kwargs(0))
+    return response
+
+
 class LoginView(APIView):
+    # Ignore any stale access cookie (e.g. of a deleted user) so it cannot block a new login.
+    authentication_classes = []
+    permission_classes = [AllowAny]
     throttle_classes = [AnonRateThrottle]
     def post(self, request):
 
@@ -50,6 +64,7 @@ class LoginView(APIView):
             )
 
         refresh = RefreshToken.for_user(user)
+        refresh[SESSION_START_CLAIM] = int(timezone.now().timestamp())
         access = refresh.access_token
 
         response = Response(
@@ -59,7 +74,7 @@ class LoginView(APIView):
                     "id": user.id,
                     "email": user.email,
                     "username": user.username,
-                    "user_role": user.role,
+                    "user_role": "superadmin" if (user.is_superuser or user.role == "superadmin") else user.role,
                     "profile_picture": user.profile_picture.url if user.profile_picture else None
                 }
             },
@@ -85,6 +100,12 @@ class LoginView(APIView):
         return response
     
 
+def is_superadmin(user):
+    return bool(
+        user and user.is_authenticated and (user.is_superuser or getattr(user, 'role', '') == 'superadmin')
+    )
+
+
 class UserDetailView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
     throttle_classes = [UserRateThrottle]
@@ -97,6 +118,24 @@ class UserDetailView(APIView):
     
     def put(self, request, user_id):
         user = get_object_or_404(User, id=user_id)
+        if not is_superadmin(request.user):
+            # Admin cannot modify peer Admin or Superadmin accounts
+            if user.id != request.user.id and (user.role in ['admin', 'superadmin'] or user.is_superuser):
+                logger.warning(
+                    f"Forbidden PUT mutation attempt by Admin '{request.user.email}' on peer/superior account '{user.email}'"
+                )
+                return Response(
+                    {"detail": "Admins cannot modify peer Admin or Superadmin accounts."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            # Admin cannot assign administrative roles
+            new_role = request.data.get('role')
+            if new_role in ['admin', 'superadmin'] and new_role != user.role:
+                return Response(
+                    {"detail": "Only superadmins can assign administrative roles."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
         serializer = UserUpdateSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -108,6 +147,24 @@ class UserDetailView(APIView):
 
     def patch(self, request, user_id):
         user = get_object_or_404(User, id=user_id)
+        if not is_superadmin(request.user):
+            # Admin cannot modify peer Admin or Superadmin accounts
+            if user.id != request.user.id and (user.role in ['admin', 'superadmin'] or user.is_superuser):
+                logger.warning(
+                    f"Forbidden PATCH mutation attempt by Admin '{request.user.email}' on peer/superior account '{user.email}'"
+                )
+                return Response(
+                    {"detail": "Admins cannot modify peer Admin or Superadmin accounts."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            # Admin cannot assign administrative roles
+            new_role = request.data.get('role')
+            if new_role in ['admin', 'superadmin'] and new_role != user.role:
+                return Response(
+                    {"detail": "Only superadmins can assign administrative roles."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
         serializer = UserUpdateSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -122,6 +179,16 @@ class UserDetailView(APIView):
             return Response({"error": "You cannot delete your own account."}, status=status.HTTP_400_BAD_REQUEST)
         
         user = get_object_or_404(User, id=user_id)
+        if not is_superadmin(request.user):
+            if user.role in ['admin', 'superadmin'] or user.is_superuser:
+                logger.warning(
+                    f"Forbidden delete attempt by Admin '{request.user.email}' on peer/superior account '{user.email}'"
+                )
+                return Response(
+                    {"detail": "Admins cannot delete peer Admin or Superadmin accounts."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
         user.delete()
         logger.info(f"Admin '{request.user.email}' deleted user '{user.email}'")
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -131,17 +198,27 @@ class UserView(APIView):
     throttle_classes = [UserRateThrottle]
     
     def post(self, request):
+        target_role = request.data.get('role', 'cms_user')
+        if target_role in ['admin', 'superadmin'] and not is_superadmin(request.user):
+            logger.warning(
+                f"Unauthorized admin creation attempt by non-superadmin '{request.user.email}'"
+            )
+            return Response(
+                {"detail": "Only superadmins can create administrative accounts."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         serializer = UserCreateSerializer(data=request.data) 
         if serializer.is_valid():
             user = serializer.save()
             logger.info(f"Admin '{request.user.email}' successfully created a new user: '{user.email}'")
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         logger.warning(f"User creation failed by Admin '{request.user.email}'. Errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     def get(self, request):
-        users = User.objects.all()
+        users = User.objects.all().order_by('-date_joined')
         serializer = UserCreateSerializer(users, many=True)
         logger.info(f"Admin '{request.user.email}' retrieved the user list.")
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -240,65 +317,80 @@ class LogoutView(APIView):
             except TokenError:
                 pass
 
-        response.set_cookie("access_token", "", **_cookie_kwargs(0))
-        response.set_cookie("refresh_token", "", **_cookie_kwargs(0))
+        _clear_session_cookies(response)
 
         logger.info(f"Logout: {request.user.email}")
 
         return response
 
 class RefreshTokenView(APIView):
-   def post(self, request):
+    """Rotate the refresh token (sliding 7-day window) within the absolute session cap."""
+    # Authenticated only by the refresh cookie; a stale access cookie must not
+    # short-circuit the request before session cookies can be cleared.
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
-        refresh_token = request.COOKIES.get("refresh_token")
+    def _reject(self, message, reason):
+        # Never log or return token values.
+        logger.info(f"Refresh rejected: {reason}")
+        response = Response({"message": message}, status=status.HTTP_401_UNAUTHORIZED)
+        return _clear_session_cookies(response)
 
-        if not refresh_token:
-            return Response(
-                {"message": "Refresh token missing"},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+    def _blacklist(self, refresh):
+        try:
+            refresh.blacklist()
+        except (TokenError, AttributeError):
+            pass
+
+    def post(self, request):
+        raw_token = request.COOKIES.get("refresh_token")
+        if not raw_token:
+            return self._reject("Refresh token missing", "missing token")
 
         try:
-
-            refresh = RefreshToken(refresh_token)
-            
-            if api_settings.ROTATE_REFRESH_TOKENS:
-                if api_settings.BLACKLIST_AFTER_ROTATION:
-                    try:
-                        refresh.blacklist()
-                    except AttributeError:
-                        pass
-                refresh.set_jti()
-                refresh.set_exp()
-                refresh.set_iat()
-
-            new_access = refresh.access_token
-
-            response = Response(
-                {
-                    "message": "Access token refreshed"
-                },
-                status=status.HTTP_200_OK
-            )
-
-            response.set_cookie(
-                key="access_token",
-                value=str(new_access),
-                **_cookie_kwargs(int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds())),
-            )
-            
-            if api_settings.ROTATE_REFRESH_TOKENS:
-                response.set_cookie(
-                    key="refresh_token",
-                    value=str(refresh),
-                    **_cookie_kwargs(int(api_settings.REFRESH_TOKEN_LIFETIME.total_seconds())),
-                )
-
-            return response
-
+            # Verifies signature, expiry and the blacklist (rotated or logged-out tokens).
+            refresh = RefreshToken(raw_token)
         except TokenError:
+            return self._reject("Invalid or expired refresh token", "invalid, expired or blacklisted token")
 
-            return Response(
-                {"message": "Invalid or expired refresh token"},
-                status=status.HTTP_401_UNAUTHORIZED
+        user = User.objects.filter(
+            **{api_settings.USER_ID_FIELD: refresh.get(api_settings.USER_ID_CLAIM)}
+        ).first()
+        if user is None or not user.is_active:
+            self._blacklist(refresh)
+            return self._reject("Session is no longer valid", "unknown or inactive user")
+
+        now = timezone.now()
+        # Tokens issued before the cap existed carry no session_start; count from their issue time.
+        session_start = int(refresh.get(SESSION_START_CLAIM, refresh.get("iat")))
+        session_end = int(session_start + settings.JWT_SESSION_MAX_LIFETIME.total_seconds())
+        if now.timestamp() >= session_end:
+            self._blacklist(refresh)
+            return self._reject("Session expired. Please log in again.", f"session cap reached for user {user.pk}")
+
+        if api_settings.ROTATE_REFRESH_TOKENS:
+            if api_settings.BLACKLIST_AFTER_ROTATION:
+                self._blacklist(refresh)
+            refresh.set_jti()
+            refresh.set_exp()
+            refresh.set_iat()
+            refresh[SESSION_START_CLAIM] = session_start
+            refresh["exp"] = min(int(refresh["exp"]), session_end)
+
+        new_access = refresh.access_token
+        new_access["exp"] = min(int(new_access["exp"]), session_end)
+
+        response = Response({"message": "Access token refreshed"}, status=status.HTTP_200_OK)
+        now_ts = int(now.timestamp())
+        response.set_cookie(
+            key="access_token",
+            value=str(new_access),
+            **_cookie_kwargs(max(int(new_access["exp"]) - now_ts, 0)),
+        )
+        if api_settings.ROTATE_REFRESH_TOKENS:
+            response.set_cookie(
+                key="refresh_token",
+                value=str(refresh),
+                **_cookie_kwargs(max(int(refresh["exp"]) - now_ts, 0)),
             )
+        return response

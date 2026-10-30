@@ -202,4 +202,4 @@ class CertificateDetailView(APIView):
         certificate = self.get_object(certificate_id)
         certificate.delete()
         logger.info(f"Certificate '{certificate_id}' deleted by user: {request.user}")
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -16,7 +16,8 @@ class UserCreateSerializer(serializers.ModelSerializer) :
    
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'role', 'profile_picture']
+        fields = ['id', 'username', 'email', 'password', 'role', 'profile_picture', 'date_joined']
+        read_only_fields = ['date_joined']
 
 
     def create(self,validated_data):
@@ -64,13 +65,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return value
 
     def validate_email(self, value):
-        # Allow updating to the same email, but not an existing one
-        request = self.context.get('request')
-        if request and request.method in ['PUT', 'PATCH']:
-            # self.instance is the current user being updated
-            if User.objects.exclude(pk=self.instance.pk).filter(email=value).exists():
-                raise serializers.ValidationError("A user with this email already exists.")
-        elif User.objects.filter(email=value).exists():
+        # Allow keeping the account's own email, but not taking another account's.
+        others = User.objects.exclude(pk=self.instance.pk) if self.instance else User.objects.all()
+        if others.filter(email=value).exists():
             raise serializers.ValidationError("A user with this email already exists.")
         return value
 
