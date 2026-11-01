@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.tenure',
     'apps.core',
     'apps.papers',
+    'apps.blogs',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',]

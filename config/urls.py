@@ -29,6 +29,7 @@ urlpatterns = [
     path('', include('apps.tenure.urls')),
     path('', include('apps.certificates.urls')),
     path('', include('apps.papers.urls')),
+    path('', include('apps.blogs.urls')),
     path('', include('apps.core.urls')),
 ]
 
