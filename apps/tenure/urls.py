@@ -14,11 +14,11 @@ from .views import (
 urlpatterns = [
     # Tenure Endpoints
     path('api/v1/tenures/', TenureListView.as_view(), name='tenure-list'),
-    path('api/v1/tenures/<slug:slug>/', TenureDetailView.as_view(), name='tenure-detail'),
+    path('api/v1/tenures/<str:slug>/', TenureDetailView.as_view(), name='tenure-detail'),
     
     # Member Endpoints
     path('api/v1/members/', MemberListView.as_view(), name='member-list'),
-    path('api/v1/members/<slug:slug>/', MemberDetailView.as_view(), name='member-detail'),
+    path('api/v1/members/<str:slug>/', MemberDetailView.as_view(), name='member-detail'),
     
     # Utility / Action Endpoints
     path('api/v1/clone-members/<slug:slug>/', clone_members, name='clone-members'),

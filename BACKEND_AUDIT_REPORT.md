@@ -414,7 +414,7 @@ The backend has explicit security checks in `UserView` and `UserDetailView`:
 2. **Missing Delete Protection in `MemberDetailView`**:
    - `apps/tenure/views.py` line 209: The `delete` method does not verify that `request.user` is an admin or staff member. Any authenticated user can delete member records.
 3. **Committed SMTP Password in `development.py`**:
-   - `EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "xvmz fpzx eykp gzop")` exposes a live Gmail application-specific password.
+   - `EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "<REDACTED - rotate this credential>")` exposes a live Gmail application-specific password.
 
 ### Category B: Important Operational Deficiencies
 1. **Inoperable Self-Service Password Reset**:

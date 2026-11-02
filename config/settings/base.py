@@ -56,18 +56,67 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.core.middleware.DuplicateRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+
+
+def env_list(name, default=None):
+    """Comma-separated environment variable -> list (empty entries dropped)."""
+    raw = os.environ.get(name)
+    if raw is None:
+        return list(default or [])
+    return [item.strip() for item in raw.split(",") if item.strip()]
+
+
+def env_bool(name, default=False):
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in ("1", "true", "yes", "on")
+
+
+_LOCAL_DEV_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
+
+# Browser origins (scheme://host[:port]) allowed to call the API with credentials.
+# Set CORS_ALLOWED_ORIGINS to the dashboard (and public website, if it calls the API).
+CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS", _LOCAL_DEV_ORIGINS)
+CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", CORS_ALLOWED_ORIGINS)
 CORS_ALLOW_CREDENTIALS = True
+
+# Authentication cookie attributes (see apps/users/cookies.py).
+# SameSite defaults are chosen per settings module; override with AUTH_COOKIE_SAMESITE.
+AUTH_COOKIE_DOMAIN = os.environ.get("AUTH_COOKIE_DOMAIN") or None
+AUTH_COOKIE_PATH = "/"
+AUTH_COOKIE_SAMESITE = os.environ.get("AUTH_COOKIE_SAMESITE", "Lax")
+AUTH_COOKIE_SECURE = env_bool("AUTH_COOKIE_SECURE", True)
+
+# Client-IP resolution for activity logs (apps/core/activity_logging.get_client_ip).
+# Forwarded headers are trusted ONLY when REMOTE_ADDR is in TRUSTED_PROXIES (IPs/CIDRs).
+TRUSTED_PROXIES = env_list("TRUSTED_PROXIES", [])
+CLIENT_IP_HEADER = os.environ.get("CLIENT_IP_HEADER", "")  # e.g. "CF-Connecting-IP"
+
+# Password recovery
+FRONTEND_URL = (os.environ.get("FRONTEND_URL") or "").rstrip("/")
+PASSWORD_RESET_TIMEOUT = int(os.environ.get("PASSWORD_RESET_TIMEOUT", 60 * 60))  # 1 hour
+
+# Email: credentials come only from the environment; nothing is hardcoded.
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
+EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL") or EMAIL_HOST_USER or "webmaster@localhost"
+EMAIL_TIMEOUT = 15
+EMAIL_CONFIGURED = bool(EMAIL_HOST_USER and EMAIL_HOST_PASSWORD)
+EMAIL_BACKEND = (
+    "django.core.mail.backends.smtp.EmailBackend" if EMAIL_CONFIGURED
+    else "django.core.mail.backends.console.EmailBackend"
+)
+
+# Seconds within which an identical authenticated POST is rejected as a duplicate (0 disables).
+DUPLICATE_REQUEST_WINDOW = int(os.environ.get("DUPLICATE_REQUEST_WINDOW", 3))
 
 
 TEMPLATES = [
@@ -96,8 +145,16 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day'
+        'anon': '60/minute',
+        'user': '120/minute',
+        'login': '5/minute',
+        'login_account': '10/hour',
+        'password_reset': '3/minute',
+        'password_reset_account': '3/hour',
+        'certificate_verify': '30/minute',
+        'account_management': '60/minute',
+        'media': '60/hour',
+        'blog_image_upload': '120/hour',
     },
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 50,

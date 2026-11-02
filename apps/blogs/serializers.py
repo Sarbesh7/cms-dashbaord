@@ -54,6 +54,8 @@ class BlogSerializer(serializers.ModelSerializer):
     )
     content_images = ContentImageSerializer(many=True, required=False)
     seo = serializers.SerializerMethodField()
+    # Credited name, kept even if the Member record is later deleted.
+    author_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Blog
@@ -64,6 +66,7 @@ class BlogSerializer(serializers.ModelSerializer):
             'slug',
             'author',
             'author_id',
+            'author_name',
             'excerpt',
             'content',
             'content_images',
@@ -85,6 +88,9 @@ class BlogSerializer(serializers.ModelSerializer):
             'updated_at',
             'seo',
         ]
+
+    def get_author_name(self, obj):
+        return obj.author.name if obj.author_id else (obj.author_name_snapshot or None)
 
     def get_seo(self, obj):
         # Derived automatically; the public frontend builds the canonical URL from its own domain + path
@@ -159,6 +165,10 @@ class BlogSerializer(serializers.ModelSerializer):
 class BlogListSerializer(serializers.ModelSerializer):
     reference = serializers.CharField(read_only=True)
     author = BlogAuthorSerializer(read_only=True)
+    author_name = serializers.SerializerMethodField()
+
+    def get_author_name(self, obj):
+        return obj.author.name if obj.author_id else (obj.author_name_snapshot or None)
 
     class Meta:
         model = Blog
@@ -167,6 +177,7 @@ class BlogListSerializer(serializers.ModelSerializer):
             'reference',
             'title',
             'author',
+            'author_name',
             'slug',
             'excerpt',
             'status',

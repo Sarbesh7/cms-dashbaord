@@ -402,3 +402,55 @@ class MentorAndAssignmentApiTests(TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data["count"], 2)
         self.assertEqual(len(res.data["results"]), 1)
+
+    def test_mentor_assigned_events_create_and_update(self):
+        # 1. Create mentor with assigned events
+        payload = {
+            "name": "New Mentor",
+            "expertise": "DevOps",
+            "assigned_events": [
+                {"event_id": self.event.id, "role": "speaker", "responsibility": "Keynote Speaker"}
+            ]
+        }
+        res = self.client.post("/api/v1/mentors/", payload, format="json")
+        self.assertEqual(res.status_code, 201, res.data)
+        mentor_id = res.data["id"]
+        self.assertEqual(len(res.data["event_assignments"]), 1)
+        self.assertEqual(res.data["event_assignments"][0]["event_id"], self.event.id)
+        self.assertEqual(res.data["event_assignments"][0]["role"], "speaker")
+
+        # 2. Check event details to verify it shows the new mentor
+        ev_res = self.client.get(f"/api/v1/events/{self.event.slug}/")
+        self.assertEqual(ev_res.status_code, 200)
+        assigned_mentor_ids = [m["mentor_id"] for m in ev_res.data["mentor_assignments"]]
+        self.assertIn(mentor_id, assigned_mentor_ids)
+
+        # 3. Update mentor's assigned events via PATCH
+        patch_payload = {
+            "assigned_events": [
+                {"event_id": self.other_event.id, "role": "judge", "responsibility": "Finals Judge"}
+            ]
+        }
+        res_patch = self.client.patch(f"/api/v1/mentors/{mentor_id}/", patch_payload, format="json")
+        self.assertEqual(res_patch.status_code, 200, res_patch.data)
+        self.assertEqual(len(res_patch.data["event_assignments"]), 1)
+        self.assertEqual(res_patch.data["event_assignments"][0]["event_id"], self.other_event.id)
+
+        # 4. Verify previous event no longer includes this mentor
+        ev_res2 = self.client.get(f"/api/v1/events/{self.event.slug}/")
+        assigned_ids_after = [m["mentor_id"] for m in ev_res2.data["mentor_assignments"]]
+        self.assertNotIn(mentor_id, assigned_ids_after)
+
+    def test_duplicate_event_assignment_on_mentor_rejected(self):
+        payload = {
+            "name": "Dupe Mentor",
+            "expertise": "Security",
+            "assigned_events": [
+                {"event_id": self.event.id, "role": "speaker"},
+                {"event_id": self.event.id, "role": "judge"}
+            ]
+        }
+        res = self.client.post("/api/v1/mentors/", payload, format="json")
+        self.assertEqual(res.status_code, 400)
+        self.assertIn("assigned_events", res.data)
+

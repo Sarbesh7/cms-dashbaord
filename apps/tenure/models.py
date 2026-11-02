@@ -4,6 +4,8 @@ from django.db import models
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from apps.core.models import TimeStampModel
 
 
@@ -100,9 +102,12 @@ class TenureMembership(TimeStampModel):
         ADVISOR = "ADVISOR", "Advisor"
         
 
+    # SET_NULL keeps the historical committee record when a Member is deleted;
+    # member_name_snapshot keeps it displayable.
     member = models.ForeignKey(
-        Member, on_delete=models.CASCADE, related_name="memberships"
+        Member, on_delete=models.SET_NULL, null=True, blank=True, related_name="memberships"
     )
+    member_name_snapshot = models.CharField(max_length=100, blank=True, default="")
     tenure = models.ForeignKey(
         Tenure, on_delete=models.CASCADE, related_name="memberships"
     )
@@ -128,17 +133,51 @@ class TenureMembership(TimeStampModel):
 
         ordering = ["order", "id"]
 
+    @property
+    def member_name(self):
+        return self.member.name if self.member_id else self.member_name_snapshot
+
+    def save(self, *args, **kwargs):
+        if self.member_id:
+            self.member_name_snapshot = self.member.name
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"[{self.order}] {self.member.name} - {self.designation} ({self.tenure.name})"
+        return f"[{self.order}] {self.member_name} - {self.designation} ({self.tenure.name})"
 
 
 class Alumni(TimeStampModel):
+    # SET_NULL keeps alumni history when the Member record is deleted.
     member = models.OneToOneField(
-        Member, on_delete=models.CASCADE, related_name="alumni_profile"
+        Member, on_delete=models.SET_NULL, null=True, blank=True, related_name="alumni_profile"
     )
+    member_name_snapshot = models.CharField(max_length=100, blank=True, default="")
     tenures = models.ManyToManyField(Tenure, related_name="alumni")
     graduation_year = models.IntegerField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
 
+    @property
+    def member_name(self):
+        return self.member.name if self.member_id else self.member_name_snapshot
+
+    def save(self, *args, **kwargs):
+        if self.member_id:
+            self.member_name_snapshot = self.member.name
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"Alumni: {self.member.name}"
+        return f"Alumni: {self.member_name}"
+
+
+def snapshot_member_references(member):
+    """Copy the member's name onto every historical record before the FK is nulled."""
+    TenureMembership.objects.filter(member=member).update(member_name_snapshot=member.name)
+    Alumni.objects.filter(member=member).update(member_name_snapshot=member.name)
+    from apps.blogs.models import Blog
+    Blog.objects.filter(author=member).update(author_name_snapshot=member.name)
+
+
+@receiver(pre_delete, sender=Member, dispatch_uid="tenure-member-snapshot-before-delete")
+def _snapshot_before_member_delete(sender, instance, **kwargs):
+    # Runs for single and bulk (queryset/admin) deletes alike.
+    snapshot_member_references(instance)

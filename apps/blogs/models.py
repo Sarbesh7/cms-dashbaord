@@ -92,6 +92,8 @@ class Blog(TimeStampModel):
         blank=True,
         related_name='blogs',
     )
+    # Credited name kept for historical articles if the Member is deleted.
+    author_name_snapshot = models.CharField(max_length=100, blank=True, default='')
 
     status = models.CharField(
         max_length=20,
@@ -169,6 +171,9 @@ class Blog(TimeStampModel):
         slug_number = None
         if not self.slug or title_changed:
             self.slug, slug_number = self._unique_slug(base_slug)
+
+        if self.author_id:
+            self.author_name_snapshot = self.author.name
 
         if self.status == self.STATUS_PUBLISHED and not self.published_at:
             self.published_at = timezone.now()

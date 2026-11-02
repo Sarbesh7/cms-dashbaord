@@ -265,3 +265,45 @@ class BlogAPITest(APITestCase):
         mismatched = generate_test_image(name="fake.png", fmt="jpeg")
         res = self.client.post('/api/v1/blogs/upload-image/', {'image': mismatched}, format='multipart')
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_image_delete_endpoint_success(self):
+        media_root = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, media_root, ignore_errors=True)
+        override = override_settings(MEDIA_ROOT=media_root)
+        override.enable()
+        self.addCleanup(override.disable)
+
+        self.client.force_authenticate(user=self.cms_user)
+        upload_res = self.client.post('/api/v1/blogs/upload-image/', {'image': generate_test_image()}, format='multipart')
+        self.assertEqual(upload_res.status_code, status.HTTP_201_CREATED)
+        pub_id = upload_res.data['public_id']
+        url = upload_res.data['url']
+
+        del_res = self.client.post('/api/v1/blogs/delete-image/', {'public_id': pub_id, 'url': url})
+        self.assertEqual(del_res.status_code, status.HTTP_200_OK)
+
+    def test_image_delete_endpoint_conflict_when_referenced(self):
+        media_root = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, media_root, ignore_errors=True)
+        override = override_settings(MEDIA_ROOT=media_root)
+        override.enable()
+        self.addCleanup(override.disable)
+
+        self.client.force_authenticate(user=self.cms_user)
+        upload_res = self.client.post('/api/v1/blogs/upload-image/', {'image': generate_test_image()}, format='multipart')
+        pub_id = upload_res.data['public_id']
+        url = upload_res.data['url']
+
+        # Create blog referencing this image
+        Blog.objects.create(
+            title="Shared Image Blog",
+            slug="shared-image-blog",
+            author=self.current_member,
+            featured_image_url=url,
+            content="Some text",
+        )
+
+        del_res = self.client.post('/api/v1/blogs/delete-image/', {'public_id': pub_id, 'url': url})
+        self.assertEqual(del_res.status_code, status.HTTP_409_CONFLICT)
+        self.assertIn("referenced by other content", del_res.data['detail'])
+

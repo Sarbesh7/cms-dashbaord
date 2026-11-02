@@ -6,10 +6,16 @@ from django.core.exceptions import ValidationError
 # Raw HTML the dashboard editor itself produces; everything else is rejected.
 ALLOWED_INLINE_TAGS = {'u', 'br'}
 
-FENCED_CODE_RE = re.compile(r'(^|\n)(`{3,}|~{3,})[^\n]*\n.*?(\n\2[ \t]*(?=\n|$)|$)', re.DOTALL)
-INLINE_CODE_RE = re.compile(r'(`+)(?:(?!\1).)+?\1', re.DOTALL)
+# Code is removed before scanning only where a CommonMark renderer would also treat it
+# as code. Anything ambiguous is left in place and scanned (rejecting is the safe side).
+FENCE_OPEN_RE = re.compile(r'^ {0,3}(`{3,}|~{3,})(.*)$')
+# Single-line code span: opening run of N backticks (not escaped, not part of a longer
+# run) closed by the first run of exactly N backticks.
+INLINE_CODE_RE = re.compile(r'(?<![`\\])(`+)(?!`)[^\n]*?(?<!`)\1(?!`)')
 HTML_TAG_RE = re.compile(r'<\s*(/?)\s*([a-zA-Z][a-zA-Z0-9-]*)([^>]*)>')
-HTML_COMMENT_RE = re.compile(r'<!--.*?-->', re.DOTALL)
+# Comments, declarations, CDATA and processing instructions are never needed by the editor,
+# and HTML parsers end comments differently from Markdown ("--!>"), so they are rejected.
+HTML_SPECIAL_RE = re.compile(r'<\s*[!?]')
 # [label](target) and ![alt](target "title"); also reference definitions "[id]: target"
 INLINE_LINK_RE = re.compile(r'(!?)\[(?:[^\]\\]|\\.)*\]\(\s*<?([^)\s>]*)>?(?:\s+["\'(][^)]*)?\)')
 REFERENCE_DEF_RE = re.compile(r'^\s{0,3}\[[^\]]+\]:\s*<?(\S+?)>?(?:\s|$)', re.MULTILINE)
@@ -19,9 +25,30 @@ SAFE_LINK_SCHEMES = {'http', 'https', 'mailto'}
 SAFE_IMAGE_SCHEMES = {'http', 'https'}
 
 
+def _strip_fenced_code(value):
+    """Remove fenced code blocks using CommonMark fence rules (top-level fences only)."""
+    out, fence = [], None
+    for line in value.replace('\r\n', '\n').replace('\r', '\n').split('\n'):
+        if fence is None:
+            match = FENCE_OPEN_RE.match(line)
+            # A backtick fence's info string may not contain backticks.
+            if match and not (match.group(1)[0] == '`' and '`' in match.group(2)):
+                fence = match.group(1)
+                out.append('')
+                continue
+            out.append(line)
+        else:
+            stripped = line.lstrip(' ')
+            indent = len(line) - len(stripped)
+            run = len(stripped) - len(stripped.lstrip(fence[0]))
+            if indent <= 3 and run >= len(fence) and not stripped[run:].strip():
+                fence = None  # closing fence: same char, at least as long, nothing after
+            out.append('')
+    return '\n'.join(out)
+
+
 def _strip_code(value):
-    value = FENCED_CODE_RE.sub('\n', value)
-    return INLINE_CODE_RE.sub('', value)
+    return INLINE_CODE_RE.sub('', _strip_fenced_code(value))
 
 
 def _scheme(target):
@@ -54,8 +81,11 @@ def validate_markdown_content(value):
     if not value or not value.strip():
         raise ValidationError('Article content cannot be empty.')
 
-    scanned = HTML_COMMENT_RE.sub('', _strip_code(value))
+    scanned = _strip_code(value)
     errors = []
+
+    if HTML_SPECIAL_RE.search(scanned):
+        errors.append('HTML comments and declarations are not allowed in article content.')
 
     disallowed = set()
     for _closing, tag, attrs in HTML_TAG_RE.findall(scanned):

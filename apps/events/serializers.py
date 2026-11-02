@@ -3,6 +3,8 @@ import re
 
 from django.db import transaction
 from rest_framework import serializers
+from apps.core.uploads import IMAGE_EXTENSIONS, validate_upload
+from apps.core.visibility import PUBLIC_EVENT_STATUSES
 from .models import Event, Mentor, EventMentorAssignment
 
 
@@ -23,6 +25,7 @@ class MentorEventAssignmentSummarySerializer(serializers.ModelSerializer):
     event_id = serializers.IntegerField(source='event.id', read_only=True)
     event_title = serializers.CharField(source='event.title', read_only=True)
     event_slug = serializers.CharField(source='event.slug', read_only=True)
+    event_status = serializers.CharField(source='event.status', read_only=True)
     role_label = serializers.CharField(read_only=True)
 
     class Meta:
@@ -32,6 +35,7 @@ class MentorEventAssignmentSummarySerializer(serializers.ModelSerializer):
             'event_id',
             'event_title',
             'event_slug',
+            'event_status',
             'role',
             'role_label',
             'custom_role',
@@ -39,8 +43,35 @@ class MentorEventAssignmentSummarySerializer(serializers.ModelSerializer):
         ]
 
 
+class MentorEventAssignmentWriteSerializer(serializers.Serializer):
+    """Validates one entry of a mentor's `assigned_events` write payload."""
+    event_id = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all(), source='event')
+    role = serializers.ChoiceField(
+        choices=EventMentorAssignment.Role.choices,
+        default=EventMentorAssignment.Role.MAIN_MENTOR,
+    )
+    custom_role = serializers.CharField(max_length=100, required=False, allow_blank=True, allow_null=True)
+    responsibility = serializers.CharField(max_length=255, required=False, allow_blank=True, allow_null=True)
+
+    def validate(self, attrs):
+        custom_role = " ".join((attrs.get('custom_role') or "").split())
+        if attrs['role'] == EventMentorAssignment.Role.CUSTOM:
+            if not custom_role:
+                raise serializers.ValidationError({'custom_role': 'Enter a role name for the custom role.'})
+            if _normalize_role_text(custom_role) in BUILT_IN_ROLE_KEYS:
+                raise serializers.ValidationError({
+                    'custom_role': f'"{custom_role}" is a built-in role. Choose it from the role list instead.'
+                })
+        else:
+            custom_role = ""
+        attrs['custom_role'] = custom_role
+        attrs['responsibility'] = (attrs.get('responsibility') or "").strip()
+        return attrs
+
+
 class MentorSerializer(serializers.ModelSerializer):
     event_assignments = MentorEventAssignmentSummarySerializer(many=True, read_only=True)
+    assigned_events = MentorEventAssignmentWriteSerializer(many=True, write_only=True, required=False)
 
     class Meta:
         model = Mentor
@@ -52,9 +83,80 @@ class MentorSerializer(serializers.ModelSerializer):
             'linkedin_profile',
             'photo',
             'event_assignments',
+            'assigned_events',
             'created_at',
             'updated_at',
         ]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if self.context.get('public'):
+            # Public callers never see mentor contact details or draft-event assignments.
+            data.pop('email', None)
+            data['event_assignments'] = [
+                a for a in data.get('event_assignments') or []
+                if a.get('event_status') in PUBLIC_EVENT_STATUSES
+            ]
+        return data
+
+    def to_internal_value(self, data):
+        # Multipart requests send `assigned_events` as a JSON string.
+        if hasattr(data, 'getlist'):
+            data = {key: data.get(key) for key in data.keys()}
+        else:
+            data = dict(data)
+
+        assignments_val = data.get('assigned_events') or data.get('event_assignments')
+        if isinstance(assignments_val, str):
+            try:
+                data['assigned_events'] = json.loads(assignments_val) if assignments_val.strip() else []
+            except ValueError:
+                raise serializers.ValidationError({'assigned_events': ['Assignments must be valid JSON.']})
+        elif isinstance(assignments_val, list):
+            data['assigned_events'] = assignments_val
+
+        return super().to_internal_value(data)
+
+    def validate_assigned_events(self, value):
+        seen = set()
+        for item in value:
+            event = item['event']
+            if event.pk in seen:
+                raise serializers.ValidationError(
+                    f'Event "{event}" (id {event.pk}) is assigned more than once.'
+                )
+            seen.add(event.pk)
+        return value
+
+    def create(self, validated_data):
+        assignments_data = validated_data.pop('assigned_events', None)
+        with transaction.atomic():
+            mentor = super().create(validated_data)
+            if assignments_data is not None:
+                self._replace_assignments(mentor, assignments_data)
+        return mentor
+
+    def update(self, instance, validated_data):
+        assignments_data = validated_data.pop('assigned_events', None)
+        with transaction.atomic():
+            mentor = super().update(instance, validated_data)
+            if assignments_data is not None:
+                self._replace_assignments(mentor, assignments_data)
+        return mentor
+
+    def _replace_assignments(self, mentor, assignments_data):
+        getattr(mentor, '_prefetched_objects_cache', {}).clear()
+        mentor.event_assignments.all().delete()
+        EventMentorAssignment.objects.bulk_create([
+            EventMentorAssignment(
+                mentor=mentor,
+                event=item['event'],
+                role=item['role'],
+                custom_role=item['custom_role'],
+                responsibility=item['responsibility'],
+            )
+            for item in assignments_data
+        ])
 
 
 class EventMentorAssignmentSerializer(serializers.ModelSerializer):
@@ -149,6 +251,13 @@ class EventSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['slug', 'mentor_assignments']
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if self.context.get('public'):
+            for assignment in data.get('mentor_assignments') or []:
+                assignment.pop('mentor_email', None)
+        return data
+
     def to_internal_value(self, data):
         # Multipart requests send `assignments` as a JSON string. Convert the
         # QueryDict into a plain dict so the nested serializer reads the decoded list.
@@ -165,6 +274,9 @@ class EventSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'assignments': ['Assignments must be valid JSON.']})
 
         return super().to_internal_value(data)
+
+    def validate_image(self, value):
+        return validate_upload(value, IMAGE_EXTENSIONS, "Event image")
 
     def validate_assignments(self, value):
         seen = set()

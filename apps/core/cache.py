@@ -24,6 +24,13 @@ def versioned_cache_page(timeout):
     def decorator(view_method):
         @wraps(view_method)
         def _wrapped(self, request, *args, **kwargs):
+            # The cache key is URL-only, so only the public (anonymous) variant may be
+            # cached. Authenticated responses can include drafts and private fields.
+            user = getattr(request, "user", None)
+            if user is not None and user.is_authenticated:
+                response = view_method(self, request, *args, **kwargs)
+                response["Cache-Control"] = "private, no-store"
+                return response
             key_prefix = f"content-v{get_content_cache_version()}"
             cached_view = cache_page(timeout, key_prefix=key_prefix)(
                 lambda req, *a, **kw: view_method(self, req, *a, **kw)

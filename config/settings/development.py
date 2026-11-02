@@ -72,10 +72,22 @@ if USE_CLOUDINARY:
         },
     }
 
-# Local Dummy Email or Gmail Dev configuration
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "swikrityac31@gmail.com")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "xvmz fpzx eykp gzop")
+# Email: configured in base.py from environment variables (SMTP only when
+# EMAIL_HOST_USER and EMAIL_HOST_PASSWORD are set, otherwise the console backend).
+
+# Local dashboard default for password-reset links (production must set FRONTEND_URL).
+FRONTEND_URL = FRONTEND_URL or "http://localhost:3000"
+
+# Local development runs over plain HTTP on the same site as the dashboard.
+AUTH_COOKIE_SAMESITE = os.getenv("AUTH_COOKIE_SAMESITE", "Lax")
+AUTH_COOKIE_SECURE = env_bool("AUTH_COOKIE_SECURE", False)
+
+if 'test' in sys.argv:
+    # Generous limits so the suite is not throttled; throttling tests override explicitly.
+    REST_FRAMEWORK['DEFAULT_THROTTLE_RATES'] = {
+        scope: '10000/minute' for scope in REST_FRAMEWORK['DEFAULT_THROTTLE_RATES']
+    }
+    DUPLICATE_REQUEST_WINDOW = 0
+    EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+    EMAIL_CONFIGURED = True
+    FRONTEND_URL = "http://localhost:3000"

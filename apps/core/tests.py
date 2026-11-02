@@ -9,54 +9,75 @@ from apps.certificates.models import Certificate
 User = get_user_model()
 
 
-class DashboardStatsTests(APITestCase):
-    def setUp(self):
-        self.user = User.objects.create_superuser(
-            username="admin",
-            email="admin@example.com",
-            password="adminpassword123",
-            role="admin",
-        )
-        self.client.force_authenticate(user=self.user)
+OVERVIEW_URL = "/api/v1/dashboard/overview/"
 
-    def test_dashboard_stats_endpoint(self):
-        # Create published notice
+ALL_MODULES = {
+    "tenures", "members", "alumni", "events", "mentors",
+    "certificates", "papers", "blogs", "notices", "activity_logs",
+}
+EXPECTED_MODULES = {
+    "superadmin": ALL_MODULES,
+    "admin": ALL_MODULES,
+    "cms_user": ALL_MODULES - {"activity_logs"},
+    "operations": {"events", "mentors", "certificates", "papers", "notices"},
+    "papers": {"papers"},
+    "notice": {"notices"},
+    "blog": {"blogs"},
+}
+
+
+class DashboardOverviewTests(APITestCase):
+    def _user(self, role):
+        return User.objects.create_user(
+            username=f"u_{role}", email=f"{role}@example.com", password="pass12345", role=role
+        )
+
+    def test_requires_authentication(self):
+        self.assertEqual(self.client.get(OVERVIEW_URL).status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(
+            self.client.get("/api/v1/dashboard/stats/").status_code, status.HTTP_401_UNAUTHORIZED
+        )
+
+    def test_each_role_receives_only_permitted_modules(self):
+        for role, expected in EXPECTED_MODULES.items():
+            with self.subTest(role=role):
+                self.client.force_authenticate(user=self._user(role))
+                res = self.client.get(OVERVIEW_URL)
+                self.assertEqual(res.status_code, status.HTTP_200_OK)
+                self.assertEqual(set(res.data["modules"].keys()), expected)
+                for key, payload in res.data["modules"].items():
+                    self.assertNotIn("error", payload, key)
+
+    def test_counts_match_database(self):
         Notice.objects.create(title="Notice 1", status="published")
         Notice.objects.create(title="Draft Notice", status="draft")
-
-        # Create open event
-        open_event = Event.objects.create(title="Event 1", status="published", date=timezone.now())
+        published_event = Event.objects.create(title="Event 1", status="published", date=timezone.now())
         Event.objects.create(title="Event 2", status="draft", date=timezone.now())
+        Event.objects.create(title="Event 3", status="completed", date=timezone.now())
+        Mentor.objects.create(name="Mentor 1", expertise="x")
+        Certificate.objects.create(full_name="Alice", event=published_event, is_project_completed=True)
+        Certificate.objects.create(full_name="Bob", event=published_event, is_project_completed=False)
 
-        # Create mentor
-        Mentor.objects.create(name="Mentor 1")
+        self.client.force_authenticate(user=self._user("superadmin"))
+        modules = self.client.get(OVERVIEW_URL).data["modules"]
 
-        # Create certificates
-        Certificate.objects.create(
-            full_name="Alice",
-            event=open_event,
-            is_project_completed=True,
-        )
-        Certificate.objects.create(
-            full_name="Bob",
-            event=open_event,
-            is_project_completed=False,
-        )
+        self.assertEqual(modules["notices"]["stats"], {"total": 2, "published": 1, "drafts": 1})
+        self.assertEqual(modules["events"]["stats"]["total"], 3)
+        self.assertEqual(modules["events"]["stats"]["published"], 1)
+        self.assertEqual(modules["events"]["stats"]["drafts"], 1)
+        self.assertEqual(modules["events"]["stats"]["completed"], 1)
+        self.assertEqual(modules["mentors"]["stats"]["total"], 1)
+        self.assertEqual(modules["certificates"]["stats"], {"total": 2, "completed": 1})
+        self.assertEqual(modules["certificates"]["recent"][0]["event_title"], "Event 1")
 
-        response = self.client.get("/api/v1/dashboard/stats/")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Check response keys and values
-        self.assertEqual(response.data["published_notices"], 1)
-        self.assertEqual(response.data["open_events"], 1)
-        self.assertEqual(response.data["total_mentors"], 1)
-        self.assertEqual(response.data["completed_certificates"], 1)
-
-        # Check camelCase aliases for frontend compatibility
-        self.assertEqual(response.data["publishedNoticesCount"], 1)
-        self.assertEqual(response.data["openEventsCount"], 1)
-        self.assertEqual(response.data["totalMentorsCount"], 1)
-        self.assertEqual(response.data["certificatesIssuedCount"], 1)
+    def test_recent_records_are_capped_and_newest_first(self):
+        for i in range(8):
+            Notice.objects.create(title=f"N{i}", status="published")
+        self.client.force_authenticate(user=self._user("notice"))
+        recent = self.client.get(OVERVIEW_URL).data["modules"]["notices"]["recent"]
+        self.assertEqual(len(recent), 5)
+        self.assertEqual(recent[0]["title"], "N7")
+        self.assertEqual(self.client.get(OVERVIEW_URL).data["modules"]["notices"]["stats"]["total"], 8)
 
 
 class ContentConsistencyTests(APITestCase):
@@ -131,5 +152,6 @@ class ContentConsistencyTests(APITestCase):
         Notice.objects.create(title="Draft", description="d", status="draft")
         page = self.client.get("/api/v1/notices/", {"page_size": 10})
         self.assertEqual(len(page.data["results"]), 10)
-        stats = self.client.get("/api/v1/dashboard/stats/")
-        self.assertEqual(stats.data["published_notices"], 45)
+        overview = self.client.get(OVERVIEW_URL)
+        self.assertEqual(overview.data["modules"]["notices"]["stats"]["published"], 45)
+        self.assertEqual(overview.data["modules"]["notices"]["stats"]["total"], 46)

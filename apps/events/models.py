@@ -69,7 +69,7 @@ class Event(TimeStampModel):
 
     tenure = models.ForeignKey(
         Tenure, 
-        on_delete=models.CASCADE, 
+        on_delete=models.SET_NULL, 
         related_name='events', 
         null=True, 
         blank=True

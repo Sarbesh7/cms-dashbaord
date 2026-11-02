@@ -196,11 +196,8 @@
 
     <div class="grid grid-2">
       <div class="card">
-        <h2>Authentication &amp; testing credentials</h2>
-        <div class="creds-box">
-          <div class="creds-row"><span>Username</span><code>admin</code></div>
-          <div class="creds-row"><span>Password</span><code>admin</code></div>
-        </div>
+        <h2>Authentication</h2>
+        <p>Accounts are created by a Superadmin. No shared or default credentials exist; use your own account.</p>
         <div class="auth-note">
           <strong>Auth header format</strong>
           <code>Authorization: Bearer &lt;access-token&gt;</code>
@@ -209,9 +206,9 @@
       <div class="card">
         <h2>How to test the API</h2>
         <ol>
-          <li>Send a <code>POST</code> request to <code>/api/v1/login/</code> with the credentials above.</li>
-          <li>Copy the returned <code>access</code> JWT token from the JSON response.</li>
-          <li>Include the token in request headers for protected endpoints.</li>
+          <li>Send a <code>POST</code> request to <code>/api/v1/login/</code> with your own account's email and password.</li>
+          <li>The access token is returned as an httpOnly <code>access_token</code> cookie.</li>
+          <li>Browser requests send the cookie automatically (from a trusted origin); other clients use the Bearer header.</li>
           <li>All routes use the prefix <code>/api/v1/</code>.</li>
         </ol>
       </div>

@@ -44,6 +44,22 @@ CSRF_TRUSTED_ORIGINS = list(set(CSRF_TRUSTED_ORIGINS + [
     "https://cms.csitabmc.com",
 ]))
 
+# Auth cookies. Default SameSite=None preserves the current cross-site deployment
+# (API on a different site than the dashboard). If the dashboard and API share a
+# registrable domain (e.g. dashboard.example.com + api.example.com), set
+# AUTH_COOKIE_SAMESITE=Lax. CSRF is enforced by Origin validation either way.
+AUTH_COOKIE_SAMESITE = os.environ.get("AUTH_COOKIE_SAMESITE", "None")
+AUTH_COOKIE_SECURE = True
+
+# Only enable behind a proxy that overwrites X-Forwarded-Proto (Django docs prerequisite).
+if env_bool("USE_X_FORWARDED_PROTO", False):
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Without SMTP credentials, never fall back to the console backend in production:
+# that would write password-reset links (secrets) into server logs.
+if not EMAIL_CONFIGURED:
+    EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
+
 
 DATABASES = {
     "default": dj_database_url.config(
@@ -58,12 +74,8 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = "smtp.gmail.com"
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+# Email settings are read from the environment in base.py
+# (EMAIL_HOST, EMAIL_PORT, EMAIL_USE_TLS, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, DEFAULT_FROM_EMAIL).
 
 
 SECURE_BROWSER_XSS_FILTER = True
