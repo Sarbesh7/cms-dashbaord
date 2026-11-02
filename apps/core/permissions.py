@@ -43,6 +43,8 @@ PERMISSION_CATALOG = {
         ],
     },
     "activity_logs": {"label": "Activity Logs", "actions": ["view"]},
+    "announcements": {"label": "Announcements", "actions": ["view", "create", "update", "delete"]},
+    "notifications": {"label": "Notifications", "actions": ["view", "retry"]},
 }
 
 ALL_PERMISSIONS = frozenset(
@@ -56,9 +58,10 @@ PROTECTED_PERMISSIONS = {
     "activity_logs.view": ("superadmin", "admin"),
     "admin_access.view": ("superadmin", "admin"),
     "admin_access.change_own_password": ("superadmin", "admin"),
+    "notifications.retry": ("superadmin", "admin", "operations"),
 }
 
-_CONTENT_MODULES = ("tenures", "members", "alumni", "events", "mentors", "notices", "blogs", "certificates", "papers")
+_CONTENT_MODULES = ("tenures", "members", "alumni", "events", "mentors", "notices", "blogs", "certificates", "papers", "announcements")
 # Existing policy kept: deleting blog articles is reserved for Admin and Superadmin.
 _BLOG_EDITOR_GRANTS = ("blogs.view", "blogs.create", "blogs.update", "blogs.publish", "blogs.unpublish")
 
@@ -72,19 +75,20 @@ ROLE_DEFINITIONS = {
         "label": "Admin",
         "description": "Full content management and activity logs; no account management.",
         "grants": ["dashboard.all", "media.all", *(f"{m}.all" for m in _CONTENT_MODULES),
-                   "activity_logs.view", "admin_access.view", "admin_access.change_own_password"],
+                   "activity_logs.view", "admin_access.view", "admin_access.change_own_password",
+                   "notifications.view", "notifications.retry"],
     },
     "cms_user": {
         "label": "CMS User",
-        "description": "Tenures, members, alumni, events, notices, blogs, mentors, certificates and past papers.",
+        "description": "Tenures, members, alumni, events, notices, blogs, mentors, certificates, past papers and announcements.",
         "grants": ["dashboard.all", "media.all", *(f"{m}.all" for m in _CONTENT_MODULES if m != "blogs"),
-                   *_BLOG_EDITOR_GRANTS],
+                   *_BLOG_EDITOR_GRANTS, "notifications.view"],
     },
     "operations": {
         "label": "Operations",
-        "description": "Events, notices, certificates, past papers and mentors.",
+        "description": "Events, notices, certificates, past papers, mentors, announcements and notifications.",
         "grants": ["dashboard.all", "media.all", "events.all", "notices.all", "certificates.all",
-                   "papers.all", "mentors.all"],
+                   "papers.all", "mentors.all", "announcements.all", "notifications.view", "notifications.retry"],
     },
     "papers": {
         "label": "Past Papers Manager",
@@ -94,7 +98,7 @@ ROLE_DEFINITIONS = {
     "notice": {
         "label": "Notices Manager",
         "description": "Notices only, including publishing.",
-        "grants": ["dashboard.all", "media.all", "notices.all"],
+        "grants": ["dashboard.all", "media.all", "notices.all", "notifications.view"],
     },
     "blog": {
         "label": "Blog Editor",
@@ -102,6 +106,7 @@ ROLE_DEFINITIONS = {
         "grants": ["dashboard.all", "media.all", *_BLOG_EDITOR_GRANTS],
     },
 }
+
 
 ROLES = list(ROLE_DEFINITIONS.keys())
 

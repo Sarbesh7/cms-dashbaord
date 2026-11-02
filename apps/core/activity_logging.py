@@ -131,7 +131,7 @@ def diff_snapshots(before, after):
 
 
 def log_activity(request=None, user=None, action="", module="", target_id="", target_repr="",
-                 details=None, description="", changes=None):
+                 details=None, description="", changes=None, actor_name=None, user_role=None):
     """Record one successful action. Never raises."""
     from apps.core.models import ActivityLog
     from apps.core.permissions import effective_role
@@ -143,15 +143,19 @@ def log_activity(request=None, user=None, action="", module="", target_id="", ta
             if req_user is not None and req_user.is_authenticated:
                 acting_user = req_user
 
-        actor_name = ""
+        resolved_actor_name = actor_name or ""
         user_email = ""
-        user_role = ""
+        resolved_user_role = user_role or ""
         actor_id = None
         if acting_user:
             actor_id = acting_user.pk
-            actor_name = (acting_user.get_full_name() or acting_user.username or "").strip()
+            resolved_actor_name = (acting_user.get_full_name() or acting_user.username or "").strip()
             user_email = getattr(acting_user, 'email', '') or ''
-            user_role = effective_role(acting_user) or getattr(acting_user, 'role', '') or ''
+            resolved_user_role = effective_role(acting_user) or getattr(acting_user, 'role', '') or ''
+        elif not resolved_actor_name and request is None:
+            # Automated background task (e.g. system notification dispatch)
+            resolved_actor_name = "System"
+            resolved_user_role = "system"
 
         ip = get_client_ip(request) if request is not None else None
         user_agent = (request.META.get('HTTP_USER_AGENT', '') if request is not None else '')[:500]
@@ -159,9 +163,9 @@ def log_activity(request=None, user=None, action="", module="", target_id="", ta
         return ActivityLog.objects.create(
             user=acting_user if acting_user and acting_user.pk else None,
             actor_id_snapshot=actor_id,
-            actor_name_snapshot=actor_name[:255],
+            actor_name_snapshot=resolved_actor_name[:255],
             user_email_snapshot=user_email[:255],
-            user_role_snapshot=user_role[:50],
+            user_role_snapshot=resolved_user_role[:50],
             action=action,
             module=module,
             target_id=str(target_id) if target_id not in (None, "") else "",

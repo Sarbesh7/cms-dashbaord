@@ -42,9 +42,13 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.papers',
     'apps.blogs',
+    'apps.notifications',
+    'apps.announcements',
     'rest_framework.authtoken',
+
     'rest_framework_simplejwt.token_blacklist',
-    'corsheaders',]
+    'corsheaders',
+]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
