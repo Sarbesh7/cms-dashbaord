@@ -6,10 +6,20 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    # Updated to point to your new local development file by default
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')  # For production, use 'config.settings.production'
-    # production ma jada use thiss 'config.settings.production' or
-    
+    from pathlib import Path
+    from dotenv import load_dotenv
+
+    # Load environment variables from .env
+    base_dir = Path(__file__).resolve().parent
+    load_dotenv(base_dir / ".env")
+
+    # Map friendly short names or default to config.settings.development
+    settings_module = os.environ.get("DJANGO_SETTINGS_MODULE", "config.settings.development")
+    if settings_module == "development":
+        settings_module = "config.settings.development"
+    elif settings_module == "production":
+        settings_module = "config.settings.production"
+    os.environ["DJANGO_SETTINGS_MODULE"] = settings_module
     
     
     try:

@@ -1,18 +1,29 @@
-from rest_framework.permissions import BasePermission
+"""
+Re-export everything from apps.core.permissions for backwards compatibility.
+"""
+from apps.core.permissions import (
+    ROLES,
+    PERMISSION_CATALOG,
+    PROTECTED_PERMISSIONS,
+    has_role_permission,
+    HasModulePermission,
+    IsSuperadminOnly,
+    CanViewActivityLogs,
+    IsAdmin,
+    IsCMSUser,
+)
 
-class IsAdmin(BasePermission):
- def has_permission(self, request, view):
-  return (
-   request.user.is_authenticated and
-   request.user.role =='admin'
-  )
-  
+PROTECTED_OPERATIONS = PROTECTED_PERMISSIONS
 
-class IsCMSUser(BasePermission):
- def has_permission(self, request, view):
-  return (
-   request.user.is_authenticated and
-   request.user.role in [
-    'admin','cms_user'
-    ]
-  )
+__all__ = [
+    "ROLES",
+    "PERMISSION_CATALOG",
+    "PROTECTED_PERMISSIONS",
+    "PROTECTED_OPERATIONS",
+    "has_role_permission",
+    "HasModulePermission",
+    "IsSuperadminOnly",
+    "CanViewActivityLogs",
+    "IsAdmin",
+    "IsCMSUser",
+]

@@ -1,15 +1,17 @@
 from django.contrib import admin
-from .models import Event, Mentor
+from .models import Event, Mentor, EventMentorAssignment
 
 
 @admin.register(Mentor)
 class MentorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'member', 'email', 'expertise', 'slug')
+    list_display = ('id', 'name', 'email', 'expertise')
     list_filter = ('expertise',)
-    search_fields = ('name', 'email', 'expertise', 'member__name')
-    prepopulated_fields = {'slug': ('name',)}
-    raw_id_fields = ('member',)  # Look up existing team members efficiently
-    list_select_related = ('member',)
+    search_fields = ('name', 'email', 'expertise')
+
+
+class EventMentorAssignmentInline(admin.TabularInline):
+    model = EventMentorAssignment
+    extra = 1
 
 
 @admin.register(Event)
@@ -18,8 +20,8 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = ('status', 'category', 'tenure', 'date')
     search_fields = ('title', 'description', 'organiser', 'location')
     prepopulated_fields = {'slug': ('title',)}
-    filter_horizontal = ('mentors',)  # Dual-list box interface for assigning multiple mentors
     list_select_related = ('tenure',)
+    inlines = [EventMentorAssignmentInline]
     fieldsets = (
         ('Basic Information', {
             'fields': ('title', 'slug', 'tenure', 'category', 'tags', 'status', 'description', 'image')
@@ -30,7 +32,11 @@ class EventAdmin(admin.ModelAdmin):
         ('Registration Details', {
             'fields': ('registration_fee_bmc', 'registration_fee_non_bmc', 'registration_link')
         }),
-        ('Mentorship', {
-            'fields': ('mentors',)
-        }),
     )
+
+
+@admin.register(EventMentorAssignment)
+class EventMentorAssignmentAdmin(admin.ModelAdmin):
+    list_display = ('event', 'mentor', 'role', 'custom_role', 'responsibility')
+    list_filter = ('role', 'event')
+    search_fields = ('event__title', 'mentor__name', 'responsibility', 'custom_role')

@@ -10,8 +10,8 @@ class TenureMembershipInline(admin.TabularInline):
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
    
-    list_display = ('name', 'email', 'phone_number', 'slug')
-    search_fields = ('name', 'email', 'phone_number')
+    list_display = ('name', 'email', 'slug')
+    search_fields = ('name', 'email')
     prepopulated_fields = {'slug': ('name',)}
     inlines = [TenureMembershipInline]
 
