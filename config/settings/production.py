@@ -28,8 +28,9 @@ if USE_CLOUDINARY:
     }
 
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or os.environ.get("SECRET_KEY")
 DEBUG = False
+SIMPLE_JWT["SIGNING_KEY"] = SECRET_KEY
 
 ALLOWED_HOSTS = [
     host.strip()

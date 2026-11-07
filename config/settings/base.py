@@ -165,6 +165,12 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSION': 'v1',
 }
 
+# Server-side Database-backed Login Rate Limiting (Multi-dimensional)
+LOGIN_RATE_LIMIT_IP_MAX = 5
+LOGIN_RATE_LIMIT_IP_WINDOW = 300  # 5 minutes
+LOGIN_RATE_LIMIT_ACCOUNT_MAX = 10
+LOGIN_RATE_LIMIT_ACCOUNT_WINDOW = 900  # 15 minutes
+
 AUTH_USER_MODEL = "users.User"
 
 # Session policy: 1-hour access tokens; 7-day refresh tokens rotated (and the old
@@ -176,6 +182,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
+    "SIGNING_KEY": os.environ.get("DJANGO_SECRET_KEY") or os.environ.get("SECRET_KEY", "django-insecure-dev-only-key-change-me-at-least-32-chars-long"),
 }
 JWT_SESSION_MAX_LIFETIME = timedelta(days=30)
 

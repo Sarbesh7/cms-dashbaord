@@ -114,8 +114,8 @@ class AdminRoleHierarchyTests(TestCase):
             username="super2", email="super2@csitabmc.org", password="Password123!", role="superadmin"
         )
         self.client.force_authenticate(user=self.superadmin)
-        # Cannot view
-        self.assertEqual(self.client.get(f"/api/v1/users/{super2.id}/").status_code, status.HTTP_403_FORBIDDEN)
+        # Can view (read-only per Phase 7)
+        self.assertEqual(self.client.get(f"/api/v1/users/{super2.id}/").status_code, status.HTTP_200_OK)
         # Cannot edit
         self.assertEqual(self.client.patch(f"/api/v1/users/{super2.id}/", {"username": "hacked"}).status_code, status.HTTP_403_FORBIDDEN)
         # Cannot delete
@@ -216,12 +216,12 @@ class AdminRoleHierarchyTests(TestCase):
         self.assertIn(response.status_code, [status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN])
 
     def test_account_list_filters_by_permission_hierarchy(self):
-        # Superadmin sees regular Admins and CMS user, but not self or other superadmins
+        # Superadmin sees all accounts including self and superadmins (read-only) per Phase 7
         self.client.force_authenticate(user=self.superadmin)
         res_super = self.client.get("/api/v1/users/")
         self.assertEqual(res_super.status_code, status.HTTP_200_OK)
         super_ids = [u["id"] for u in res_super.data]
-        self.assertNotIn(self.superadmin.id, super_ids)
+        self.assertIn(self.superadmin.id, super_ids)
         self.assertIn(self.admin1.id, super_ids)
         self.assertIn(self.admin2.id, super_ids)
         self.assertIn(self.cms_user.id, super_ids)
@@ -342,14 +342,14 @@ class AccountManagementTests(TestCase):
         self.assertNotIn(self.superadmin.id, admin_ids)
         self.assertNotIn(self.admin.id, admin_ids)
 
-        # Superadmin gets 200, contains admin and CMS user, not self
+        # Superadmin gets 200, contains admin, CMS user, and superadmin (read-only) per Phase 7
         self.client.force_authenticate(user=self.superadmin)
         res_super = self.client.get("/api/v1/users/accounts/")
         self.assertEqual(res_super.status_code, status.HTTP_200_OK)
         super_ids = [u["id"] for u in res_super.data]
         self.assertIn(self.admin.id, super_ids)
         self.assertIn(self.cms_user.id, super_ids)
-        self.assertNotIn(self.superadmin.id, super_ids)
+        self.assertIn(self.superadmin.id, super_ids)
 
     def test_superadmin_can_create_and_manage_admin(self):
         self.client.force_authenticate(user=self.superadmin)
@@ -552,3 +552,142 @@ class ForgotPasswordRemovalTests(TestCase):
         # Legacy reset-password endpoint removed
         res3 = self.client.post("/api/v1/users/reset-password/", {})
         self.assertEqual(res3.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class UserProfilePictureRemovalTests(TestCase):
+    def test_user_model_has_no_profile_picture_field(self):
+        user = User(username="testprofile", email="profile@csitabmc.org")
+        self.assertFalse(hasattr(user, "profile_picture"))
+
+
+class SuperadminReadOnlyAdminAccessTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.superadmin1 = User.objects.create_superuser(
+            username="super1",
+            email="super1@csitabmc.org",
+            password="Password123!",
+            role="superadmin",
+        )
+        self.superadmin2 = User.objects.create_superuser(
+            username="super2",
+            email="super2@csitabmc.org",
+            password="Password123!",
+            role="superadmin",
+        )
+        self.admin = User.objects.create_user(
+            username="adminuser",
+            email="adminuser@csitabmc.org",
+            password="Password123!",
+            role="admin",
+        )
+
+    def test_superadmin_included_in_account_listing(self):
+        self.client.force_authenticate(user=self.superadmin1)
+        res = self.client.get("/api/v1/users/accounts/")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        returned_ids = [item["id"] for item in res.data]
+        self.assertIn(self.superadmin1.id, returned_ids)
+        self.assertIn(self.superadmin2.id, returned_ids)
+        self.assertIn(self.admin.id, returned_ids)
+
+    def test_superadmin_mutations_blocked(self):
+        self.client.force_authenticate(user=self.superadmin1)
+        # Attempt PATCH on self
+        res_self = self.client.patch(f"/api/v1/users/accounts/{self.superadmin1.id}/", {"first_name": "Test"})
+        self.assertEqual(res_self.status_code, status.HTTP_403_FORBIDDEN)
+
+        # Attempt PATCH on another superadmin
+        res_other = self.client.patch(f"/api/v1/users/accounts/{self.superadmin2.id}/", {"first_name": "Test2"})
+        self.assertEqual(res_other.status_code, status.HTTP_403_FORBIDDEN)
+
+        # Attempt DELETE on another superadmin
+        res_del = self.client.delete(f"/api/v1/users/accounts/{self.superadmin2.id}/")
+        self.assertEqual(res_del.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class DatabaseBackedLoginRateLimitingTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username="ratelimituser",
+            email="ratelimit@csitabmc.org",
+            password="CorrectPassword123!",
+            role="cms_user",
+        )
+
+    def test_ip_rate_limiting_enforced_with_retry_after(self):
+        # 5 failed attempts from same IP
+        for _ in range(5):
+            res = self.client.post(
+                "/api/v1/login/",
+                {"email": "wrong@csitabmc.org", "password": "BadPassword123!"},
+                REMOTE_ADDR="198.51.100.50",
+            )
+            self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        # 6th attempt should be blocked with 429
+        res_blocked = self.client.post(
+            "/api/v1/login/",
+            {"email": "wrong@csitabmc.org", "password": "BadPassword123!"},
+            REMOTE_ADDR="198.51.100.50",
+        )
+        self.assertEqual(res_blocked.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+        self.assertIn("Retry-After", res_blocked.headers)
+        self.assertTrue(int(res_blocked.headers["Retry-After"]) > 0)
+        self.assertIn("Too many failed login attempts", res_blocked.data["detail"])
+
+    def test_account_rate_limiting_across_multiple_ips(self):
+        target_email = "target@csitabmc.org"
+        User.objects.create_user(
+            username="targetacct",
+            email=target_email,
+            password="CorrectPassword123!",
+            role="cms_user",
+        )
+
+        # 10 failed attempts from 10 distinct IPs targeting same account
+        for i in range(10):
+            res = self.client.post(
+                "/api/v1/login/",
+                {"email": target_email, "password": "WrongPassword123!"},
+                REMOTE_ADDR=f"198.51.100.{100 + i}",
+            )
+            self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        # 11th attempt from a fresh 11th IP targeting that account is rate limited
+        res_blocked = self.client.post(
+            "/api/v1/login/",
+            {"email": target_email, "password": "WrongPassword123!"},
+            REMOTE_ADDR="198.51.100.200",
+        )
+        self.assertEqual(res_blocked.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+        self.assertIn("Retry-After", res_blocked.headers)
+
+    def test_successful_login_clears_failed_attempts(self):
+        # 3 failed attempts
+        for _ in range(3):
+            self.client.post(
+                "/api/v1/login/",
+                {"email": "ratelimit@csitabmc.org", "password": "WrongPassword123!"},
+                REMOTE_ADDR="198.51.100.77",
+            )
+
+        # Successful login
+        res_success = self.client.post(
+            "/api/v1/login/",
+            {"email": "ratelimit@csitabmc.org", "password": "CorrectPassword123!"},
+            REMOTE_ADDR="198.51.100.77",
+        )
+        self.assertEqual(res_success.status_code, status.HTTP_200_OK)
+
+        # Counter is reset, so 3 more failed attempts don't hit the 5-attempt limit
+        for _ in range(3):
+            res = self.client.post(
+                "/api/v1/login/",
+                {"email": "ratelimit@csitabmc.org", "password": "WrongPassword123!"},
+                REMOTE_ADDR="198.51.100.77",
+            )
+            self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+            self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+

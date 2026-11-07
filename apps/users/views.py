@@ -13,7 +13,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.core.activity_logging import diff_snapshots, log_activity
+from apps.core.activity_logging import diff_snapshots, get_client_ip, log_activity
 from apps.core.permissions import (
     CanManageAccounts,
     ORDINARY_CMS_ROLES,
@@ -24,6 +24,7 @@ from apps.core.permissions import (
 )
 from .authentication import trusted_origins
 from .models import User
+from .rate_limiting import check_login_rate_limit, record_login_attempt
 from .serializers import (
     AccountCreateSerializer,
     AccountSerializer,
@@ -133,6 +134,8 @@ def check_account_access(request_user, target_user, action_name="manage"):
     is_target_super = target_role == "superadmin" or target_user.is_superuser
 
     if req_role == "superadmin":
+        if action_name == "view":
+            return True, ""
         if request_user.id == target_user.id:
             return False, "Superadmins cannot manage their own account through Admin Access."
         if is_target_super:
@@ -169,15 +172,32 @@ class LoginView(APIView):
         if not email or not password:
             return Response({"error": "email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
 
+        client_ip = get_client_ip(request)
+        is_limited, retry_after = check_login_rate_limit(client_ip, email)
+        if is_limited:
+            logger.warning(f"Login rate limited for IP: {client_ip}, email: {email}")
+            res = Response(
+                {"detail": f"Too many failed login attempts. Please try again in {retry_after} seconds."},
+                status=status.HTTP_429_TOO_MANY_REQUESTS
+            )
+            res["Retry-After"] = str(retry_after)
+            return res
+
         user = User.objects.filter(email__iexact=email).first()
         if user is None or not user.check_password(password):
             logger.warning(f"Login failed for email: {email}")
+            record_login_attempt(client_ip, email, successful=False)
             return Response({"error": GENERIC_LOGIN_ERROR}, status=status.HTTP_401_UNAUTHORIZED)
         if not user.is_active:
             logger.warning(f"Login rejected for deactivated account: {email}")
+            record_login_attempt(client_ip, email, successful=False)
             return Response({"error": GENERIC_LOGIN_ERROR}, status=status.HTTP_401_UNAUTHORIZED)
 
-        response = Response(serialize_session_user(user), status=status.HTTP_200_OK)
+        record_login_attempt(client_ip, email, successful=True)
+
+        user_data = serialize_session_user(user)
+        payload = {**user_data, "user": user_data}
+        response = Response(payload, status=status.HTTP_200_OK)
         refresh, access = issue_tokens(user)
         set_session_cookies(response, refresh, access)
         logger.info(f"Login successful for user id {user.pk} ({user.email})")
@@ -354,10 +374,8 @@ class AccountListCreateView(APIView):
     def get(self, request):
         req_role = effective_role(request.user)
         if req_role == "superadmin":
-            # Superadmin can view regular Admins and CMS users, never Superadmins or self
-            users = User.objects.exclude(id=request.user.id).exclude(
-                models.Q(is_superuser=True) | models.Q(role='superadmin')
-            ).order_by('-date_joined')
+            # Superadmin can view all accounts (Superadmins are displayed as read-only)
+            users = User.objects.all().order_by('-date_joined')
         elif req_role == "admin":
             # Regular Admin can view only ordinary CMS users
             users = User.objects.filter(role__in=ORDINARY_CMS_ROLES).exclude(

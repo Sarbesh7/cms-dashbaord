@@ -33,7 +33,6 @@ MEDIA_FOLDERS = {
     "notices/": ("notices", "notices.update"),
     "president_signatures/": ("tenures", "tenures.update"),
     "certificate_templates/": ("certificates", "certificates.manage_templates"),
-    "profile_pictures/": ("accounts", "accounts.update"),
 }
 STORAGE_PREFIXES = ("media/",)  # optional prefix some storages add to stored names
 
@@ -97,7 +96,6 @@ def _file_field_sources():
         ("notices", Notice, "image", lambda o: o.title),
         ("tenures", Tenure, "signature", lambda o: o.name),
         ("certificates", CertificateTemplate, "template_file", lambda o: o.template_name),
-        ("accounts", User, "profile_picture", lambda o: o.username),
     ]
 
 
