@@ -10,7 +10,7 @@ from apps.core.activity_logging import diff_snapshots, log_activity, model_snaps
 from apps.core.ordering import apply_ordering
 from apps.core.pagination import StandardPagination
 from apps.core.permissions import HasModulePermission
-from apps.notifications.services.push import PushNotificationService
+from apps.notifications.services.in_app import InAppNotificationService
 from .models import Announcement
 from .serializers import AnnouncementSerializer
 
@@ -66,18 +66,18 @@ class AnnouncementListView(_AnnouncementView):
             description=f"Created announcement '{announcement.title}'",
         )
 
-        # Trigger shared push notification service asynchronously
-        PushNotificationService.send_async(
-            title=announcement.title,
-            body=announcement.description,
+        # Trigger in-app notification dispatch for eligible dashboard users
+        InAppNotificationService.send_system_notification(
+            title=f"New Announcement: {announcement.title}",
+            message=announcement.description or f"Announcement '{announcement.title}' has been posted.",
             source_module="announcement",
             source_id=str(announcement.id),
-            source_title=announcement.title,
             data={
                 "type": "announcement",
                 "id": announcement.id,
                 "link": announcement.link or "",
             },
+            exclude_user=request.user,
         )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)

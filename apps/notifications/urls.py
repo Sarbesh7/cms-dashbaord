@@ -1,32 +1,21 @@
 from django.urls import path
 from .views import (
-    DeviceTokenListCreateView,
-    DeviceTokenStatusView,
-    DeviceTokenDetailView,
-    PushDeviceRegisterView,
-    PushDeviceUnregisterView,
-    NotificationHistoryListView,
-    NotificationHistoryDetailView,
-    NotificationRetryView,
+    NotificationInboxListView,
+    NotificationUnreadCountView,
+    NotificationMarkAllReadView,
+    NotificationToggleReadView,
+    NotificationComposeView,
+    NotificationSentListView,
+    EligibleRecipientsListView,
 )
 
-
 urlpatterns = [
-    # Mobile app compatibility routes (drop-in replacement for Strapi /api/push-devices/*)
-    path('api/push-devices/register', PushDeviceRegisterView.as_view(), name='push-device-register'),
-    path('api/push-devices/register/', PushDeviceRegisterView.as_view(), name='push-device-register-slash'),
-    path('api/push-devices/unregister', PushDeviceUnregisterView.as_view(), name='push-device-unregister'),
-    path('api/push-devices/unregister/', PushDeviceUnregisterView.as_view(), name='push-device-unregister-slash'),
-
-    # Administrative & API v1 routes
-    path('api/v1/device-tokens/', DeviceTokenListCreateView.as_view(), name='device-token-list-create'),
-    path('api/v1/device-tokens/<int:pk>/status/', DeviceTokenStatusView.as_view(), name='device-token-status'),
-    path('api/v1/device-tokens/<int:pk>/', DeviceTokenDetailView.as_view(), name='device-token-detail'),
-
-    # Notification History & Retries
-    path('api/v1/notifications/', NotificationHistoryListView.as_view(), name='notification-history-list'),
-    path('api/v1/notifications/<int:pk>/', NotificationHistoryDetailView.as_view(), name='notification-history-detail'),
-    path('api/v1/notifications/<int:pk>/retry/', NotificationRetryView.as_view(), name='notification-history-retry'),
+    # In-App User Notifications (Role-based for superadmin, admin, cms_user)
+    path('api/v1/notifications/', NotificationInboxListView.as_view(), name='notification-inbox'),
+    path('api/v1/notifications/unread-count/', NotificationUnreadCountView.as_view(), name='notification-unread-count'),
+    path('api/v1/notifications/mark-all-read/', NotificationMarkAllReadView.as_view(), name='notification-mark-all-read'),
+    path('api/v1/notifications/<int:pk>/read/', NotificationToggleReadView.as_view(), name='notification-toggle-read'),
+    path('api/v1/notifications/compose/', NotificationComposeView.as_view(), name='notification-compose'),
+    path('api/v1/notifications/sent/', NotificationSentListView.as_view(), name='notification-sent-list'),
+    path('api/v1/notifications/recipients/', EligibleRecipientsListView.as_view(), name='notification-eligible-recipients'),
 ]
-
-

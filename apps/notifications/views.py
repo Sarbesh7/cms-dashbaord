@@ -1,461 +1,217 @@
-from rest_framework import status, permissions
+import logging
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+from django.db.models import Q
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from .models import DeviceToken
+from apps.core.pagination import StandardPagination
+from .models import Notification, NotificationRecipient
+from .permissions import IsEligibleNotificationUser, ELIGIBLE_NOTIFICATION_ROLES
 from .serializers import (
-    DeviceTokenSerializer,
-    DeviceTokenRegistrationSerializer,
-    DeviceTokenStatusSerializer,
-    DeviceTokenUpdateSerializer,
-    PushDeviceRegisterSerializer,
-    PushDeviceUnregisterSerializer,
+    NotificationRecipientInboxSerializer,
+    NotificationSentSerializer,
+    NotificationComposeSerializer,
+    EligibleRecipientSerializer,
 )
+from .services.in_app import InAppNotificationService
+
+logger = logging.getLogger('notifications')
+User = get_user_model()
 
 
-
-class IsDeviceTokenOwnerOrAdmin(permissions.BasePermission):
+class NotificationInboxListView(APIView):
     """
-    Object-level permission:
-    - Superadmins and Admins can access any device token record.
-    - Authenticated users can only access their own device tokens.
-    - Unauthenticated guest tokens can only be updated/read by admins or guest clients.
+    Lists notifications received by the authenticated eligible user.
+    Supports filtering by read/unread status, source module, and search keyword.
     """
-
-    def has_object_permission(self, request, view, obj):
-        # Admin / Superadmin override
-        if request.user.is_authenticated and getattr(request.user, 'role', '') in ('superadmin', 'admin'):
-            return True
-
-        # Token owned by an authenticated user
-        if obj.user_id is not None:
-            return request.user.is_authenticated and obj.user_id == request.user.id
-
-        # Guest token (user is None)
-        # Regular authenticated users cannot hijack guest tokens unless they re-register them
-        if request.user.is_authenticated:
-            return False
-
-        # Anonymous caller accessing guest token
-        return True
-
-
-class DeviceTokenListCreateView(APIView):
-    """
-    POST /api/v1/device-tokens/
-    Register a new device token or idempotently update an existing token.
-
-    GET /api/v1/device-tokens/
-    List device tokens. Authenticated users see only their own devices. Admins can see all devices.
-    """
-    permission_classes = [permissions.AllowAny]
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.IsAuthenticated()]
-        return [permissions.AllowAny()]
-
-    def post(self, request):
-        serializer = DeviceTokenRegistrationSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(
-                {
-                    "success": False,
-                    "message": "Validation failed.",
-                    "errors": serializer.errors,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        user = request.user if request.user.is_authenticated else None
-        device_token, created = serializer.save(user=user)
-
-        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
-        message = "Device token registered successfully." if created else "Device token updated successfully."
-
-        return Response(
-            {
-                "success": True,
-                "message": message,
-                "data": {
-                    "id": device_token.id,
-                    "platform": device_token.platform,
-                    "enabled": device_token.enabled,
-                },
-            },
-            status=status_code,
-        )
+    permission_classes = [IsEligibleNotificationUser]
+    pagination_class = StandardPagination
 
     def get(self, request):
         user = request.user
-        is_admin = getattr(user, 'role', '') in ('superadmin', 'admin')
-
-        if is_admin:
-            queryset = DeviceToken.objects.all().select_related('user')
-        else:
-            queryset = DeviceToken.objects.filter(user=user)
-
-        # Optional query filters
-        platform = request.query_params.get('platform')
-        if platform:
-            queryset = queryset.filter(platform=platform.lower().strip())
-
-        enabled_param = request.query_params.get('enabled')
-        if enabled_param is not None:
-            if enabled_param.lower() in ('true', '1'):
-                queryset = queryset.filter(enabled=True)
-            elif enabled_param.lower() in ('false', '0'):
-                queryset = queryset.filter(enabled=False)
-
-        serializer = DeviceTokenSerializer(queryset, many=True)
-        return Response(
-            {
-                "success": True,
-                "count": queryset.count(),
-                "data": serializer.data,
-            },
-            status=status.HTTP_200_OK,
+        queryset = (
+            NotificationRecipient.objects
+            .filter(recipient=user)
+            .select_related('notification', 'notification__sender')
+            .order_by('-created_at')
         )
 
+        # Filter by read status
+        is_read_param = request.query_params.get('is_read')
+        if is_read_param is not None and is_read_param != '' and is_read_param.lower() != 'all':
+            if is_read_param.lower() in ('true', '1'):
+                queryset = queryset.filter(is_read=True)
+            elif is_read_param.lower() in ('false', '0'):
+                queryset = queryset.filter(is_read=False)
 
-class DeviceTokenStatusView(APIView):
-    """
-    PATCH /api/v1/device-tokens/{id}/status/
-    Update only the push notification enabled status for a device.
-    """
-    permission_classes = [IsDeviceTokenOwnerOrAdmin]
-
-    def patch(self, request, pk):
-        device_token = get_object_or_404(DeviceToken, pk=pk)
-        self.check_object_permissions(request, device_token)
-
-        serializer = DeviceTokenStatusSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(
-                {
-                    "success": False,
-                    "message": "Validation failed.",
-                    "errors": serializer.errors,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        serializer.update(device_token, serializer.validated_data)
-
-        action_word = "enabled" if device_token.enabled else "disabled"
-        return Response(
-            {
-                "success": True,
-                "message": f"Push notifications {action_word} successfully.",
-                "data": {
-                    "id": device_token.id,
-                    "enabled": device_token.enabled,
-                },
-            },
-            status=status.HTTP_200_OK,
-        )
-
-
-class DeviceTokenDetailView(APIView):
-    """
-    GET /api/v1/device-tokens/{id}/
-    Retrieve device token metadata.
-
-    PATCH /api/v1/device-tokens/{id}/
-    Update token value or platform when refreshed.
-
-    DELETE /api/v1/device-tokens/{id}/
-    Unregister a device token.
-    """
-    permission_classes = [IsDeviceTokenOwnerOrAdmin]
-
-    def get(self, request, pk):
-        device_token = get_object_or_404(DeviceToken, pk=pk)
-        self.check_object_permissions(request, device_token)
-
-        serializer = DeviceTokenSerializer(device_token)
-        return Response(
-            {
-                "success": True,
-                "data": serializer.data,
-            },
-            status=status.HTTP_200_OK,
-        )
-
-    def patch(self, request, pk):
-        device_token = get_object_or_404(DeviceToken, pk=pk)
-        self.check_object_permissions(request, device_token)
-
-        serializer = DeviceTokenUpdateSerializer(device_token, data=request.data, partial=True)
-        if not serializer.is_valid():
-            return Response(
-                {
-                    "success": False,
-                    "message": "Validation failed.",
-                    "errors": serializer.errors,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        serializer.save()
-        return Response(
-            {
-                "success": True,
-                "message": "Device token updated successfully.",
-                "data": {
-                    "id": device_token.id,
-                    "platform": device_token.platform,
-                    "enabled": device_token.enabled,
-                },
-            },
-            status=status.HTTP_200_OK,
-        )
-
-    def delete(self, request, pk):
-        device_token = get_object_or_404(DeviceToken, pk=pk)
-        self.check_object_permissions(request, device_token)
-
-        device_token.delete()
-        return Response(
-            {
-                "success": True,
-                "message": "Device token unregistered successfully.",
-            },
-            status=status.HTTP_204_NO_CONTENT,
-        )
-
-
-class PushDeviceRegisterView(APIView):
-    """
-    POST /api/push-devices/register
-    Public endpoint for mobile apps to register or re-enable Expo push tokens.
-    Strictly adheres to legacy mobile contract and Strapi JSON response format.
-    """
-    permission_classes = [permissions.AllowAny]
-    authentication_classes = []
-
-    def post(self, request):
-        serializer = PushDeviceRegisterSerializer(data=request.data)
-        if not serializer.is_valid():
-            first_error = "Validation error"
-            for field, errs in serializer.errors.items():
-                if errs:
-                    first_error = errs[0] if isinstance(errs, list) else str(errs)
-                    break
-            return Response(
-                {"error": first_error, "details": serializer.errors},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        token = serializer.validated_data['token']
-        platform = serializer.validated_data['platform']
-
-        try:
-            device = DeviceToken.objects.filter(token=token).first()
-            if device:
-                # Re-enable if disabled, or update platform
-                if not device.enabled or device.platform != platform:
-                    device.enabled = True
-                    device.platform = platform
-                    device.save(update_fields=['enabled', 'platform', 'updated_at'])
-
-                return Response(
-                    {
-                        "success": True,
-                        "registered": False,
-                        "message": "Device already registered",
-                    },
-                    status=status.HTTP_200_OK,
-                )
-
-            # Register new device
-            DeviceToken.objects.create(
-                token=token,
-                platform=platform,
-                enabled=True,
-                user=None,
-            )
-
-            return Response(
-                {
-                    "success": True,
-                    "registered": True,
-                    "message": "Device registered successfully",
-                },
-                status=status.HTTP_201_CREATED,
-            )
-        except Exception as e:
-            return Response(
-                {"error": "Unable to register device", "details": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-
-class PushDeviceUnregisterView(APIView):
-    """
-    POST /api/push-devices/unregister
-    Public endpoint for mobile apps to disable Expo push tokens (opt-out).
-    The token record is preserved with enabled=False.
-    Idempotent: unknown or already disabled tokens return 200 OK.
-    """
-    permission_classes = [permissions.AllowAny]
-    authentication_classes = []
-
-    def post(self, request):
-        serializer = PushDeviceUnregisterSerializer(data=request.data)
-        if not serializer.is_valid():
-            first_error = "Push token is required"
-            for field, errs in serializer.errors.items():
-                if errs:
-                    first_error = errs[0] if isinstance(errs, list) else str(errs)
-                    break
-            return Response(
-                {"error": first_error, "details": serializer.errors},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        token = serializer.validated_data['token']
-
-        try:
-            device = DeviceToken.objects.filter(token=token).first()
-            if device and device.enabled:
-                device.enabled = False
-                device.save(update_fields=['enabled', 'updated_at'])
-
-            return Response(
-                {
-                    "success": True,
-                    "message": "Device unregistered",
-                },
-                status=status.HTTP_200_OK,
-            )
-        except Exception as e:
-            return Response(
-                {"error": "Unable to unregister device", "details": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-
-class NotificationHistoryListView(APIView):
-    """
-    GET /api/v1/notifications/
-    Lists outgoing push notifications with filtering by status, source_module, date, and title search.
-    """
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_permissions(self):
-        from apps.core.permissions import HasPermission
-        return [permissions.IsAuthenticated(), HasPermission("notifications.view")()]
-
-    def get(self, request):
-        from apps.core.pagination import StandardPagination
-        from .models import NotificationHistory
-        from .serializers import NotificationHistorySerializer
-
-        queryset = NotificationHistory.objects.all().prefetch_related('attempts')
-
+        # Filter by source module
         source_module = request.query_params.get('source_module')
         if source_module and source_module.lower() != 'all':
-            queryset = queryset.filter(source_module=source_module.lower())
+            queryset = queryset.filter(notification__source_module=source_module.strip())
 
-        status_param = request.query_params.get('status')
-        if status_param and status_param.lower() != 'all':
-            queryset = queryset.filter(status=status_param.lower())
+        # Search by title or message
+        search_query = request.query_params.get('search')
+        if search_query:
+            q = search_query.strip()
+            queryset = queryset.filter(
+                Q(notification__title__icontains=q) |
+                Q(notification__message__icontains=q) |
+                Q(notification__sender__username__icontains=q) |
+                Q(notification__sender__first_name__icontains=q) |
+                Q(notification__sender__last_name__icontains=q)
+            )
 
-        search = request.query_params.get('search')
-        if search:
-            queryset = queryset.filter(title__icontains=search.strip())
-
-        date_param = request.query_params.get('date')
-        if date_param:
-            queryset = queryset.filter(created_at__date=date_param)
-
-        paginator = StandardPagination()
+        paginator = self.pagination_class()
         page = paginator.paginate_queryset(queryset, request)
-        serializer = NotificationHistorySerializer(page, many=True)
+        serializer = NotificationRecipientInboxSerializer(page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
 
-class NotificationHistoryDetailView(APIView):
+class NotificationUnreadCountView(APIView):
     """
-    GET /api/v1/notifications/{id}/
-    Retrieves full details of an outgoing notification including complete attempt logs.
+    Returns the count of unread notifications for the current authenticated user.
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsEligibleNotificationUser]
 
-    def get_permissions(self):
-        from apps.core.permissions import HasPermission
-        return [permissions.IsAuthenticated(), HasPermission("notifications.view")()]
-
-    def get(self, request, pk):
-        from .models import NotificationHistory
-        from .serializers import NotificationHistorySerializer
-
-        notification = get_object_or_404(NotificationHistory.objects.prefetch_related('attempts'), pk=pk)
-        serializer = NotificationHistorySerializer(notification)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self, request):
+        count = NotificationRecipient.objects.filter(
+            recipient=request.user,
+            is_read=False
+        ).count()
+        return Response({"unread_count": count})
 
 
-class NotificationRetryView(APIView):
+class NotificationMarkAllReadView(APIView):
     """
-    POST /api/v1/notifications/{id}/retry/
-    Retries failed recipients for an existing notification.
-    Targeting only previously failed devices; does not resend to already accepted devices.
+    Marks all received notifications for the current user as read.
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsEligibleNotificationUser]
 
-    def get_permissions(self):
-        from apps.core.permissions import HasPermission
-        return [permissions.IsAuthenticated(), HasPermission("notifications.retry")()]
+    def post(self, request):
+        now = timezone.now()
+        updated = NotificationRecipient.objects.filter(
+            recipient=request.user,
+            is_read=False
+        ).update(is_read=True, read_at=now)
+
+        return Response({
+            "message": f"Marked {updated} notification(s) as read.",
+            "marked_count": updated
+        })
+
+
+class NotificationToggleReadView(APIView):
+    """
+    Marks an individual received notification as read or unread for the current user.
+    """
+    permission_classes = [IsEligibleNotificationUser]
 
     def post(self, request, pk):
-        from apps.core.activity_logging import log_activity
-        from .models import NotificationHistory
-        from .serializers import NotificationHistorySerializer
-        from .services.push import PushNotificationService
+        recipient_record = get_object_or_404(
+            NotificationRecipient,
+            pk=pk,
+            recipient=request.user
+        )
 
-        notification = get_object_or_404(NotificationHistory, pk=pk)
+        desired_read = request.data.get('is_read')
+        if desired_read is None:
+            # Toggle if not explicitly specified
+            recipient_record.is_read = not recipient_record.is_read
+        elif isinstance(desired_read, str):
+            recipient_record.is_read = desired_read.strip().lower() in ('true', '1')
+        else:
+            recipient_record.is_read = bool(desired_read)
 
-        if notification.failed_count == 0:
+        recipient_record.read_at = timezone.now() if recipient_record.is_read else None
+        recipient_record.save(update_fields=['is_read', 'read_at'])
+
+        return Response({
+            "id": recipient_record.id,
+            "is_read": recipient_record.is_read,
+            "read_at": recipient_record.read_at,
+            "message": "Notification marked as read." if recipient_record.is_read else "Notification marked as unread."
+        })
+
+
+class NotificationComposeView(APIView):
+    """
+    Composes and dispatches a notification to selected eligible users or all eligible users.
+    """
+    permission_classes = [IsEligibleNotificationUser]
+
+    def post(self, request):
+        serializer = NotificationComposeSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+
+        data = serializer.validated_data
+        recipients = data['resolved_recipients']
+
+        notification = InAppNotificationService.send_notification(
+            title=data['title'],
+            message=data['message'],
+            recipients=recipients,
+            sender=request.user,
+            exclude_sender=True
+        )
+
+        if not notification:
             return Response(
-                {"error": "This notification has no failed recipients eligible for retry."},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"error": "Failed to dispatch notification. No valid eligible recipients found."},
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-        updated_history = PushNotificationService.dispatch_notification(
-            title=notification.title,
-            body=notification.body,
-            source_module=notification.source_module,
-            source_id=notification.source_id,
-            source_title=notification.source_title,
-            data=notification.data,
-            existing_history=notification,
-            is_retry=True,
-        )
-
-        log_activity(
-            request=request,
-            action="retry",
-            module="notifications",
-            target_id=str(notification.id),
-            target_repr=f"Notification #{notification.id}: {notification.title[:50]}",
-            description=f"User {request.user.username} retried push notification for {notification.source_module} '{notification.source_title}'",
-            details={
-                "retry_count": updated_history.retry_count,
-                "status": updated_history.status,
-                "accepted_count": updated_history.accepted_count,
-                "failed_count": updated_history.failed_count,
-            }
-        )
-
-        serializer = NotificationHistorySerializer(updated_history)
         return Response(
             {
-                "success": True,
-                "message": f"Retry completed. Current status: {updated_history.status}",
-                "data": serializer.data,
+                "message": f"Notification successfully sent to {len(recipients)} recipient(s).",
+                "id": notification.id
             },
-            status=status.HTTP_200_OK,
+            status=status.HTTP_201_CREATED
         )
 
 
+class NotificationSentListView(APIView):
+    """
+    Lists notifications sent by the current authenticated user.
+    """
+    permission_classes = [IsEligibleNotificationUser]
+    pagination_class = StandardPagination
+
+    def get(self, request):
+        queryset = (
+            Notification.objects
+            .filter(sender=request.user)
+            .prefetch_related('recipients__recipient')
+            .order_by('-created_at')
+        )
+
+        search_query = request.query_params.get('search')
+        if search_query:
+            q = search_query.strip()
+            queryset = queryset.filter(
+                Q(title__icontains=q) | Q(message__icontains=q)
+            )
+
+        paginator = self.pagination_class()
+        page = paginator.paginate_queryset(queryset, request)
+        serializer = NotificationSentSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+
+class EligibleRecipientsListView(APIView):
+    """
+    Returns the list of dashboard users who are eligible to receive notifications
+    (Superadmin, Admin, and CMS Users). Excludes the requesting user.
+    """
+    permission_classes = [IsEligibleNotificationUser]
+
+    def get(self, request):
+        users = (
+            User.objects
+            .filter(is_active=True, role__in=ELIGIBLE_NOTIFICATION_ROLES)
+            .exclude(id=request.user.id)
+            .order_by('first_name', 'last_name', 'username')
+        )
+        serializer = EligibleRecipientSerializer(users, many=True)
+        return Response(serializer.data)

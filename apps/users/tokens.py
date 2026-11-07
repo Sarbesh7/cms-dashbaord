@@ -53,17 +53,35 @@ def issue_tokens(user, session_start=None):
     return refresh, refresh.access_token
 
 
+def apply_partitioned_cookie(response, names):
+    """
+    Apply the 'Partitioned' attribute (CHIPS) when cookies are SameSite=None and Secure.
+    Allows cross-site HttpOnly cookies to function in Incognito mode and modern browsers
+    with third-party cookie restrictions (Chrome, Edge, Firefox).
+    """
+    kwargs = cookie_kwargs(0)
+    if str(kwargs.get("samesite") or "").lower() == "none" and kwargs.get("secure"):
+        for name in names:
+            if name in response.cookies:
+                try:
+                    response.cookies[name]["partitioned"] = True
+                except Exception:
+                    pass
+
+
 def set_session_cookies(response, refresh, access):
     response.set_cookie(ACCESS_COOKIE, str(access),
                         **cookie_kwargs(int(api_settings.ACCESS_TOKEN_LIFETIME.total_seconds())))
     response.set_cookie(REFRESH_COOKIE, str(refresh),
                         **cookie_kwargs(int(api_settings.REFRESH_TOKEN_LIFETIME.total_seconds())))
+    apply_partitioned_cookie(response, (ACCESS_COOKIE, REFRESH_COOKIE))
     return response
 
 
 def clear_session_cookies(response):
     for name in (ACCESS_COOKIE, REFRESH_COOKIE):
         response.set_cookie(name, "", **cookie_kwargs(0))
+    apply_partitioned_cookie(response, (ACCESS_COOKIE, REFRESH_COOKIE))
     return response
 
 

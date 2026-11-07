@@ -14,7 +14,7 @@ from apps.core.pagination import StandardPagination
 from apps.core.permissions import HasModulePermission
 from apps.core.publishing import TRANSITION_VERBS, check_publish_permission, publish_transition
 from apps.core.visibility import PUBLISHED, can_view_private
-from apps.notifications.services.push import PushNotificationService
+from apps.notifications.services.in_app import InAppNotificationService
 from .models import Notice
 from .serializers import NoticeSerializer
 
@@ -80,16 +80,16 @@ class NoticeListView(_NoticeView):
             if transition == "publish":
                 log_activity(request, action="publish", module="notices", target_id=notice.id,
                              target_repr=notice.title, description=f"Published notice '{notice.title}'")
-                PushNotificationService.send_async(
-                    title=notice.title,
-                    body=(notice.description[:200] if notice.description else ""),
+                InAppNotificationService.send_system_notification(
+                    title=f"Published Notice: {notice.title}",
+                    message=(notice.description[:200] if notice.description else f"Notice '{notice.title}' has been published."),
                     source_module="notice",
                     source_id=str(notice.id),
-                    source_title=notice.title,
                     data={
                         "type": "notice",
                         "noticeId": notice.slug or str(notice.id),
                     },
+                    exclude_user=request.user,
                 )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         logger.warning(f"Failed notice creation. Errors: {serializer.errors}")
@@ -131,16 +131,16 @@ class NoticeDetailView(_NoticeView):
                          description=f"{TRANSITION_VERBS[transition]} notice '{notice.title}'",
                          changes=changes)
             if transition == "publish":
-                PushNotificationService.send_async(
-                    title=notice.title,
-                    body=(notice.description[:200] if notice.description else ""),
+                InAppNotificationService.send_system_notification(
+                    title=f"Published Notice: {notice.title}",
+                    message=(notice.description[:200] if notice.description else f"Notice '{notice.title}' has been published."),
                     source_module="notice",
                     source_id=str(notice.id),
-                    source_title=notice.title,
                     data={
                         "type": "notice",
                         "noticeId": notice.slug or str(notice.id),
                     },
+                    exclude_user=request.user,
                 )
             return Response(serializer.data)
         logger.warning(f"Failed update for notice '{slug}'. Errors: {serializer.errors}")

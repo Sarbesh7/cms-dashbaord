@@ -84,6 +84,18 @@ class PermissionCatalogTests(TestCase):
     def test_invalid_role(self):
         self.assertFalse(has_role_permission("random_role", "events", "view"))
 
+    def test_notification_role_permissions(self):
+        # Superadmin, Admin, and CMS User have equal notifications access
+        for role in ("superadmin", "admin", "cms_user"):
+            self.assertTrue(has_role_permission(role, "notifications", "view"), f"{role} should have notifications.view")
+            self.assertTrue(has_role_permission(role, "notifications", "send"), f"{role} should have notifications.send")
+
+        # Other roles have no notifications access
+        for role in ("operations", "papers", "notice", "blog"):
+            self.assertFalse(has_role_permission(role, "notifications", "view"), f"{role} should NOT have notifications.view")
+            self.assertFalse(has_role_permission(role, "notifications", "send"), f"{role} should NOT have notifications.send")
+            self.assertFalse(has_role_permission(role, "notifications", "retry"), f"{role} should NOT have notifications.retry")
+
 
 class DRFPermissionClassesTests(TestCase):
     def setUp(self):

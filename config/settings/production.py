@@ -36,14 +36,23 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         "ALLOWED_HOSTS",
-        "cms.csitabmc.com"
+        "cms.csitabmc.com,cms-dashbaord-ben2.onrender.com"
     ).split(",")
     if host.strip()
 ]
 
-CSRF_TRUSTED_ORIGINS = list(set(CSRF_TRUSTED_ORIGINS + [
+_PROD_DEFAULT_ORIGINS = [
+    "https://csitabmc-dashboard.vercel.app",
     "https://cms.csitabmc.com",
-]))
+]
+
+CORS_ALLOWED_ORIGINS = list(set(
+    CORS_ALLOWED_ORIGINS + env_list("CORS_ALLOWED_ORIGINS", _PROD_DEFAULT_ORIGINS)
+))
+
+CSRF_TRUSTED_ORIGINS = list(set(
+    CSRF_TRUSTED_ORIGINS + CORS_ALLOWED_ORIGINS + _PROD_DEFAULT_ORIGINS
+))
 
 # Auth cookies. Default SameSite=None preserves the current cross-site deployment
 # (API on a different site than the dashboard). If the dashboard and API share a

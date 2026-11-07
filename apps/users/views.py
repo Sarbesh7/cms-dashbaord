@@ -32,9 +32,11 @@ from .serializers import (
     ChangePasswordSerializer,
 )
 from .tokens import (
+    ACCESS_COOKIE,
     AUTH_HASH_CLAIM,
     REFRESH_COOKIE,
     SESSION_START_CLAIM,
+    apply_partitioned_cookie,
     clear_session_cookies,
     compute_auth_hash,
     cookie_kwargs,
@@ -278,7 +280,7 @@ class RefreshTokenView(APIView):
         response = Response({"message": "Access token refreshed"}, status=status.HTTP_200_OK)
         now_ts = int(now.timestamp())
         response.set_cookie(
-            key="access_token",
+            key=ACCESS_COOKIE,
             value=str(new_access),
             **cookie_kwargs(max(int(new_access["exp"]) - now_ts, 0)),
         )
@@ -288,6 +290,7 @@ class RefreshTokenView(APIView):
                 value=str(refresh),
                 **cookie_kwargs(max(int(refresh["exp"]) - now_ts, 0)),
             )
+        apply_partitioned_cookie(response, (ACCESS_COOKIE, REFRESH_COOKIE))
         return response
 
 
