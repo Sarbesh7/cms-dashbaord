@@ -65,6 +65,8 @@ _CONTENT_MODULES = ("tenures", "members", "alumni", "events", "mentors", "notice
 # Existing policy kept: deleting blog articles is reserved for Admin and Superadmin.
 _BLOG_EDITOR_GRANTS = ("blogs.view", "blogs.create", "blogs.update", "blogs.publish", "blogs.unpublish")
 
+ORDINARY_CMS_ROLES = ("cms_user", "operations", "papers", "notice", "blog")
+
 ROLE_DEFINITIONS = {
     "superadmin": {
         "label": "Superadmin",
@@ -262,6 +264,21 @@ class IsSuperadminOnly(BasePermission):
 
     def has_permission(self, request, view):
         return user_has_permission(request.user, "accounts.manage")
+
+
+class CanManageAccounts(BasePermission):
+    """
+    Administrative account management:
+    - Superadmin: can manage regular Admins and ordinary CMS users.
+    - Admin: can manage ordinary CMS users.
+    - Ordinary CMS users / unauthenticated: denied.
+    """
+    message = "You do not have permission to manage accounts."
+
+    def has_permission(self, request, view):
+        if not (request.user and request.user.is_authenticated):
+            return False
+        return effective_role(request.user) in ("superadmin", "admin")
 
 
 class CanViewActivityLogs(BasePermission):

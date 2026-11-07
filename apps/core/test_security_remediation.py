@@ -104,7 +104,7 @@ class RBACCatalogTests(TestCase):
         expectations = {
             "/api/v1/certificates/": {"superadmin", "admin", "cms_user", "operations"},
             "/api/v1/activity-logs/": {"superadmin", "admin"},
-            "/api/v1/users/accounts/": {"superadmin"},
+            "/api/v1/users/accounts/": {"superadmin", "admin"},
             "/api/v1/blogs/": {"superadmin", "admin", "cms_user", "blog"},
             "/api/v1/certificates/templates/": {"superadmin", "admin", "cms_user", "operations"},
         }
@@ -185,7 +185,7 @@ class CookieCsrfTests(TestCase):
         self.client = APIClient()
         self.superadmin = make_user("superadmin")
         login(self.client, self.superadmin)
-        self.payload = {"username": "evil", "email": "evil@example.org", "password": PASSWORD, "role": "superadmin"}
+        self.payload = {"username": "evil", "email": "evil@example.org", "password": PASSWORD, "role": "admin"}
 
     def test_cross_site_form_post_rejected(self):
         res = self.client.post("/api/v1/users/accounts/", self.payload, HTTP_ORIGIN="https://attacker.example")
@@ -260,17 +260,6 @@ class CredentialInvalidationTests(TestCase):
         self._assert_device_b_locked_out()
         self.assertTrue(ActivityLog.objects.filter(action="password_change", module="accounts").exists())
 
-    def test_email_reset_signs_out_all_sessions(self):
-        from django.contrib.auth.tokens import default_token_generator
-        from django.utils.encoding import force_bytes
-        from django.utils.http import urlsafe_base64_encode
-        self.user.refresh_from_db()  # login updated last_login, which the reset token hashes
-        payload = {"uid": urlsafe_base64_encode(force_bytes(self.user.pk)),
-                   "token": default_token_generator.make_token(self.user), "new_password": "Reset-Strong-Pass-3!"}
-        self.assertEqual(APIClient().post("/api/v1/users/password-reset-confirm/", payload).status_code, 200)
-        self._assert_device_b_locked_out()
-        self.assertEqual(APIClient().post("/api/v1/users/password-reset-confirm/", payload).status_code, 400)
-
     def test_inactive_user_gets_generic_login_failure(self):
         self.user.is_active = False
         self.user.save()
@@ -287,26 +276,6 @@ class CredentialInvalidationTests(TestCase):
         res = client.post("/api/v1/users/accounts/",
                           {"username": "u1", "email": "u1@example.org", "password": "12345678", "role": "blog"})
         self.assertEqual(res.status_code, 400)
-
-
-class PasswordRecoveryPolicyTests(TestCase):
-    def test_reset_link_uses_frontend_url_and_superadmin_excluded(self):
-        user = make_user("blog")
-        sa = make_user("superadmin")
-        with override_settings(FRONTEND_URL="https://dashboard.example.test"):
-            mail.outbox = []
-            APIClient().post("/api/v1/users/password-reset/", {"email": user.email})
-            APIClient().post("/api/v1/users/password-reset/", {"email": sa.email})
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("https://dashboard.example.test/reset-password?uid=", mail.outbox[0].body)
-
-    def test_no_email_when_frontend_url_missing(self):
-        user = make_user("blog")
-        with override_settings(FRONTEND_URL=""):
-            mail.outbox = []
-            res = APIClient().post("/api/v1/users/password-reset/", {"email": user.email})
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(len(mail.outbox), 0)
 
 
 # ----------------------------------------------------------------------------- S4

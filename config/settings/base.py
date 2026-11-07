@@ -101,9 +101,8 @@ AUTH_COOKIE_SECURE = env_bool("AUTH_COOKIE_SECURE", True)
 TRUSTED_PROXIES = env_list("TRUSTED_PROXIES", [])
 CLIENT_IP_HEADER = os.environ.get("CLIENT_IP_HEADER", "")  # e.g. "CF-Connecting-IP"
 
-# Password recovery
+# Frontend URL
 FRONTEND_URL = (os.environ.get("FRONTEND_URL") or "").rstrip("/")
-PASSWORD_RESET_TIMEOUT = int(os.environ.get("PASSWORD_RESET_TIMEOUT", 60 * 60))  # 1 hour
 
 # Email: credentials come only from the environment; nothing is hardcoded.
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
@@ -182,7 +181,7 @@ JWT_SESSION_MAX_LIFETIME = timedelta(days=30)
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'apps.users.password_validation.PasswordComplexityValidator', 'OPTIONS': {'min_length': 8}},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]

@@ -1,10 +1,8 @@
 from django.urls import path
-# from .views import LoginView,UserView,ChangePasswordView,LogoutView,ResetPasswordView
 from .views import (
-    LoginView, UserView, ChangePasswordView, ResetPasswordView,
+    LoginView, UserView, ChangePasswordView,
     UserDetailView, RefreshTokenView, LogoutView,
     AccountListCreateView, AccountDetailView,
-    PasswordResetRequestView, PasswordResetConfirmView,
     UserMeView, RoleListView,
 )
 
@@ -17,9 +15,6 @@ urlpatterns = [
     path('api/v1/users/accounts/', AccountListCreateView.as_view()),
     path('api/v1/users/accounts/<int:user_id>/', AccountDetailView.as_view()),
     path('api/v1/users/change-password/', ChangePasswordView.as_view()),
-    path('api/v1/users/password-reset/', PasswordResetRequestView.as_view()),
-    path('api/v1/users/password-reset-confirm/', PasswordResetConfirmView.as_view()),
-    path("api/v1/users/reset-password/", ResetPasswordView.as_view()),
     path("api/v1/users/logout/", LogoutView.as_view()),
     path("api/v1/users/refresh-token/", RefreshTokenView.as_view()),
 ]

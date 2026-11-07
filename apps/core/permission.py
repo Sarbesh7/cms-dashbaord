@@ -8,9 +8,11 @@ from apps.core.permissions import (
     has_role_permission,
     HasModulePermission,
     IsSuperadminOnly,
+    CanManageAccounts,
     CanViewActivityLogs,
     IsAdmin,
     IsCMSUser,
+    ORDINARY_CMS_ROLES,
 )
 
 PROTECTED_OPERATIONS = PROTECTED_PERMISSIONS
@@ -23,7 +25,9 @@ __all__ = [
     "has_role_permission",
     "HasModulePermission",
     "IsSuperadminOnly",
+    "CanManageAccounts",
     "CanViewActivityLogs",
     "IsAdmin",
     "IsCMSUser",
+    "ORDINARY_CMS_ROLES",
 ]

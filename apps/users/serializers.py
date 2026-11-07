@@ -2,10 +2,11 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 
-from apps.core.permissions import ROLE_DEFINITIONS, role_label
+from apps.core.permissions import ORDINARY_CMS_ROLES, ROLE_DEFINITIONS, effective_role, role_label
 from .models import User
 
-ROLE_CHOICES = [(key, spec["label"]) for key, spec in ROLE_DEFINITIONS.items()]
+# Superadmin cannot be assigned through account-management endpoints.
+ROLE_CHOICES = [(key, spec["label"]) for key, spec in ROLE_DEFINITIONS.items() if key != "superadmin"]
 
 
 def run_password_validators(password, user=None):
@@ -27,7 +28,10 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'role', 'role_label', 'is_active', 'date_joined', 'last_login']
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 'email',
+            'role', 'role_label', 'is_active', 'date_joined', 'last_login',
+        ]
         read_only_fields = fields
 
     def get_role_label(self, obj):
@@ -40,6 +44,13 @@ class _AccountWriteMixin:
         others = User.objects.exclude(pk=self.instance.pk) if self.instance else User.objects.all()
         if others.filter(email__iexact=value).exists():
             raise serializers.ValidationError("A user with this email already exists.")
+        return value
+
+    def validate_username(self, value):
+        value = value.strip()
+        others = User.objects.exclude(pk=self.instance.pk) if self.instance else User.objects.all()
+        if others.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("A user with this username already exists.")
         return value
 
     def _validate_new_password(self, attrs):
@@ -56,15 +67,28 @@ class _AccountWriteMixin:
 
 
 class AccountCreateSerializer(_AccountWriteMixin, serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, min_length=8)
+    first_name = serializers.CharField(required=False, allow_blank=True, default="")
+    last_name = serializers.CharField(required=False, allow_blank=True, default="")
+    password = serializers.CharField(write_only=True)
     role = serializers.ChoiceField(choices=ROLE_CHOICES, default='cms_user')
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'role', 'is_active', 'date_joined', 'last_login']
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 'email',
+            'password', 'role', 'is_active', 'date_joined', 'last_login',
+        ]
         read_only_fields = ['id', 'date_joined', 'last_login']
 
     def validate(self, attrs):
+        request = self.context.get('request')
+        if request and request.user:
+            creator_role = effective_role(request.user)
+            target_role = attrs.get('role', 'cms_user')
+            if target_role == 'superadmin':
+                raise serializers.ValidationError({'role': "Cannot create a Superadmin account through Admin Access."})
+            if creator_role == 'admin' and target_role not in ORDINARY_CMS_ROLES:
+                raise serializers.ValidationError({'role': "Admins can only create ordinary CMS user accounts."})
         return self._validate_new_password(attrs)
 
     def create(self, validated_data):
@@ -76,17 +100,30 @@ class AccountCreateSerializer(_AccountWriteMixin, serializers.ModelSerializer):
 
 
 class AccountUpdateSerializer(_AccountWriteMixin, serializers.ModelSerializer):
+    first_name = serializers.CharField(required=False, allow_blank=True)
+    last_name = serializers.CharField(required=False, allow_blank=True)
     password = serializers.CharField(write_only=True, required=False, allow_blank=True)
     role = serializers.ChoiceField(choices=ROLE_CHOICES, required=False)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'role', 'is_active', 'date_joined', 'last_login']
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 'email',
+            'password', 'role', 'is_active', 'date_joined', 'last_login',
+        ]
         read_only_fields = ['id', 'date_joined', 'last_login']
 
     def validate(self, attrs):
         if not attrs.get('password'):
             attrs.pop('password', None)
+        request = self.context.get('request')
+        if request and request.user:
+            editor_role = effective_role(request.user)
+            target_role = attrs.get('role')
+            if target_role == 'superadmin':
+                raise serializers.ValidationError({'role': "Cannot promote an account to Superadmin."})
+            if editor_role == 'admin' and target_role and target_role not in ORDINARY_CMS_ROLES:
+                raise serializers.ValidationError({'role': "Admins can only assign ordinary CMS user roles."})
         return self._validate_new_password(attrs)
 
     def update(self, instance, validated_data):
@@ -101,7 +138,7 @@ class AccountUpdateSerializer(_AccountWriteMixin, serializers.ModelSerializer):
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(write_only=True)
-    new_password = serializers.CharField(write_only=True, min_length=8)
+    new_password = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
         user = self.context.get('user')
@@ -110,13 +147,3 @@ class ChangePasswordSerializer(serializers.Serializer):
         except DjangoValidationError as exc:
             raise serializers.ValidationError({'new_password': list(exc.messages)})
         return attrs
-
-
-class ForgotPasswordSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-
-
-class ResetPasswordSerializer(serializers.Serializer):
-    uid = serializers.CharField()
-    token = serializers.CharField()
-    new_password = serializers.CharField(write_only=True, min_length=8)
