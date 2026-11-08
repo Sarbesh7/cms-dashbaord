@@ -68,7 +68,11 @@ class ActivityLogListView(APIView):
         except Exception:
             return Response({"detail": "Invalid date filter."}, status=status.HTTP_400_BAD_REQUEST)
         if actor:
-            qs = qs.filter(Q(actor_name_snapshot__icontains=actor) | Q(user_email_snapshot__icontains=actor))
+            qs = qs.filter(
+                Q(actor_name_snapshot__icontains=actor) |
+                Q(actor_username_snapshot__icontains=actor) |
+                Q(user_email_snapshot__icontains=actor)
+            )
         if record:
             qs = qs.filter(Q(target_repr__icontains=record) | Q(target_id__iexact=record))
         if search:
@@ -76,6 +80,7 @@ class ActivityLogListView(APIView):
                 Q(target_repr__icontains=search) |
                 Q(user_email_snapshot__icontains=search) |
                 Q(actor_name_snapshot__icontains=search) |
+                Q(actor_username_snapshot__icontains=search) |
                 Q(target_id__icontains=search) |
                 Q(description__icontains=search) |
                 Q(action__icontains=search) |

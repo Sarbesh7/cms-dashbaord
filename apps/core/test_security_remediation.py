@@ -457,7 +457,8 @@ class ActivityLogIntegrityTests(TestCase):
         client.patch(f"/api/v1/events/{event.id}/", {"title": "New"}, format="json")
         log = ActivityLog.objects.get(action="update", module="events")
         self.assertEqual(log.changes["title"], {"before": "Old", "after": "New"})
-        self.assertEqual(log.actor_name_snapshot, user.username)
+        self.assertEqual(log.actor_name_snapshot, "Name unavailable")
+        self.assertEqual(log.actor_username_snapshot, user.username)
 
     def test_activity_log_ordering_and_filters(self):
         client = APIClient()

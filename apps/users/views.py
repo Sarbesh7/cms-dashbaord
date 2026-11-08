@@ -91,13 +91,19 @@ def get_active_superadmin_count():
 
 def serialize_session_user(user):
     role = effective_role(user)
+    is_super = role == "superadmin" or getattr(user, 'is_superuser', False)
+    username = "CSITABMC_SUPER" if is_super else user.username
+    first_name = "CSITABMC" if is_super else user.first_name
+    last_name = "SUPERADMIN" if is_super else user.last_name
+    name = "CSITABMC SUPERADMIN" if is_super else (user.get_full_name() or user.username)
     return {
         "id": user.id,
+        "sys_id": f"SYS-{user.id}",
         "email": user.email,
-        "username": user.username,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "name": user.get_full_name() or user.username,
+        "username": username,
+        "first_name": first_name,
+        "last_name": last_name,
+        "name": name,
         "role": role,
         "user_role": role,
         "role_label": role_label(role),
@@ -189,10 +195,30 @@ class LoginView(APIView):
         if user is None or not user.check_password(password):
             logger.warning(f"Login failed for email: {email}")
             record_login_attempt(client_ip, email, successful=False)
+            log_activity(
+                request,
+                user=None,
+                action="failed_login",
+                module="auth",
+                target_id="",
+                target_repr="",
+                description=f"Failed login attempt for {email}",
+                details={"attempted_email": email},
+            )
             return Response({"error": GENERIC_LOGIN_ERROR}, status=status.HTTP_401_UNAUTHORIZED)
         if not user.is_active:
             logger.warning(f"Login rejected for deactivated account: {email}")
             record_login_attempt(client_ip, email, successful=False)
+            log_activity(
+                request,
+                user=user,
+                action="failed_login",
+                module="auth",
+                target_id="",
+                target_repr="",
+                description=f"Login attempt rejected for deactivated account ({email})",
+                details={"attempted_email": email, "reason": "account_deactivated"},
+            )
             return Response({"error": GENERIC_LOGIN_ERROR}, status=status.HTTP_401_UNAUTHORIZED)
 
         record_login_attempt(client_ip, email, successful=True)
@@ -203,8 +229,15 @@ class LoginView(APIView):
         refresh, access = issue_tokens(user)
         set_session_cookies(response, refresh, access)
         logger.info(f"Login successful for user id {user.pk} ({user.email})")
-        log_activity(request, user=user, action="login", module="auth", target_id=user.id,
-                     target_repr=user.email, description=f"{user.email} logged in")
+        log_activity(
+            request,
+            user=user,
+            action="login",
+            module="auth",
+            target_id="",
+            target_repr="",
+            description=f"User {user.email} logged in successfully",
+        )
         return response
 
 
@@ -307,8 +340,15 @@ class LogoutView(APIView):
                 pass
         clear_session_cookies(response)
         logger.info(f"Logout: user id {request.user.pk}")
-        log_activity(request, user=request.user, action="logout", module="auth", target_id=request.user.id,
-                     target_repr=request.user.email, description=f"{request.user.email} logged out")
+        log_activity(
+            request,
+            user=request.user,
+            action="logout",
+            module="auth",
+            target_id="",
+            target_repr="",
+            description=f"User {request.user.email} logged out",
+        )
         return response
 
 
@@ -364,8 +404,15 @@ class ChangePasswordView(APIView):
         refresh, access = issue_tokens(user)
         set_session_cookies(response, refresh, access)
         logger.info(f"Password changed for user id {user.pk}")
-        log_activity(request, user=user, action="password_change", module="auth", target_id=user.id,
-                     target_repr=user.email, description="Changed own password; other sessions signed out")
+        log_activity(
+            request,
+            user=user,
+            action="password_change",
+            module="auth",
+            target_id="",
+            target_repr="",
+            description="Changed own password; other sessions signed out",
+        )
         return response
 
 

@@ -25,17 +25,30 @@ class LoginSerializer(serializers.Serializer):
 
 class AccountSerializer(serializers.ModelSerializer):
     role_label = serializers.SerializerMethodField()
+    sys_id = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
-            'id', 'username', 'first_name', 'last_name', 'email',
+            'id', 'sys_id', 'username', 'first_name', 'last_name', 'email',
             'role', 'role_label', 'is_active', 'date_joined', 'last_login',
         ]
         read_only_fields = fields
 
     def get_role_label(self, obj):
         return role_label("superadmin" if obj.is_superuser else obj.role)
+
+    def get_sys_id(self, obj):
+        return f"SYS-{obj.id}"
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        role = effective_role(instance)
+        if role == "superadmin" or getattr(instance, 'is_superuser', False):
+            data["username"] = "CSITABMC_SUPER"
+            data["first_name"] = "CSITABMC"
+            data["last_name"] = "SUPERADMIN"
+        return data
 
 
 class _AccountWriteMixin:

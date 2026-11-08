@@ -36,7 +36,9 @@ class ActivityLog(models.Model):
         related_name="activity_logs"
     )
     actor_id_snapshot = models.BigIntegerField(null=True, blank=True)
+    actor_sys_id_snapshot = models.CharField(max_length=50, blank=True, default="")
     actor_name_snapshot = models.CharField(max_length=255, blank=True)
+    actor_username_snapshot = models.CharField(max_length=150, blank=True, default="")
     user_email_snapshot = models.EmailField(max_length=255, blank=True)
     user_role_snapshot = models.CharField(max_length=50, blank=True)
     description = models.TextField(blank=True)

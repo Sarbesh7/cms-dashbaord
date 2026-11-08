@@ -131,7 +131,7 @@ def diff_snapshots(before, after):
 
 
 def log_activity(request=None, user=None, action="", module="", target_id="", target_repr="",
-                 details=None, description="", changes=None, actor_name=None, user_role=None):
+                 details=None, description="", changes=None, actor_name=None, actor_username=None, user_role=None):
     """Record one successful action. Never raises."""
     from apps.core.models import ActivityLog
     from apps.core.permissions import effective_role
@@ -144,26 +144,47 @@ def log_activity(request=None, user=None, action="", module="", target_id="", ta
                 acting_user = req_user
 
         resolved_actor_name = actor_name or ""
+        resolved_actor_username = actor_username or ""
         user_email = ""
         resolved_user_role = user_role or ""
         actor_id = None
+        actor_sys_id = ""
         if acting_user:
-            actor_id = acting_user.pk
-            resolved_actor_name = (acting_user.get_full_name() or acting_user.username or "").strip()
+            actor_id = getattr(acting_user, 'pk', None)
+            if actor_id:
+                actor_sys_id = f"SYS-{actor_id}"
+            first = (getattr(acting_user, 'first_name', '') or '').strip()
+            last = (getattr(acting_user, 'last_name', '') or '').strip()
+            full_name = f"{first} {last}".strip()
+            resolved_actor_name = full_name if full_name else (actor_name or "Name unavailable")
+            resolved_user_role = user_role or effective_role(acting_user) or getattr(acting_user, 'role', '') or ''
+            if resolved_user_role == "superadmin" or getattr(acting_user, 'is_superuser', False):
+                resolved_actor_username = "CSITABMC_SUPER"
+                resolved_actor_name = "CSITABMC SUPERADMIN"
+            else:
+                resolved_actor_username = actor_username or getattr(acting_user, 'username', '') or ''
             user_email = getattr(acting_user, 'email', '') or ''
-            resolved_user_role = effective_role(acting_user) or getattr(acting_user, 'role', '') or ''
         elif not resolved_actor_name and request is None:
             # Automated background task (e.g. system notification dispatch)
             resolved_actor_name = "System"
-            resolved_user_role = "system"
+            resolved_actor_username = actor_username or "system"
+            resolved_user_role = user_role or "system"
+            actor_sys_id = "SYS-0"
+        else:
+            if not resolved_actor_name:
+                resolved_actor_name = "Anonymous"
+            if not resolved_actor_username:
+                resolved_actor_username = "anonymous"
 
         ip = get_client_ip(request) if request is not None else None
         user_agent = (request.META.get('HTTP_USER_AGENT', '') if request is not None else '')[:500]
 
         return ActivityLog.objects.create(
-            user=acting_user if acting_user and acting_user.pk else None,
+            user=acting_user if acting_user and getattr(acting_user, 'pk', None) else None,
             actor_id_snapshot=actor_id,
+            actor_sys_id_snapshot=actor_sys_id,
             actor_name_snapshot=resolved_actor_name[:255],
+            actor_username_snapshot=resolved_actor_username[:150],
             user_email_snapshot=user_email[:255],
             user_role_snapshot=resolved_user_role[:50],
             action=action,
