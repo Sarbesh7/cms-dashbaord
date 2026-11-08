@@ -15,7 +15,7 @@ from apps.core.pagination import StandardPagination
 from apps.core.permissions import HasModulePermission
 from apps.core.visibility import PUBLIC_EVENT_STATUSES, can_view_private
 from .models import Event, Mentor
-from .serializers import EventSerializer, MentorSerializer
+from .serializers import EventListSerializer, EventSerializer, MentorSerializer
 
 logger = logging.getLogger("event")
 
@@ -33,6 +33,11 @@ def _event_queryset():
     return Event.objects.select_related('tenure').prefetch_related(
         'mentor_assignments__mentor', 'mentors__event_assignments__event'
     )
+
+
+def _event_list_queryset():
+    """Lightweight queryset for event listings: eager-loads tenure and event mentors without recursive event trees."""
+    return Event.objects.select_related('tenure').prefetch_related('mentor_assignments__mentor')
 
 
 class _ModuleView(APIView):
@@ -57,7 +62,7 @@ class EventListView(_ModuleView):
 
     @versioned_cache_page(60 * 5)
     def get(self, request):
-        events = _event_queryset()
+        events = _event_list_queryset()
         if not self.is_private(request):
             events = events.filter(status__in=PUBLIC_EVENT_STATUSES)
 
@@ -84,7 +89,7 @@ class EventListView(_ModuleView):
         events = apply_ordering(events, request.query_params.get("ordering"), EVENT_ORDERING, "-created_at")
         paginator = StandardPagination()
         result_page = paginator.paginate_queryset(events, request)
-        serializer = EventSerializer(result_page, many=True, context=self.serializer_context(request))
+        serializer = EventListSerializer(result_page, many=True, context=self.serializer_context(request))
         return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):

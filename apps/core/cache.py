@@ -5,6 +5,7 @@ from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 
 CONTENT_CACHE_VERSION_KEY = "content-cache-version"
+DASHBOARD_OVERVIEW_CACHE_VERSION_KEY = "dashboard-overview-cache-version"
 
 
 def get_content_cache_version():
@@ -17,6 +18,18 @@ def bump_content_cache_version(*args, **kwargs):
         cache.incr(CONTENT_CACHE_VERSION_KEY)
     except ValueError:
         cache.set(CONTENT_CACHE_VERSION_KEY, 2, None)
+
+
+def get_dashboard_overview_cache_version():
+    return cache.get_or_set(DASHBOARD_OVERVIEW_CACHE_VERSION_KEY, 1, None)
+
+
+def bump_dashboard_overview_cache_version(*args, **kwargs):
+    """Invalidate cached dashboard overview responses. Usable directly as a signal receiver."""
+    try:
+        cache.incr(DASHBOARD_OVERVIEW_CACHE_VERSION_KEY)
+    except ValueError:
+        cache.set(DASHBOARD_OVERVIEW_CACHE_VERSION_KEY, 2, None)
 
 
 def versioned_cache_page(timeout):

@@ -18,7 +18,7 @@ class Certificate(TimeStampModel):
     event = models.ForeignKey(Event, on_delete=models.SET_NULL, null=True, blank=True)
     event_title = models.CharField(max_length=255, blank=True, default='')
     is_project_completed = models.BooleanField(default=True)
-    issued_at = models.DateTimeField(auto_now_add=True) 
+    issued_at = models.DateTimeField(auto_now_add=True, db_index=True) 
 
     def save(self, *args, **kwargs):
         if self.event and not self.event_title:

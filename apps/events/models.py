@@ -87,7 +87,7 @@ class Event(TimeStampModel):
         blank=True
     )
     
-    date = models.DateTimeField()
+    date = models.DateTimeField(db_index=True)
     start_time = models.DateTimeField(blank=True, null=True)
     end_time = models.DateTimeField(blank=True, null=True)
     
@@ -105,6 +105,12 @@ class Event(TimeStampModel):
         related_name='events',
         blank=True
     )
+
+    class Meta:
+        ordering = ['-date']
+        indexes = [
+            models.Index(fields=['status', '-date']),
+        ]
 
     def __str__(self):
         return self.title

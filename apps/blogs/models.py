@@ -109,6 +109,9 @@ class Blog(TimeStampModel):
         ordering = ['-created_at']
         verbose_name = 'Blog'
         verbose_name_plural = 'Blogs'
+        indexes = [
+            models.Index(fields=['status', '-created_at', '-id'], name='blog_status_created_idx'),
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

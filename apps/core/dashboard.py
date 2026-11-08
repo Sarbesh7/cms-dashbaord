@@ -153,14 +153,18 @@ def build_mentors():
     from apps.events.models import Mentor
 
     qs = Mentor.objects.all()
+    counts = qs.aggregate(
+        total=Count("id", distinct=True),
+        assigned=Count("id", filter=Q(events__isnull=False), distinct=True),
+    )
     recent = (
         qs.annotate(event_count=Count("events", distinct=True))
         .order_by("-created_at")[:RECENT_LIMIT]
     )
     return {
         "stats": {
-            "total": qs.count(),
-            "assigned": qs.filter(events__isnull=False).distinct().count(),
+            "total": counts["total"],
+            "assigned": counts["assigned"],
         },
         "recent": [
             {
@@ -302,14 +306,24 @@ def activity_log_summary():
         .order_by("-count")
         .first()
     )
+    aggregated_counts = ActivityLog.objects.aggregate(
+        total_activities=Count("id"),
+        logins_this_week=Count("id", filter=Q(action="login", timestamp__gte=week_ago)),
+        mutations_today=Count(
+            "id",
+            filter=Q(
+                action__in=[
+                    "create", "update", "delete", "publish", "unpublish",
+                    "status_change", "role_change", "media_upload", "media_delete"
+                ],
+                timestamp__gte=today_start,
+            ),
+        ),
+    )
     return {
-        "total_activities": ActivityLog.objects.count(),
-        "logins_this_week": ActivityLog.objects.filter(action="login", timestamp__gte=week_ago).count(),
-        "mutations_today": ActivityLog.objects.filter(
-            action__in=["create", "update", "delete", "publish", "unpublish",
-                        "status_change", "role_change", "media_upload", "media_delete"],
-            timestamp__gte=today_start,
-        ).count(),
+        "total_activities": aggregated_counts.get("total_activities") or 0,
+        "logins_this_week": aggregated_counts.get("logins_this_week") or 0,
+        "mutations_today": aggregated_counts.get("mutations_today") or 0,
         "most_active_module": most_active["module"] if most_active else "None",
     }
 
@@ -364,3 +378,27 @@ def build_overview(user):
             logger.exception("Dashboard overview module %s failed", key)
             modules[key] = {"error": True}
     return {"role": role, "modules": modules}
+
+
+DASHBOARD_OVERVIEW_CACHE_TIMEOUT = 60  # seconds
+
+
+def get_cached_dashboard_overview(user):
+    from django.core.cache import cache
+    from apps.core.cache import get_dashboard_overview_cache_version
+
+    if not user or not user.is_authenticated:
+        return build_overview(user)
+
+    role = effective_role(user) or ""
+    version = get_dashboard_overview_cache_version()
+    cache_key = f"dashboard_overview_{user.id}_{role}_v{version}"
+
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    data = build_overview(user)
+    cache.set(cache_key, data, DASHBOARD_OVERVIEW_CACHE_TIMEOUT)
+    return data
+

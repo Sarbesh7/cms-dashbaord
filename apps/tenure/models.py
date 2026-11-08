@@ -130,8 +130,10 @@ class TenureMembership(TimeStampModel):
 
     class Meta:
         unique_together = ("member", "tenure")
-
         ordering = ["order", "id"]
+        indexes = [
+            models.Index(fields=["status", "order"]),
+        ]
 
     @property
     def member_name(self):

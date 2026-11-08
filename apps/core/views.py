@@ -6,7 +6,7 @@ from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 
 from apps.core.activity_logging import log_activity
-from apps.core.dashboard import activity_log_summary, build_overview
+from apps.core.dashboard import activity_log_summary, build_overview, get_cached_dashboard_overview
 from apps.core.media import MediaError, delete_asset, find_references, normalize_public_id, visible_references
 from apps.core.pagination import StandardPagination
 from apps.core.permissions import CanViewActivityLogs, HasPermission
@@ -23,7 +23,7 @@ class DashboardOverviewView(APIView):
     permission_classes = [IsAuthenticated, HasPermission("dashboard.overview.view")]
 
     def get(self, request):
-        response = Response(build_overview(request.user))
+        response = Response(get_cached_dashboard_overview(request.user))
         response["Cache-Control"] = "private, no-store"
         return response
 

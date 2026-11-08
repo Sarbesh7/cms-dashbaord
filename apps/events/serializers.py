@@ -319,3 +319,55 @@ class EventSerializer(serializers.ModelSerializer):
             )
             for item in assignments_data
         ])
+
+
+class EventListSerializer(serializers.ModelSerializer):
+    """
+    Lightweight representation for event listings.
+    Omits heavy nested mentor lifetime event histories while preserving
+    event-specific mentor identification, role assignment, and photo.
+    """
+    tenure_name = serializers.CharField(source='tenure.name', read_only=True, default=None)
+    mentors = serializers.SerializerMethodField()
+    mentor_assignments = EventMentorAssignmentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Event
+        fields = [
+            'id',
+            'tenure',
+            'tenure_name',
+            'title',
+            'slug',
+            'description',
+            'organiser',
+            'location',
+            'image',
+            'date',
+            'start_time',
+            'end_time',
+            'available_seats',
+            'registration_fee_bmc',
+            'registration_fee_non_bmc',
+            'registration_link',
+            'category',
+            'tags',
+            'status',
+            'mentors',
+            'mentor_assignments',
+            'created_at',
+            'updated_at',
+        ]
+        read_only_fields = fields
+
+    def get_mentors(self, obj):
+        if hasattr(obj, '_prefetched_objects_cache') and 'mentor_assignments' in obj._prefetched_objects_cache:
+            return [a.mentor_id for a in obj.mentor_assignments.all() if a.mentor_id is not None]
+        return list(obj.mentors.values_list('id', flat=True))
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if self.context.get('public'):
+            for assignment in data.get('mentor_assignments') or []:
+                assignment.pop('mentor_email', None)
+        return data

@@ -22,6 +22,9 @@ class PastPaper(TimeStampModel):
     class Meta:
         ordering = ['-exam_year', '-semester', 'subject_name']
         unique_together = ('subject_name', 'semester', 'exam_year', 'model_set', 'is_old_course')
+        indexes = [
+            models.Index(fields=['semester', '-exam_year'], name='pastpaper_sem_year_idx'),
+        ]
         
     def save(self, *args, **kwargs): 
         set_type = "model-set" if self.model_set else "board-exam"

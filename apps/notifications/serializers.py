@@ -92,7 +92,7 @@ class NotificationSentSerializer(serializers.ModelSerializer):
     Represents a notification authored and sent by the current user.
     """
     recipients = NotificationRecipientSummarySerializer(many=True, read_only=True)
-    recipient_count = serializers.IntegerField(source='recipients.count', read_only=True)
+    recipient_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Notification
@@ -107,6 +107,11 @@ class NotificationSentSerializer(serializers.ModelSerializer):
             'recipient_count',
             'recipients',
         ]
+
+    def get_recipient_count(self, obj):
+        if hasattr(obj, '_prefetched_objects_cache') and 'recipients' in obj._prefetched_objects_cache:
+            return len(obj.recipients.all())
+        return obj.recipients.count()
 
 
 class NotificationComposeSerializer(serializers.Serializer):

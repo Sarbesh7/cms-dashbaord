@@ -206,7 +206,10 @@ def clone_members(request, slug):
         return Response({"error": "source_tenure_slug is required"}, status=status.HTTP_400_BAD_REQUEST)
 
     source_tenure = get_object_or_404(Tenure, slug=source_tenure_slug)
-    source_memberships = TenureMembership.objects.filter(tenure=source_tenure, member__isnull=False)
+    source_memberships = (
+        TenureMembership.objects.filter(tenure=source_tenure, member__isnull=False)
+        .select_related("member")
+    )
     if not source_memberships.exists():
         return Response({"message": "No memberships found in source tenure to clone"}, status=status.HTTP_200_OK)
 
@@ -220,7 +223,7 @@ def clone_members(request, slug):
             designation=m.designation,
             order=m.order,
         )
-        for m in source_memberships.select_related("member")
+        for m in source_memberships
         if m.member_id not in existing
     ]
     try:

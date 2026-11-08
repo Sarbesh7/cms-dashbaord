@@ -49,7 +49,8 @@ class Notice(TimeStampModel):
         ],
         default='draft',
         null=True,
-        blank=True
+        blank=True,
+        db_index=True,
     )
 
     category = models.CharField(
