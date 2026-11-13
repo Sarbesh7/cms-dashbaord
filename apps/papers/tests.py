@@ -62,3 +62,26 @@ class PastPaperIntegrationTests(APITestCase):
         self.assertEqual(response_new.status_code, status.HTTP_200_OK)
         self.assertEqual(response_new.data["count"], 1)
         self.assertEqual(response_new.data["results"][0]["id"], self.paper_new.id)
+
+    def test_past_paper_numeric_slug_lookup_and_delete(self):
+        """Verify past paper with numeric slug (e.g. '5555') resolves and deletes."""
+        paper = PastPaper.objects.create(
+            subject_name="MTH117",
+            semester=1,
+            exam_year=2081,
+            drive_link="https://drive.google.com/file/d/test3/view",
+        )
+        PastPaper.objects.filter(id=paper.id).update(slug="5555")
+        paper.refresh_from_db()
+        self.assertEqual(paper.slug, "5555")
+        self.assertNotEqual(paper.id, 5555)
+
+        # GET detail using numeric slug
+        resp = self.client.get("/api/v1/past-papers/5555/")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["id"], paper.id)
+
+        # DELETE using numeric slug
+        del_resp = self.client.delete("/api/v1/past-papers/5555/")
+        self.assertEqual(del_resp.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(PastPaper.objects.filter(id=paper.id).exists())

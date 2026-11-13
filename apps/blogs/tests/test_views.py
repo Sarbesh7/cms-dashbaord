@@ -307,3 +307,25 @@ class BlogAPITest(APITestCase):
         self.assertEqual(del_res.status_code, status.HTTP_409_CONFLICT)
         self.assertIn("referenced by other content", del_res.data['detail'])
 
+    def test_blog_numeric_slug_lookup_and_delete(self):
+        """Verify blog with numeric slug (e.g. '1234') resolves and deletes."""
+        blog = Blog.objects.create(
+            title="Numeric Blog",
+            slug="1234",
+            excerpt="Excerpt",
+            content="Content",
+            status="published"
+        )
+        self.assertNotEqual(blog.id, 1234)
+
+        self.client.force_authenticate(user=self.admin_user)
+        # GET detail using numeric slug
+        resp = self.client.get("/api/v1/blogs/1234/")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["id"], blog.id)
+
+        # DELETE using numeric slug
+        del_resp = self.client.delete("/api/v1/blogs/1234/")
+        self.assertEqual(del_resp.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Blog.objects.filter(id=blog.id).exists())
+

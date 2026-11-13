@@ -76,13 +76,14 @@ class TenureDetailView(_ModuleView):
     permission_module = "tenures"
 
     def get_object(self, slug):
-        try:
-            qs = Tenure.objects.prefetch_related("memberships__member", "alumni__member")
-            if str(slug).isdigit():
-                return qs.get(id=int(slug))
-            return qs.get(slug=slug)
-        except Tenure.DoesNotExist:
+        qs = Tenure.objects.prefetch_related("memberships__member", "alumni__member")
+        # Try slug first (covers numeric slugs like "23124")
+        obj = qs.filter(slug=slug).first()
+        if not obj and str(slug).isdigit():
+            obj = qs.filter(id=int(slug)).first()
+        if not obj:
             raise Http404
+        return obj
 
     @versioned_cache_page(60 * 5)
     def get(self, request, slug):
@@ -155,12 +156,13 @@ class MemberDetailView(_ModuleView):
         qs = Member.objects.prefetch_related("memberships__tenure")
         if public:
             qs = qs.filter(status=PUBLISHED)
-        try:
-            if str(slug).isdigit():
-                return qs.get(id=int(slug))
-            return qs.get(slug=slug)
-        except Member.DoesNotExist:
+        # Try slug first (covers numeric slugs)
+        obj = qs.filter(slug=slug).first()
+        if not obj and str(slug).isdigit():
+            obj = qs.filter(id=int(slug)).first()
+        if not obj:
             raise Http404
+        return obj
 
     @versioned_cache_page(60 * 5)
     def get(self, request, slug):

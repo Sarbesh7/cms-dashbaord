@@ -100,12 +100,13 @@ class NoticeDetailView(_NoticeView):
 
     def get_object(self, slug, public=False):
         qs = Notice.objects.filter(status=PUBLISHED) if public else Notice.objects.all()
-        try:
-            if str(slug).isdigit():
-                return qs.get(id=int(slug))
-            return qs.get(slug=slug)
-        except Notice.DoesNotExist:
+        # Try slug first (covers numeric slugs)
+        obj = qs.filter(slug=slug).first()
+        if not obj and str(slug).isdigit():
+            obj = qs.filter(id=int(slug)).first()
+        if not obj:
             raise Http404
+        return obj
 
     @versioned_cache_page(60 * 5)
     def get(self, request, slug):

@@ -95,15 +95,14 @@ class BlogDetailView(APIView):
     permission_classes = [IsAuthenticated, HasModulePermission("blogs")]
 
     def get_object(self, pk):
-        try:
-            if str(pk).isdigit():
-                return Blog.objects.select_related('author').get(pk=int(pk))
-        except (ValueError, TypeError):
-            pass
-        try:
-            return Blog.objects.select_related('author').get(slug=pk)
-        except Blog.DoesNotExist:
+        qs = Blog.objects.select_related('author')
+        # Try slug first (covers numeric slugs)
+        obj = qs.filter(slug=pk).first()
+        if not obj and str(pk).isdigit():
+            obj = qs.filter(pk=int(pk)).first()
+        if not obj:
             raise Http404("Blog not found")
+        return obj
 
     def get(self, request, pk):
         serializer = BlogSerializer(self.get_object(pk), context={'request': request})

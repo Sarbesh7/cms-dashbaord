@@ -164,3 +164,24 @@ class NoticeApiSlugTests(TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data["count"], 3)
         self.assertEqual(len(res.data["results"]), 1)
+
+    def test_notice_numeric_slug_lookup_and_delete(self):
+        """Verify notice with numeric slug (e.g. '7777') resolves and deletes."""
+        notice = Notice.objects.create(
+            title="Numeric Notice",
+            description="desc",
+        )
+        Notice.objects.filter(id=notice.id).update(slug="7777")
+        notice.refresh_from_db()
+        self.assertEqual(notice.slug, "7777")
+        self.assertNotEqual(notice.id, 7777)
+
+        # GET detail using numeric slug
+        resp = self.client.get("/api/v1/notices/7777/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data["id"], notice.id)
+
+        # DELETE using numeric slug
+        del_resp = self.client.delete("/api/v1/notices/7777/")
+        self.assertEqual(del_resp.status_code, 204)
+        self.assertFalse(Notice.objects.filter(id=notice.id).exists())

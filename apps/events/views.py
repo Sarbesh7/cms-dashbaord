@@ -111,9 +111,13 @@ class EventDetailsView(_ModuleView):
         qs = _event_queryset()
         if request is not None and not self.is_private(request):
             qs = qs.filter(status__in=PUBLIC_EVENT_STATUSES)
-        if str(slug).isdigit():
-            return get_object_or_404(qs, id=int(slug))
-        return get_object_or_404(qs, slug__iexact=slug)
+        # Try slug first (covers numeric slugs)
+        obj = qs.filter(slug__iexact=slug).first()
+        if not obj and str(slug).isdigit():
+            obj = qs.filter(id=int(slug)).first()
+        if not obj:
+            raise Http404("Event not found")
+        return obj
 
     @versioned_cache_page(60 * 5)
     def get(self, request, slug):

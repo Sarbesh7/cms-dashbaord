@@ -454,3 +454,48 @@ class MentorAndAssignmentApiTests(TestCase):
         self.assertEqual(res.status_code, 400)
         self.assertIn("assigned_events", res.data)
 
+    def test_event_numeric_slug_lookup_and_delete(self):
+        """Verify event with numeric slug (e.g. '8888') resolves and can be deleted."""
+        event = Event.objects.create(
+            title="Numeric Event",
+            slug="8888",
+            date=timezone.now(),
+            available_seats=10,
+        )
+        self.assertNotEqual(event.id, 8888)
+
+        # GET detail using numeric slug
+        resp = self.client.get("/api/v1/events/8888/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data["id"], event.id)
+
+        # DELETE using numeric slug
+        del_resp = self.client.delete("/api/v1/events/8888/")
+        self.assertEqual(del_resp.status_code, 204)
+        self.assertFalse(Event.objects.filter(id=event.id).exists())
+
+    def test_event_delete_with_mentor_assignments_cascades_assignments_and_preserves_mentors(self):
+        """Verify deleting an Event with EventMentorAssignments removes assignments and keeps mentors."""
+        event = Event.objects.create(
+            title="Event With Mentors",
+            slug="event-with-mentors",
+            date=timezone.now(),
+            available_seats=20,
+        )
+        mentor = Mentor.objects.create(
+            name="Preserved Mentor",
+            expertise="Architecture",
+        )
+        assignment = EventMentorAssignment.objects.create(
+            event=event,
+            mentor=mentor,
+            role="speaker",
+        )
+
+        del_resp = self.client.delete(f"/api/v1/events/{event.slug}/")
+        self.assertEqual(del_resp.status_code, 204)
+        self.assertFalse(Event.objects.filter(id=event.id).exists())
+        self.assertFalse(EventMentorAssignment.objects.filter(id=assignment.id).exists())
+        # Mentor must remain intact
+        self.assertTrue(Mentor.objects.filter(id=mentor.id).exists())
+

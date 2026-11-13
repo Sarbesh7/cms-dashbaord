@@ -91,15 +91,11 @@ class PastPaperDetailView(APIView):
         return [IsAuthenticated(), HasModulePermission("papers")]
     
     def get_object(self, slug):
-        try:
-            if str(slug).isdigit():
-                return PastPaper.objects.get(pk=int(slug))
-        except (ValueError, TypeError):
-            pass
-        try:
-            return PastPaper.objects.get(slug=slug)
-        except PastPaper.DoesNotExist:
-            return None
+        # Try slug first (covers numeric slugs)
+        obj = PastPaper.objects.filter(slug=slug).first()
+        if not obj and str(slug).isdigit():
+            obj = PastPaper.objects.filter(pk=int(slug)).first()
+        return obj
         
     def get(self, request, slug):
         paper = self.get_object(slug)

@@ -166,3 +166,72 @@ class TenureIntegrationTests(APITestCase):
         self.assertEqual(list_response.status_code, status.HTTP_200_OK)
         found = any(t.get("slug") == tenure_with_sig.slug and t.get("signature") for t in list_response.data)
         self.assertTrue(found)
+
+    def test_tenure_numeric_slug_lookup_and_delete(self):
+        """Verify that a tenure with a numeric slug (e.g. '23124') resolves by slug and deletes."""
+        tenure_numeric = Tenure.objects.create(
+            name="Tenure Numeric Slug",
+            slug="23124",
+            start_date="2027-01-01",
+            end_date="2028-01-01",
+        )
+        # Even though tenure_numeric.id != 23124, slug lookup should resolve it
+        self.assertNotEqual(tenure_numeric.id, 23124)
+
+        # GET detail using numeric slug
+        resp = self.client.get("/api/v1/tenures/23124/")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["id"], tenure_numeric.id)
+
+        # DELETE using numeric slug
+        del_resp = self.client.delete("/api/v1/tenures/23124/")
+        self.assertEqual(del_resp.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Tenure.objects.filter(id=tenure_numeric.id).exists())
+
+    def test_tenure_fallback_to_id_lookup(self):
+        """Verify that if slug doesn't match, numeric string falls back to id."""
+        tenure = Tenure.objects.create(
+            name="Tenure Standard",
+            start_date="2028-01-01",
+            end_date="2029-01-01",
+        )
+        # Query using its numeric ID
+        resp = self.client.get(f"/api/v1/tenures/{tenure.id}/")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["slug"], tenure.slug)
+
+    def test_member_numeric_slug_and_role_permissions(self):
+        """Verify member numeric slug resolution and that superadmin can delete whereas admin cannot."""
+        member_numeric = Member.objects.create(
+            name="Member Numeric",
+            slug="9999",
+            status="published",
+        )
+        self.assertNotEqual(member_numeric.id, 9999)
+
+        # Admin tries to delete member -> should be 403 Forbidden (PROTECTED_PERMISSIONS)
+        # Create a standard user with role="admin" (not is_superuser)
+        admin_user = User.objects.create_user(
+            username="content_admin",
+            email="content_admin@example.com",
+            password="adminpassword123",
+            role="admin",
+        )
+        self.client.force_authenticate(user=admin_user)
+        admin_del_resp = self.client.delete("/api/v1/members/9999/")
+        self.assertEqual(admin_del_resp.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(Member.objects.filter(id=member_numeric.id).exists())
+
+        # Switch to superadmin
+        superadmin = User.objects.create_superuser(
+            username="superadmin",
+            email="superadmin@example.com",
+            password="adminpassword123",
+            role="superadmin",
+        )
+        self.client.force_authenticate(user=superadmin)
+
+        # Superadmin deletes using numeric slug -> 204
+        sa_del_resp = self.client.delete("/api/v1/members/9999/")
+        self.assertEqual(sa_del_resp.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Member.objects.filter(id=member_numeric.id).exists())
